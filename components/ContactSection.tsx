@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Send, Facebook, Instagram, CheckCircle2 } from 'lucide-react';
+import { Send, Facebook, CheckCircle2 } from 'lucide-react';
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -59,7 +59,7 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contacto" className="py-20 bg-white">
+    <section id="contacto" className="py-20 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -169,7 +169,7 @@ export default function ContactSection() {
                 className={`w-full px-8 py-4 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg flex items-center justify-center gap-2 ${
                   isSubmitting
                     ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-amber-500 hover:bg-amber-600 hover:scale-105'
+                    : 'bg-sky-500 hover:bg-sky-600 hover:scale-105'
                 }`}
               >
                 {isSubmitting ? (
@@ -222,22 +222,13 @@ export default function ContactSection() {
               </h3>
               <div className="flex gap-4">
                 <a
-                  href="https://facebook.com"
+                  href="https://www.facebook.com/promogimmickscl/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-14 h-14 bg-blue-600 rounded-xl flex items-center justify-center text-white hover:bg-blue-700 hover:scale-110 transition-all duration-300 shadow-lg"
-                  aria-label="Facebook"
+                  aria-label="Facebook de PromoGimmicks"
                 >
                   <Facebook size={28} />
-                </a>
-                <a
-                  href="https://instagram.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-14 h-14 bg-gradient-to-br from-purple-600 via-pink-600 to-amber-600 rounded-xl flex items-center justify-center text-white hover:scale-110 transition-all duration-300 shadow-lg"
-                  aria-label="Instagram"
-                >
-                  <Instagram size={28} />
                 </a>
                 <a
                   href="https://wa.me/593998594123"
@@ -272,7 +263,7 @@ export default function ContactSection() {
                 </p>
               </div>
 
-              <div className="bg-amber-50 rounded-2xl p-6">
+              <div className="bg-sky-50 rounded-2xl p-6">
                 <h4 className="text-lg font-bold text-blue-900 mb-2">
                   Respuesta Rápida
                 </h4>

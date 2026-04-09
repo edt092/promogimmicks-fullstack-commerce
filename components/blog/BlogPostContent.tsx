@@ -642,6 +642,39 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
           </div>
         </div>
 
+        {/* Interlinking: categorías de productos */}
+        <div className="mt-10 bg-gradient-to-br from-amber-50 to-blue-50 rounded-2xl p-6 border border-amber-200">
+          <h2 className="font-bold text-blue-900 text-lg mb-4">
+            Explora productos por categoría
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {[
+              { slug: 'tecnologia', label: '⚡ Tecnología' },
+              { slug: 'drinkware', label: '☕ Drinkware' },
+              { slug: 'oficina', label: '🖊️ Oficina' },
+              { slug: 'bolsos-y-mochilas', label: '🎒 Bolsos y Mochilas' },
+              { slug: 'eco', label: '🌿 Productos Eco' },
+              { slug: 'articulos-de-escritura', label: '✒️ Escritura' },
+            ].map((cat) => (
+              <Link
+                key={cat.slug}
+                href={`/tienda/categoria/${cat.slug}/`}
+                className="flex items-center gap-2 bg-white text-blue-900 text-sm font-medium px-4 py-2.5 rounded-xl border border-blue-100 hover:border-amber-400 hover:text-amber-600 transition-all"
+              >
+                {cat.label}
+              </Link>
+            ))}
+          </div>
+          <div className="mt-4 text-center">
+            <Link
+              href="/tienda"
+              className="inline-flex items-center gap-2 text-amber-600 hover:text-amber-700 font-semibold text-sm transition-colors"
+            >
+              Ver todos los productos →
+            </Link>
+          </div>
+        </div>
+
         {/* Navegación */}
         <div className="mt-8 pt-8 border-t border-gray-200">
           <Link

@@ -2,6 +2,8 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 
 const stockImages = [
   '/img/imagenes-de-stock/1.jpg',
@@ -59,6 +61,22 @@ export default function ProductosGallery() {
             </motion.div>
           ))}
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="text-center mt-12"
+        >
+          <Link
+            href="/tienda"
+            className="inline-flex items-center gap-2 bg-blue-900 hover:bg-sky-600 text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 shadow-lg group"
+          >
+            Ver toda la tienda
+            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </motion.div>
       </div>
     </section>
   );

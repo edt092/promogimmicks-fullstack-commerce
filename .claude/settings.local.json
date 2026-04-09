@@ -33,7 +33,8 @@
       "WebFetch(domain:images.unsplash.com)",
       "Bash(npm run dev)",
       "Bash(dir \"C:\\\\Users\\\\Dagon\\\\Documents\\\\coding\\\\proyectos-personales\\\\archivados\\\\promogimmicks\\\\public\\\\img\")",
-      "Bash(npm uninstall:*)"
+      "Bash(npm uninstall:*)",
+      "Bash(sleep 8 && git -C \"E:/coding/proyectos-personales/archivados/promogimmicks\" log --oneline -3)"
     ],
     "deny": [],
     "ask": []

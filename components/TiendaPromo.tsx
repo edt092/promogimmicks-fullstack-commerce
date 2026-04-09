@@ -5,45 +5,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, ShoppingBag, MessageCircle, ArrowRight, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
-// Componente con efecto de brillo dorado dinámico
+// Badge 100% Personalizables — animación CSS pura, sin setInterval
 function GoldenShimmerBadge() {
-  const [shimmerPosition, setShimmerPosition] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setShimmerPosition((prev) => (prev >= 100 ? 0 : prev + 1.5));
-    }, 25);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <div className="mt-10 pt-8 border-t border-white/20 flex justify-center">
-      <div className="relative text-center">
-        {/* Efecto de brillo de fondo */}
-        <div
-          className="absolute inset-0 rounded-2xl opacity-30 blur-xl"
-          style={{
-            background: `radial-gradient(ellipse at ${shimmerPosition}% 50%, #FFD700 0%, transparent 50%)`,
-          }}
-        />
-
+      <div className="relative text-center overflow-hidden px-4">
+        <div className="golden-glow-sweep absolute inset-y-0 w-1/2 opacity-30 blur-xl" />
         <div className="relative">
-          <span
-            className="text-6xl md:text-7xl font-black bg-clip-text text-transparent"
-            style={{
-              backgroundImage: `linear-gradient(90deg, #FFD700 ${shimmerPosition - 30}%, #FFFFFF ${shimmerPosition}%, #FFD700 ${shimmerPosition + 30}%)`,
-              backgroundSize: '200% 100%',
-            }}
-          >
+          <span className="golden-shimmer-cta text-6xl md:text-7xl font-black">
             100%
           </span>
-          <p
-            className="text-2xl md:text-3xl font-bold mt-1 bg-clip-text text-transparent"
-            style={{
-              backgroundImage: `linear-gradient(90deg, #FFA500 ${shimmerPosition - 40}%, #FFD700 ${shimmerPosition - 10}%, #FFFFFF ${shimmerPosition}%, #FFD700 ${shimmerPosition + 10}%, #FFA500 ${shimmerPosition + 40}%)`,
-              backgroundSize: '200% 100%',
-            }}
-          >
+          <p className="golden-shimmer-orange text-2xl md:text-3xl font-bold mt-1">
             Personalizables
           </p>
         </div>
@@ -117,7 +89,7 @@ export default function TiendaPromo() {
     <section className="py-16 md:py-24 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 relative overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-amber-500 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute top-0 left-0 w-96 h-96 bg-sky-500 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-400 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
       </div>
 
@@ -130,7 +102,7 @@ export default function TiendaPromo() {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <div className="inline-flex items-center gap-2 bg-amber-500/20 text-amber-400 px-4 py-2 rounded-full text-sm font-medium mb-4">
+          <div className="inline-flex items-center gap-2 bg-sky-500/20 text-sky-400 px-4 py-2 rounded-full text-sm font-medium mb-4">
             <Sparkles size={16} />
             <span>Explora Nuestra Tienda</span>
           </div>
@@ -196,7 +168,7 @@ export default function TiendaPromo() {
                     onClick={() => setCurrentSlide(index)}
                     className={`w-3 h-3 rounded-full transition-all ${
                       index === currentSlide
-                        ? 'bg-amber-500 w-8'
+                        ? 'bg-sky-500 w-8'
                         : 'bg-white/50 hover:bg-white/70'
                     }`}
                   />
@@ -220,7 +192,7 @@ export default function TiendaPromo() {
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <span className="inline-block bg-amber-500 text-white text-sm font-semibold px-4 py-1.5 rounded-full mb-4">
+                  <span className="inline-block bg-sky-500 text-white text-sm font-semibold px-4 py-1.5 rounded-full mb-4">
                     {featuredProducts[currentSlide].categoria}
                   </span>
                   <h3 className="text-3xl md:text-4xl font-bold mb-4">
@@ -236,7 +208,7 @@ export default function TiendaPromo() {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   href="/tienda"
-                  className="group inline-flex items-center justify-center gap-3 bg-white text-blue-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-amber-500 hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl"
+                  className="group inline-flex items-center justify-center gap-3 bg-white text-blue-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-sky-500 hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl"
                 >
                   <ShoppingBag size={22} />
                   Ver Tienda

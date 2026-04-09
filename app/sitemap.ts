@@ -9,19 +9,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Páginas estáticas principales
   const staticPages: MetadataRoute.Sitemap = [
     {
-      url: SITE_URL,
+      url: `${SITE_URL}/`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1,
     },
     {
-      url: `${SITE_URL}/tienda`,
+      url: `${SITE_URL}/tienda/`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.9,
     },
     {
-      url: `${SITE_URL}/blog`,
+      url: `${SITE_URL}/blog/`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,
@@ -31,13 +31,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Páginas geográficas - Colombia
   const colombiaPages: MetadataRoute.Sitemap = [
     {
-      url: `${SITE_URL}/productos-promocionales-colombia`,
+      url: `${SITE_URL}/productos-promocionales-colombia/`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     },
     ...colombia.ciudades.map((ciudad) => ({
-      url: `${SITE_URL}/productos-promocionales-colombia/${ciudad.slug}`,
+      url: `${SITE_URL}/productos-promocionales-colombia/${ciudad.slug}/`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority: 0.85,
@@ -47,13 +47,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Páginas geográficas - Ecuador
   const ecuadorPages: MetadataRoute.Sitemap = [
     {
-      url: `${SITE_URL}/productos-promocionales-ecuador`,
+      url: `${SITE_URL}/productos-promocionales-ecuador/`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     },
     ...ecuador.ciudades.map((ciudad) => ({
-      url: `${SITE_URL}/productos-promocionales-ecuador/${ciudad.slug}`,
+      url: `${SITE_URL}/productos-promocionales-ecuador/${ciudad.slug}/`,
       lastModified: new Date(),
       changeFrequency: 'weekly' as const,
       priority: 0.85,
@@ -65,7 +65,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Páginas de categorías
   const categoryPages: MetadataRoute.Sitemap = uniqueCategories.map((categorySlug) => ({
-    url: `${SITE_URL}/tienda/categoria/${categorySlug}`,
+    url: `${SITE_URL}/tienda/categoria/${categorySlug}/`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.85,
@@ -73,7 +73,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Páginas de productos
   const productPages: MetadataRoute.Sitemap = productsData.map((product) => ({
-    url: `${SITE_URL}/tienda/${product.slug}`,
+    url: `${SITE_URL}/tienda/${product.slug}/`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: 0.7,
@@ -81,7 +81,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Páginas del blog
   const blogPages: MetadataRoute.Sitemap = blogPosts.map((post) => ({
-    url: `${SITE_URL}/blog/${post.slug}`,
+    url: `${SITE_URL}/blog/${post.slug}/`,
     lastModified: new Date(post.fecha_publicacion),
     changeFrequency: 'monthly' as const,
     priority: 0.8,

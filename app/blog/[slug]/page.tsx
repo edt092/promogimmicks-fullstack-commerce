@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       url: `${SITE_URL}/blog/${post.slug}`,
       images: [
         {
-          url: `${SITE_URL}${post.imagen_destacada}`,
+          url: post.imagen_destacada.startsWith('http') ? post.imagen_destacada : `${SITE_URL}${post.imagen_destacada}`,
           width: 1200,
           height: 630,
           alt: post.titulo,
@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       card: 'summary_large_image',
       title: post.seo_title,
       description: post.seo_description,
-      images: [`${SITE_URL}${post.imagen_destacada}`],
+      images: [post.imagen_destacada.startsWith('http') ? post.imagen_destacada : `${SITE_URL}${post.imagen_destacada}`],
     },
   };
 }

@@ -35,7 +35,7 @@ const BanderaColombia = () => (
 
 // Icono de alianza/handshake SVG
 const IconoAlianza = () => (
-  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" className="text-amber-500">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" className="text-sky-400">
     <path
       d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z"
       fill="currentColor"
@@ -68,7 +68,7 @@ export default function Footer() {
           <div>
             <Link href="/" className="inline-block mb-6">
               <span className="text-2xl font-bold text-white">
-                Promo<span className="text-amber-500">Gimmicks</span>
+                Promo<span className="text-sky-400">Gimmicks</span>
               </span>
             </Link>
             <div className="flex items-center gap-2 mb-6">
@@ -82,7 +82,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/"
-                    className="text-gray-400 hover:text-amber-500 transition-colors text-sm"
+                    className="text-gray-400 hover:text-sky-400 transition-colors text-sm"
                   >
                     Inicio
                   </Link>
@@ -90,7 +90,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/tienda"
-                    className="text-gray-400 hover:text-amber-500 transition-colors text-sm"
+                    className="text-gray-400 hover:text-sky-400 transition-colors text-sm"
                   >
                     Tienda
                   </Link>
@@ -98,7 +98,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/blog"
-                    className="text-gray-400 hover:text-amber-500 transition-colors text-sm"
+                    className="text-gray-400 hover:text-sky-400 transition-colors text-sm"
                   >
                     Blog
                   </Link>
@@ -112,23 +112,23 @@ export default function Footer() {
             <h4 className="text-lg font-bold mb-4">Correo electrónico</h4>
             <address className="not-italic space-y-3">
               <div className="flex items-start gap-3">
-                <Mail className="text-amber-500 mt-1 flex-shrink-0" size={20} aria-hidden="true" />
+                <Mail className="text-sky-400 mt-1 flex-shrink-0" size={20} aria-hidden="true" />
                 <div className="space-y-2">
                   <a
                     href="mailto:jjygonzalez@hotmail.com"
-                    className="block text-white hover:text-amber-500 transition-colors"
+                    className="block text-white hover:text-sky-400 transition-colors"
                   >
                     jjygonzalez@hotmail.com
                   </a>
                   <a
                     href="mailto:info@promogimmicks.com"
-                    className="block text-gray-400 hover:text-amber-500 transition-colors"
+                    className="block text-gray-400 hover:text-sky-400 transition-colors"
                   >
                     info@promogimmicks.com
                   </a>
                   <a
                     href="mailto:corporativo@promogimmicks.com"
-                    className="block text-gray-400 hover:text-amber-500 transition-colors"
+                    className="block text-gray-400 hover:text-sky-400 transition-colors"
                   >
                     corporativo@promogimmicks.com
                   </a>
@@ -142,13 +142,13 @@ export default function Footer() {
             <h4 className="text-lg font-bold mb-4">Teléfonos de contacto</h4>
             <address className="not-italic space-y-3">
               <div className="flex items-start gap-3">
-                <Phone className="text-amber-500 mt-1 flex-shrink-0" size={20} aria-hidden="true" />
+                <Phone className="text-sky-400 mt-1 flex-shrink-0" size={20} aria-hidden="true" />
                 <div className="space-y-2">
                   <div>
                     <span className="text-sm text-gray-400">Ecuador</span>
                     <a
                       href="tel:+593998594123"
-                      className="block text-white hover:text-amber-500 transition-colors"
+                      className="block text-white hover:text-sky-400 transition-colors"
                     >
                       +593 99 859 4123
                     </a>
@@ -157,7 +157,7 @@ export default function Footer() {
                     <span className="text-sm text-gray-400">Colombia</span>
                     <a
                       href="tel:+573155595134"
-                      className="block text-white hover:text-amber-500 transition-colors"
+                      className="block text-white hover:text-sky-400 transition-colors"
                     >
                       +57 315 559 5134
                     </a>
@@ -184,7 +184,7 @@ export default function Footer() {
             <h4 className="text-lg font-bold mb-4">Nuestras oficinas</h4>
             <address className="not-italic space-y-4">
               <div className="flex items-start gap-3">
-                <MapPin className="text-amber-500 mt-1 flex-shrink-0" size={20} aria-hidden="true" />
+                <MapPin className="text-sky-400 mt-1 flex-shrink-0" size={20} aria-hidden="true" />
                 <div>
                   <span className="text-sm text-gray-400">Ecuador</span>
                   <p className="text-white text-sm">
@@ -193,7 +193,7 @@ export default function Footer() {
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <MapPin className="text-amber-500 mt-1 flex-shrink-0" size={20} aria-hidden="true" />
+                <MapPin className="text-sky-400 mt-1 flex-shrink-0" size={20} aria-hidden="true" />
                 <div>
                   <span className="text-sm text-gray-400">Colombia</span>
                   <p className="text-white text-sm">
@@ -217,7 +217,7 @@ export default function Footer() {
                 href="https://edwinbayonaitmanager.online"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-amber-500 hover:text-amber-400 transition-colors"
+                className="text-sky-400 hover:text-sky-400 transition-colors"
               >
                 Bayona Digital Systems
               </a>
