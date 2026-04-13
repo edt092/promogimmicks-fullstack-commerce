@@ -13,14 +13,13 @@ import json
 import time
 import re
 import os
-import sys
 from urllib.parse import urljoin
 from collections import Counter
 
 # ── Config ────────────────────────────────────────────────────────────────────
 BASE_URL  = "https://www.catalogospromocionales.com"
 DELAY     = 1.5   # seconds between requests
-MAX_PAGES = 50    # safety cap (variedades has 25 pages)
+MAX_PAGES = 50    # safety cap
 
 ROOT            = os.path.join(os.path.dirname(__file__), '..')
 PRODUCTS_FILE   = os.path.join(ROOT, 'data', 'products.json')
@@ -61,22 +60,41 @@ def get_page(url, retries=3):
 
 
 def title_case(text):
-    """Capitalize each word, keeping short words lowercase."""
     return ' '.join(
         w.capitalize() if len(w) > 2 else w.lower()
         for w in text.split()
     )
 
 
+def normalise_img(src):
+    """Resolve protocol-relative and relative URLs to absolute https://."""
+    url = urljoin(BASE_URL, src)
+    return ('https:' + url) if url.startswith('//') else url
+
+
+def clean_product_name(raw):
+    """Strip '[Más]', 'PRECIO BOMBA' suffix, and extra whitespace."""
+    name = re.sub(r'\[.*?\]', '', raw)
+    name = re.sub(r'\s*-?\s*PRECIO BOMBA\s*', '', name, flags=re.I)
+    return re.sub(r'\s+', ' ', name).strip()
+
+
+def extract_prod_id(img_url):
+    """Extract the numeric product ID from the image URL."""
+    m = re.search(r'/productos[-s]*/(\d+)', img_url)
+    return m.group(1) if m else None
+
+
 def build_product(raw_name, img_original_url, cat_id, cat_name):
     """Build a product dict in the promogimmicks format."""
-    clean_name = title_case(re.sub(r'\s+', ' ', raw_name).strip())
-    slug = slugify(clean_name)
-    prod_id = slug  # use slug as id (same convention as existing products)
+    clean_name  = title_case(clean_product_name(raw_name))
+    name_slug   = slugify(clean_name)
+    prod_id     = extract_prod_id(img_original_url)
 
-    # Derive local image path from original URL numeric ID
-    m = re.search(r'/(\d+)\.(?:jpg|jpeg|png|webp)', img_original_url, re.I)
-    numeric_id = m.group(1) if m else slug
+    # Slug must be globally unique — append numeric image ID when available
+    slug = f"{name_slug}-{prod_id}" if prod_id else name_slug
+    uid  = slug  # use slug as id (same convention as existing products)
+
     local_img = f"/img/productos/{slug}.jpg"
 
     desc_templates = [
@@ -84,8 +102,7 @@ def build_product(raw_name, img_original_url, cat_id, cat_name):
         f"Cotiza {clean_name} con impresión de logo. Artículo promocional versátil para eventos y campañas.",
         f"{clean_name} con tu marca impresa. Regalo corporativo ideal para ferias y lanzamientos.",
     ]
-    # Vary description by numeric_id parity for minor diversity
-    desc_idx = int(numeric_id) % 3 if numeric_id.isdigit() else 0
+    desc_idx   = int(prod_id) % 3 if prod_id and prod_id.isdigit() else 0
     descripcion = desc_templates[desc_idx]
 
     seo_title = f"{clean_name} Personalizado Ecuador | PromoGimmicks"
@@ -99,31 +116,26 @@ def build_product(raw_name, img_original_url, cat_id, cat_name):
     )
 
     return {
-        'id': prod_id,
-        'nombre': clean_name,
-        'slug': slug,
-        'categoria': cat_name,
-        'categoria_slug': cat_id,
-        'descripcion_corta': descripcion,
-        'imagen_url': local_img,
+        'id':                  uid,
+        'nombre':              clean_name,
+        'slug':                slug,
+        'categoria':           cat_name,
+        'categoria_slug':      cat_id,
+        'descripcion_corta':   descripcion,
+        'imagen_url':          local_img,
         'imagen_original_url': img_original_url,
-        'codigo': None,
-        'seo_title': seo_title,
-        'seo_description': seo_desc,
-        'seo_keywords': seo_kw,
+        'codigo':              None,
+        'seo_title':           seo_title,
+        'seo_description':     seo_desc,
+        'seo_keywords':        seo_kw,
     }
 
 
 # ── Pagination helper ─────────────────────────────────────────────────────────
 
 def find_next_page_url(soup, current_page):
-    """
-    Extract the URL for the next page.
-    catalogospromocionales.com uses /Catalogo/Default.aspx?id=XX&Page=N
-    """
     next_page_num = str(current_page + 1)
 
-    # Find all links with Page= parameter
     page_links = soup.find_all('a', href=re.compile(r'[Pp]age=\d+'))
     for link in page_links:
         href = link.get('href', '')
@@ -131,7 +143,6 @@ def find_next_page_url(soup, current_page):
         if m and m.group(1) == next_page_num:
             return urljoin(BASE_URL, href)
 
-    # Fallback: text-based next link
     next_link = soup.find('a', string=re.compile(r'siguiente|next|[›»>]', re.I))
     if next_link and next_link.get('href'):
         return urljoin(BASE_URL, next_link['href'])
@@ -143,7 +154,7 @@ def find_next_page_url(soup, current_page):
 
 def scrape_category(cat_id, cat_name, cat_url):
     """Scrape all products from a category URL, following pagination."""
-    products = []
+    products  = []
     seen_imgs = set()
     current_url = cat_url
     page = 1
@@ -156,58 +167,53 @@ def scrape_category(cat_id, cat_name, cat_url):
         soup = BeautifulSoup(html, 'lxml')
         found_on_page = 0
 
-        # Primary selector: wrapProdWhite (actual class on catalogospromocionales.com)
-        containers = soup.find_all('div', class_='wrapProdWhite')
+        # ── Primary: #backTable → div.itemProducto- ───────────────────────────
+        # This is the real product grid on catalogospromocionales.com.
+        # The old wrapProdWhite selector hit the sidebar widget which shows the
+        # same generic products on every page — causing wrong category assignments.
+        back_table = soup.find(id='backTable')
+        items = back_table.find_all('div', class_='itemProducto-') if back_table else []
 
-        # Fallback: generic patterns
-        if not containers:
-            containers = (
-                soup.find_all('div', class_=re.compile(r'product[-_]?item|product[-_]?card', re.I))
-                or soup.find_all('li', class_=re.compile(r'product|item', re.I))
-            )
-
-        if containers:
-            for container in containers:
-                img = container.find('img')
+        if items:
+            for item in items:
+                link = item.find('a', class_='img-producto')
+                if not link:
+                    continue
+                img = link.find('img')
                 if not img:
                     continue
-                img_src = img.get('src') or img.get('data-src') or img.get('data-original', '')
+                img_src = img.get('src') or img.get('data-src', '')
                 if not img_src:
                     continue
-                img_url = urljoin(BASE_URL, img_src)
+                img_url = normalise_img(img_src)
                 if img_url in seen_imgs:
                     continue
 
-                # Extract product name
-                name = ''
-                for tag in ['h2', 'h3', 'h4', 'strong', 'p', 'span']:
-                    el = container.find(tag)
-                    if el:
-                        candidate = el.get_text(strip=True)
-                        if len(candidate) >= 3:
-                            name = candidate
-                            break
-                if not name:
-                    name = img.get('alt', '').strip()
+                # Name: img alt is cleanest; fall back to h3
+                name = clean_product_name(img.get('alt', '').strip())
+                if not name or len(name) < 3:
+                    h3 = item.find('h3')
+                    name = clean_product_name(h3.get_text(strip=True)) if h3 else ''
                 if not name or len(name) < 3:
                     continue
 
                 seen_imgs.add(img_url)
                 products.append(build_product(name, img_url, cat_id, cat_name))
                 found_on_page += 1
+
         else:
-            # Last-resort: find all product images directly
-            for img in soup.find_all('img', src=re.compile(r'/images/productos', re.I)):
-                img_url = urljoin(BASE_URL, img['src'])
+            # Fallback: full-size product images only (/productos/, not /productos-s/)
+            for img in soup.find_all('img', src=re.compile(r'/images/productos/\d+', re.I)):
+                img_url = normalise_img(img['src'])
                 if img_url in seen_imgs:
                     continue
-                name = img.get('alt', '').strip()
+                name = clean_product_name(img.get('alt', '').strip())
                 if not name or len(name) < 3:
                     parent = img.find_parent(['a', 'div', 'li'])
                     if parent:
-                        heading = parent.find(['h2', 'h3', 'h4', 'strong', 'span'])
-                        if heading:
-                            name = heading.get_text(strip=True)
+                        h3 = parent.find(['h3', 'h4', 'h2', 'strong', 'b'])
+                        if h3:
+                            name = clean_product_name(h3.get_text(strip=True))
                 if name and len(name) >= 3:
                     seen_imgs.add(img_url)
                     products.append(build_product(name, img_url, cat_id, cat_name))
@@ -231,23 +237,52 @@ def scrape_category(cat_id, cat_name, cat_url):
 
 # ── Merge & Save ─────────────────────────────────────────────────────────────
 
-def merge_products(existing, new_products):
-    """Add products not already present (dedup by imagen_original_url)."""
-    existing_imgs = {p.get('imagen_original_url') for p in existing if p.get('imagen_original_url')}
+def merge_products(existing, new_products, force_category=False):
+    """
+    Merge new_products into existing list, deduplicating by imagen_original_url.
 
-    # Also dedup by slug to avoid duplicate slugs (which break static routing)
+    When force_category=True, existing products whose URL matches are updated
+    to the new categoria_slug rather than skipped. This corrects products that
+    were previously scraped under a wrong/generic category.
+    """
+    # Build lookup: imagen_original_url → index in existing
+    img_to_idx = {}
+    for idx, p in enumerate(existing):
+        url = p.get('imagen_original_url')
+        if url:
+            img_to_idx[url] = idx
+
+    # Also track slugs to prevent duplicates in new additions
     existing_slugs = {p.get('slug') for p in existing if p.get('slug')}
 
-    added = 0
+    added      = 0
+    reassigned = 0
+
     for p in new_products:
-        img = p.get('imagen_original_url')
+        img  = p.get('imagen_original_url')
         slug = p.get('slug')
-        if img and img not in existing_imgs and slug not in existing_slugs:
+        if not img:
+            continue
+
+        if img in img_to_idx:
+            if force_category:
+                ep = existing[img_to_idx[img]]
+                if ep.get('categoria_slug') != p.get('categoria_slug'):
+                    ep['categoria_slug'] = p['categoria_slug']
+                    ep['categoria']      = p['categoria']
+                    ep['id']             = p['id']
+                    ep['slug']           = p['slug']
+                    reassigned += 1
+        else:
+            if slug in existing_slugs:
+                continue  # slug collision — skip to avoid broken static routes
             existing.append(p)
-            existing_imgs.add(img)
+            img_to_idx[img] = len(existing) - 1
             existing_slugs.add(slug)
             added += 1
 
+    if reassigned:
+        print(f"  Reassigned category for {reassigned} existing products")
     return existing, added
 
 
@@ -258,7 +293,6 @@ def main():
     print("PromoGimmicks — Daily Scraper")
     print("=" * 60)
 
-    # Load existing data
     with open(PRODUCTS_FILE, encoding='utf-8') as f:
         existing_products = json.load(f)
     with open(CATEGORIES_FILE, encoding='utf-8') as f:
@@ -267,7 +301,6 @@ def main():
     print(f"Existing products: {len(existing_products)}")
     print(f"Categories to scrape: {len(categories)}")
 
-    # Scrape each category using its providerUrl
     all_new = []
     for idx, cat in enumerate(categories, 1):
         cat_id   = cat.get('id') or cat.get('slug', '')
@@ -275,7 +308,7 @@ def main():
         cat_url  = cat.get('providerUrl', '')
 
         if not cat_url or not cat_id:
-            print(f"\n[{idx}/{len(categories)}] SKIP — missing id or providerUrl: {cat}")
+            print(f"\n[{idx}/{len(categories)}] SKIP — missing id or providerUrl")
             continue
 
         print(f"\n[{idx}/{len(categories)}] {cat_name} ({cat_id})")
@@ -288,22 +321,20 @@ def main():
 
     print(f"\nTotal scraped this run: {len(all_new)}")
 
-    # Merge
-    merged, added = merge_products(existing_products, all_new)
+    # Merge — first category wins dedup (specialized cats come before catch-alls in categories.json)
+    merged, added = merge_products(existing_products, all_new, force_category=False)
     print(f"New products added:  {added}")
     print(f"Total products now:  {len(merged)}")
 
-    # Save
     with open(PRODUCTS_FILE, 'w', encoding='utf-8') as f:
         json.dump(merged, f, ensure_ascii=False, indent=2)
 
     print("\nSaved data/products.json")
 
-    # Summary by category
     print("\nCategory breakdown:")
     counts = Counter(p.get('categoria_slug', '?') for p in merged)
-    for cat_id, count in sorted(counts.items(), key=lambda x: -x[1]):
-        print(f"  {cat_id:<35} {count:>5}")
+    for cid, count in sorted(counts.items(), key=lambda x: -x[1]):
+        print(f"  {cid:<35} {count:>5}")
 
     print("\nDone.")
 
