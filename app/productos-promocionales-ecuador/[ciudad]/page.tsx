@@ -146,7 +146,7 @@ export default function CiudadEcuadorPage({ params }: Props) {
 
             <div className="text-center mt-12">
               <Link
-                href="/tienda"
+                href="/tienda/"
                 className="inline-flex items-center gap-2 bg-amber-500 text-white px-8 py-4 rounded-full font-bold hover:bg-amber-600 transition-colors"
               >
                 Ver Catálogo Completo

@@ -77,7 +77,7 @@ export default function HeroSection() {
           className="flex flex-col sm:flex-row gap-4 items-center"
         >
           <Link
-            href="/tienda"
+            href="/tienda/"
             className="group inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-400 text-white font-bold px-6 py-3 sm:px-8 sm:py-4 rounded-full transition-all duration-300 shadow-lg shadow-sky-500/30 hover:shadow-sky-400/40 hover:shadow-xl"
           >
             Ver catálogo

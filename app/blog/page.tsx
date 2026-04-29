@@ -93,7 +93,7 @@ export default function BlogPage() {
             Explora nuestro catálogo de productos promocionales y encuentra el regalo perfecto para tu empresa.
           </p>
           <a
-            href="/tienda"
+            href="/tienda/"
             className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
           >
             Ver Catálogo de Productos

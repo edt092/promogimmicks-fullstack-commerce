@@ -89,7 +89,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/tienda"
+                    href="/tienda/"
                     className="text-gray-400 hover:text-sky-400 transition-colors text-sm"
                   >
                     Tienda

@@ -207,7 +207,7 @@ export default function TiendaPromo() {
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
-                  href="/tienda"
+                  href="/tienda/"
                   className="group inline-flex items-center justify-center gap-3 bg-white text-blue-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-sky-500 hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl"
                 >
                   <ShoppingBag size={22} />

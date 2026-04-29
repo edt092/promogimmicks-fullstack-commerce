@@ -62,7 +62,7 @@ export default function ProductShowcase({
           {/* CTA */}
           <div className="text-center mt-8">
             <Link
-              href="/tienda"
+              href="/tienda/"
               className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-8 py-3 rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
             >
               Ver todos los productos
@@ -80,7 +80,7 @@ export default function ProductShowcase({
         <div className="flex items-center justify-between mb-4">
           <h4 className="text-lg font-bold text-blue-900">{title}</h4>
           <Link
-            href="/tienda"
+            href="/tienda/"
             className="text-sm text-amber-600 hover:text-amber-700 font-medium flex items-center gap-1"
           >
             Ver más <ArrowRight size={14} />
@@ -122,7 +122,7 @@ export default function ProductShowcase({
 
         <div className="text-center mt-6 pt-6 border-t border-gray-100">
           <Link
-            href="/tienda"
+            href="/tienda/"
             className="inline-flex items-center gap-2 text-blue-900 hover:text-amber-600 font-semibold transition-colors"
           >
             Explorar catálogo completo
@@ -145,7 +145,7 @@ function ProductCardFeatured({
 
   return (
     <Link
-      href={`/tienda/${product.slug}`}
+      href={`/tienda/${product.slug}/`}
       className="group bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden hover:bg-white/20 transition-all duration-300 border border-white/10 hover:border-white/30"
     >
       <div className="relative h-32 md:h-40 bg-white/5 overflow-hidden">
@@ -184,7 +184,7 @@ function ProductCardCompact({
 
   return (
     <Link
-      href={`/tienda/${product.slug}`}
+      href={`/tienda/${product.slug}/`}
       className="group flex items-center gap-3 bg-white rounded-xl p-3 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100"
     >
       <div className="w-16 h-16 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0">
@@ -216,7 +216,7 @@ function ProductCardDefault({
 
   return (
     <Link
-      href={`/tienda/${product.slug}`}
+      href={`/tienda/${product.slug}/`}
       className="group bg-gray-50 rounded-xl overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-blue-200"
     >
       <div className="relative h-28 md:h-36 bg-white overflow-hidden">

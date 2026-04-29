@@ -85,7 +85,7 @@ export default function CTABanner({
             </div>
           </div>
           <Link
-            href="/tienda"
+            href="/tienda/"
             className="bg-amber-500 hover:bg-amber-600 text-white px-5 py-2.5 rounded-lg font-semibold text-sm transition-colors flex items-center gap-2 whitespace-nowrap"
           >
             Ver productos
@@ -114,7 +114,7 @@ export default function CTABanner({
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
-                  href="/tienda"
+                  href="/tienda/"
                   className="bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-lg font-bold transition-colors flex items-center justify-center gap-2"
                 >
                   <ShoppingBag size={18} />
@@ -163,7 +163,7 @@ export default function CTABanner({
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
-            href="/tienda"
+            href="/tienda/"
             className="bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center gap-2"
           >
             <ShoppingBag size={20} />

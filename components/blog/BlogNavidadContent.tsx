@@ -127,7 +127,7 @@ function ChristmasCarousel() {
               {products.map((product) => (
                 <Link
                   key={product.id}
-                  href={`/tienda/${product.slug}`}
+                  href={`/tienda/${product.slug}/`}
                   className="group flex-shrink-0 w-full sm:w-1/2 md:w-1/4 bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden hover:bg-white/20 transition-all duration-300 border border-white/20 hover:border-white/40 hover:scale-105"
                 >
                   <div className="relative h-32 md:h-40 bg-white/10 overflow-hidden">
@@ -188,7 +188,7 @@ function ChristmasCarousel() {
         {/* CTA */}
         <div className="text-center mt-8">
           <Link
-            href="/tienda"
+            href="/tienda/"
             className="inline-flex items-center gap-2 bg-white hover:bg-gray-100 text-red-900 px-8 py-3 rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
           >
             <ShoppingBag size={18} />
@@ -239,7 +239,7 @@ function ChristmasCTA({
             </div>
           </div>
           <Link
-            href="/tienda"
+            href="/tienda/"
             className="bg-white hover:bg-gray-100 text-red-600 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center gap-2"
           >
             <TreePine size={20} />
@@ -297,7 +297,7 @@ function ChristmasCTA({
             </div>
           </div>
           <Link
-            href="/tienda"
+            href="/tienda/"
             className="bg-white hover:bg-gray-100 text-emerald-600 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center gap-2"
           >
             <Leaf size={20} />
@@ -332,7 +332,7 @@ function ChristmasCTA({
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
-            href="/tienda"
+            href="/tienda/"
             className="bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center justify-center gap-2"
           >
             <Gift size={20} />
@@ -430,7 +430,7 @@ function ChristmasProductShowcase({
             {subtitle && <p className="text-gray-300 mt-1">{subtitle}</p>}
           </div>
           <Link
-            href="/tienda"
+            href="/tienda/"
             className="text-amber-400 hover:text-amber-300 font-medium flex items-center gap-1 text-sm"
           >
             Ver más <ArrowRight size={16} />
@@ -441,7 +441,7 @@ function ChristmasProductShowcase({
           {products.slice(0, 4).map((product) => (
             <Link
               key={product.id}
-              href={`/tienda/${product.slug}`}
+              href={`/tienda/${product.slug}/`}
               className="group bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden hover:bg-white/20 transition-all duration-300 border border-white/10 hover:border-white/30"
             >
               <div className="relative h-28 md:h-36 bg-white/5 overflow-hidden">
@@ -1076,7 +1076,7 @@ export default function BlogNavidadContent() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="/tienda"
+                href="/tienda/"
                 className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300"
               >
                 <Gift size={20} />

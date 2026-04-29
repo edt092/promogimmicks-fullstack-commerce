@@ -70,7 +70,7 @@ export default function ProductosGallery() {
           className="text-center mt-12"
         >
           <Link
-            href="/tienda"
+            href="/tienda/"
             className="inline-flex items-center gap-2 bg-blue-900 hover:bg-sky-600 text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 shadow-lg group"
           >
             Ver toda la tienda

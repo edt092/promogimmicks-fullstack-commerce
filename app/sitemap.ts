@@ -6,24 +6,28 @@ import { colombia, ecuador } from '@/data/geo-data'
 const SITE_URL = 'https://promogimmicks.com'
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  // Fechas fijas para evitar que Google re-rastree todo en cada deploy
+  const GEO_UPDATED = new Date('2025-11-01')
+  const STORE_UPDATED = new Date('2026-04-13')
+
   // Páginas estáticas principales
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: `${SITE_URL}/`,
-      lastModified: new Date(),
+      lastModified: new Date('2026-04-01'),
       changeFrequency: 'weekly',
       priority: 1,
     },
     {
       url: `${SITE_URL}/tienda/`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
+      lastModified: STORE_UPDATED,
+      changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
       url: `${SITE_URL}/blog/`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
+      lastModified: new Date('2026-02-01'),
+      changeFrequency: 'monthly',
       priority: 0.8,
     },
   ]
@@ -32,14 +36,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const colombiaPages: MetadataRoute.Sitemap = [
     {
       url: `${SITE_URL}/productos-promocionales-colombia/`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
+      lastModified: GEO_UPDATED,
+      changeFrequency: 'monthly' as const,
       priority: 0.9,
     },
     ...colombia.ciudades.map((ciudad) => ({
       url: `${SITE_URL}/productos-promocionales-colombia/${ciudad.slug}/`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
+      lastModified: GEO_UPDATED,
+      changeFrequency: 'monthly' as const,
       priority: 0.85,
     })),
   ]
@@ -48,14 +52,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const ecuadorPages: MetadataRoute.Sitemap = [
     {
       url: `${SITE_URL}/productos-promocionales-ecuador/`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
+      lastModified: GEO_UPDATED,
+      changeFrequency: 'monthly' as const,
       priority: 0.9,
     },
     ...ecuador.ciudades.map((ciudad) => ({
       url: `${SITE_URL}/productos-promocionales-ecuador/${ciudad.slug}/`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
+      lastModified: GEO_UPDATED,
+      changeFrequency: 'monthly' as const,
       priority: 0.85,
     })),
   ]
@@ -66,15 +70,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Páginas de categorías
   const categoryPages: MetadataRoute.Sitemap = uniqueCategories.map((categorySlug) => ({
     url: `${SITE_URL}/tienda/categoria/${categorySlug}/`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
+    lastModified: STORE_UPDATED,
+    changeFrequency: 'monthly' as const,
     priority: 0.85,
   }))
 
-  // Páginas de productos
+  // Páginas de productos — lastModified estático para no señalizar cambios diarios
   const productPages: MetadataRoute.Sitemap = productsData.map((product) => ({
     url: `${SITE_URL}/tienda/${product.slug}/`,
-    lastModified: new Date(),
+    lastModified: STORE_UPDATED,
     changeFrequency: 'monthly' as const,
     priority: 0.7,
   }))

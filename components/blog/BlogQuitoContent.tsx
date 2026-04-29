@@ -647,7 +647,7 @@ export default function BlogQuitoContent() {
               Contacta hoy mismo y solicita un presupuesto personalizado para tu empresa en Quito.
             </p>
             <Link
-              href="/tienda"
+              href="/tienda/"
               className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300"
             >
               Explorar Catálogo Completo

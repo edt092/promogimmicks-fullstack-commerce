@@ -53,7 +53,7 @@ export default function EcuadorPage() {
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <Link
-                  href="/tienda"
+                  href="/tienda/"
                   className="inline-flex items-center gap-2 bg-white text-amber-600 px-8 py-4 rounded-full font-bold hover:bg-gray-100 transition-colors"
                 >
                   Ver Catálogo Completo
@@ -207,7 +207,7 @@ export default function EcuadorPage() {
               ].map((cat) => (
                 <Link
                   key={cat.slug}
-                  href={`/tienda/categoria/${cat.slug}`}
+                  href={`/tienda/categoria/${cat.slug}/`}
                   className="bg-gray-100 hover:bg-amber-100 text-slate-900 hover:text-amber-700 px-6 py-4 rounded-xl text-center font-medium transition-colors"
                 >
                   {cat.nombre}
@@ -228,7 +228,7 @@ export default function EcuadorPage() {
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link
-                href="/tienda"
+                href="/tienda/"
                 className="inline-flex items-center gap-2 bg-amber-500 text-white px-8 py-4 rounded-full font-bold hover:bg-amber-600 transition-colors"
               >
                 Explorar Productos

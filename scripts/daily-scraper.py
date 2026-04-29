@@ -85,6 +85,36 @@ def extract_prod_id(img_url):
     return m.group(1) if m else None
 
 
+# Category-specific attributes used to enrich product descriptions
+CATEGORY_ATTRS = {
+    'boligrafos':            ('de escritura suave y tinta de larga duración', 'empresas, oficinas y eventos corporativos'),
+    'lapices':               ('ecológico y ergonómico', 'colegios, universidades y ferias'),
+    'libretas':              ('con pasta dura y hojas de alta gramaje', 'ejecutivos, estudiantes y profesionales'),
+    'maletines-y-morrales':  ('resistente al agua con compartimentos organizadores', 'viajes de negocios y uso diario'),
+    'botilitos':             ('de materiales libres de BPA, apto para alimentos', 'deportistas, oficinas y eventos'),
+    'mugs-termos':           ('de cerámica/acero inoxidable con doble pared', 'oficinas, regalos corporativos y hogares'),
+    'tecnologia':            ('compatible con los principales dispositivos', 'startups, agencias y eventos tech'),
+    'paraguas':              ('con estructura reforzada y tela repelente al agua', 'temporada de lluvias y ferias al aire libre'),
+    'llaveros':              ('fabricado en metal/PVC de alta resistencia', 'congresos, lanzamientos y fidelización de clientes'),
+    'gorras':                ('en tela transpirable con ajuste universal', 'eventos deportivos, ferias y activaciones de marca'),
+    'bolsas':                ('fabricada en material eco-friendly', 'supermercados, ferias y campañas de sostenibilidad'),
+    'neveras-loncheras':     ('con aislamiento térmico de alta eficiencia', 'picnics, eventos deportivos y regalos ejecutivos'),
+    'herramientas':          ('de acero inoxidable con estuche protector', 'obras, técnicos y regalos funcionales'),
+    'relojes':               ('con mecanismo de precisión y acabado premium', 'obsequios ejecutivos y reconocimientos empresariales'),
+    'pastilleros':           ('compacto y fácil de limpiar, fabricado en ABS', 'farmacias, centros médicos y adultos mayores'),
+    'espejo':                ('con acabado espejado de alta definición', 'salones de belleza, ferias y regalos personalizados'),
+    'speaker-bluetooth':     ('con batería de larga duración y sonido 360°', 'eventos, marketing digital y regalos premium'),
+    'audifonos-bluetooth':   ('con cancelación de ruido y autonomía extendida', 'oficinas, viajes y activaciones de marca'),
+}
+
+def get_category_context(cat_id):
+    """Return (atributo, uso) tuple for a category, with generic fallback."""
+    for key, val in CATEGORY_ATTRS.items():
+        if key in cat_id:
+            return val
+    return ('personalizable con logo y texto', 'empresas, eventos y campañas de marketing')
+
+
 def build_product(raw_name, img_original_url, cat_id, cat_name):
     """Build a product dict in the promogimmicks format."""
     clean_name  = title_case(clean_product_name(raw_name))
@@ -93,26 +123,31 @@ def build_product(raw_name, img_original_url, cat_id, cat_name):
 
     # Slug must be globally unique — append numeric image ID when available
     slug = f"{name_slug}-{prod_id}" if prod_id else name_slug
-    uid  = slug  # use slug as id (same convention as existing products)
+    uid  = slug
 
     local_img = f"/img/productos/{slug}.jpg"
 
-    desc_templates = [
-        f"{clean_name} personalizado con logo. Producto promocional para empresas en Ecuador y Colombia.",
-        f"Cotiza {clean_name} con impresión de logo. Artículo promocional versátil para eventos y campañas.",
-        f"{clean_name} con tu marca impresa. Regalo corporativo ideal para ferias y lanzamientos.",
-    ]
-    desc_idx   = int(prod_id) % 3 if prod_id and prod_id.isdigit() else 0
-    descripcion = desc_templates[desc_idx]
-
-    seo_title = f"{clean_name} Personalizado Ecuador | PromoGimmicks"
-    seo_desc  = f"{descripcion} Envíos a Quito, Guayaquil, Bogotá y Medellín."
+    attr, uso = get_category_context(cat_id)
     name_lower = clean_name.lower()
+    idx = int(prod_id) % 5 if prod_id and prod_id.isdigit() else 0
+
+    # Five richer template variants using category-specific attributes
+    desc_templates = [
+        f"{clean_name} personalizado con tu logo: {attr}. Ideal para {uso}. Cotiza con PromoGimmicks en Ecuador y Colombia.",
+        f"Imprime tu marca en este {name_lower} ({attr}). Perfecto para {uso}. Envíos a todo Ecuador y Colombia.",
+        f"Destaca en ferias y eventos con el {name_lower} personalizado. {attr.capitalize()}, orientado a {uso}.",
+        f"El {name_lower} es un artículo promocional {attr} muy buscado por {uso}. Personalízalo con tu logo.",
+        f"Regala el {name_lower} con tu logo corporativo. {attr.capitalize()}. Pensado para {uso} en Ecuador y Colombia.",
+    ]
+    descripcion = desc_templates[idx]
+
+    seo_title = f"{clean_name} Personalizado con Logo | PromoGimmicks Ecuador"
+    seo_desc  = f"{descripcion} Mínimo de unidades accesible. Envíos desde Quito y Guayaquil a todo Ecuador y Colombia."
     seo_kw = (
-        f"{name_lower}, {name_lower} personalizado, {name_lower} promocional, "
-        f"{name_lower} con logo, {name_lower} ecuador, {name_lower} corporativo, "
-        f"{cat_id}, regalo corporativo ecuador, merchandising quito, "
-        f"productos promocionales guayaquil, promogimmicks, artículos publicitarios"
+        f"{name_lower}, {name_lower} personalizado, {name_lower} con logo, "
+        f"{name_lower} ecuador, {name_lower} bogota, {cat_id} personalizado, "
+        f"regalo corporativo ecuador, merchandising quito, productos promocionales guayaquil, "
+        f"artículos publicitarios colombia, promogimmicks"
     )
 
     return {
@@ -241,9 +276,10 @@ def merge_products(existing, new_products, force_category=False):
     """
     Merge new_products into existing list, deduplicating by imagen_original_url.
 
-    When force_category=True, existing products whose URL matches are updated
-    to the new categoria_slug rather than skipped. This corrects products that
-    were previously scraped under a wrong/generic category.
+    IMPORTANT: slugs of existing products are NEVER changed. Changing slugs
+    breaks URLs that Google has already indexed, causing mass 404s and de-indexing.
+    When force_category=True, only categoria_slug and categoria are updated — slug
+    is always preserved so existing URLs remain valid.
     """
     # Build lookup: imagen_original_url → index in existing
     img_to_idx = {}
@@ -268,10 +304,9 @@ def merge_products(existing, new_products, force_category=False):
             if force_category:
                 ep = existing[img_to_idx[img]]
                 if ep.get('categoria_slug') != p.get('categoria_slug'):
+                    # Only update category metadata — NEVER change slug/id/url
                     ep['categoria_slug'] = p['categoria_slug']
                     ep['categoria']      = p['categoria']
-                    ep['id']             = p['id']
-                    ep['slug']           = p['slug']
                     reassigned += 1
         else:
             if slug in existing_slugs:

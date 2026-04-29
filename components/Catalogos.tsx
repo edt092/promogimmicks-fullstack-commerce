@@ -316,7 +316,7 @@ export default function Catalogos() {
               transition={{ duration: 0.4, delay: (index % 12) * 0.05 }}
             >
               <Link
-                href={`/tienda/categoria/${categoria.slug}`}
+                href={`/tienda/categoria/${categoria.slug}/`}
                 className="group block relative bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
               >
                 {/* Imagen de fondo */}
@@ -366,7 +366,7 @@ export default function Catalogos() {
           className="text-center mt-12"
         >
           <Link
-            href="/tienda"
+            href="/tienda/"
             className="inline-flex items-center gap-2 bg-blue-900 hover:bg-blue-800 text-white font-semibold px-8 py-4 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg"
           >
             Ver todos los productos

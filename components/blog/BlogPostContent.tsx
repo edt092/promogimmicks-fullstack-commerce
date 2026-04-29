@@ -615,7 +615,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
                 Contacta hoy mismo y solicita un presupuesto personalizado para tu empresa.
               </p>
               <Link
-                href="/tienda"
+                href="/tienda/"
                 className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300"
               >
                 Explorar Catálogo Completo
@@ -667,7 +667,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
           </div>
           <div className="mt-4 text-center">
             <Link
-              href="/tienda"
+              href="/tienda/"
               className="inline-flex items-center gap-2 text-amber-600 hover:text-amber-700 font-semibold text-sm transition-colors"
             >
               Ver todos los productos →

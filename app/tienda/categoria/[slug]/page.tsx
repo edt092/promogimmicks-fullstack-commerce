@@ -404,7 +404,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
             <nav className="inline-flex items-center gap-2 text-blue-200 text-sm">
               <Link href="/" className="hover:text-white transition">Inicio</Link>
               <span>/</span>
-              <Link href="/tienda" className="hover:text-white transition">Tienda</Link>
+              <Link href="/tienda/" className="hover:text-white transition">Tienda</Link>
               <span>/</span>
               <span className="text-white">{categoryName}</span>
             </nav>

@@ -44,7 +44,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
 
   return (
     <Link
-      href={`/tienda/${product.slug}`}
+      href={`/tienda/${product.slug}/`}
       className="bg-white rounded-2xl overflow-hidden group block border border-slate-100 hover:border-sky-200 hover:shadow-xl hover:shadow-sky-50 transition-all duration-300 transform hover:-translate-y-1"
     >
       {/* Image area */}

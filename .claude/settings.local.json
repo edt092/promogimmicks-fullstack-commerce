@@ -34,7 +34,21 @@
       "Bash(npm run dev)",
       "Bash(dir \"C:\\\\Users\\\\Dagon\\\\Documents\\\\coding\\\\proyectos-personales\\\\archivados\\\\promogimmicks\\\\public\\\\img\")",
       "Bash(npm uninstall:*)",
-      "Bash(sleep 8 && git -C \"E:/coding/proyectos-personales/archivados/promogimmicks\" log --oneline -3)"
+      "Bash(sleep 8 && git -C \"E:/coding/proyectos-personales/archivados/promogimmicks\" log --oneline -3)",
+      "Bash(grep -E \"tsx$\")",
+      "Bash(sed 's/.*\"slug\": \"//')",
+      "Bash(sed 's/\",//')",
+      "Read(//tmp/**)",
+      "Bash(python3 -c ' *)",
+      "Bash(python3)",
+      "Bash(python3 scripts/generate_redirects.py)",
+      "Bash(grep -rn 'href={`/tienda/${' components/ app/ --include=\"*.tsx\")",
+      "Bash(grep -v \"tienda/\\\\`\")",
+      "Bash(python3 scripts/fix_trailing_slashes.py)",
+      "Bash(grep -v '/`}')",
+      "Bash(grep -rn 'href={`/tienda/' components/ app/ --include=\"*.tsx\")",
+      "Bash(grep -v '/\\\\`}')",
+      "Bash(grep -rn \"href={.*tienda.*slug.*[^/]\\\\`}\" components/ app/ --include=\"*.tsx\")"
     ],
     "deny": [],
     "ask": []

@@ -64,7 +64,7 @@ export default function ProductDetailView({ product }: ProductDetailViewProps) {
         <div className="flex items-center gap-2 text-sm text-gray-500 flex-wrap">
           <Link href="/" className="hover:text-blue-900 transition-colors">Inicio</Link>
           <span>/</span>
-          <Link href="/tienda" className="hover:text-blue-900 transition-colors">Tienda</Link>
+          <Link href="/tienda/" className="hover:text-blue-900 transition-colors">Tienda</Link>
           <span>/</span>
           <span className="text-blue-900 font-medium truncate max-w-[200px]">{product.nombre}</span>
         </div>
@@ -188,7 +188,7 @@ export default function ProductDetailView({ product }: ProductDetailViewProps) {
             {relatedProducts.map((relProduct) => (
               <Link
                 key={relProduct.id}
-                href={`/tienda/${relProduct.slug}`}
+                href={`/tienda/${relProduct.slug}/`}
                 className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden group border border-gray-100 hover:border-blue-200"
               >
                 <div className="aspect-square bg-gray-50 p-4">
@@ -212,7 +212,7 @@ export default function ProductDetailView({ product }: ProductDetailViewProps) {
 
       <div className="mt-8">
         <Link
-          href="/tienda"
+          href="/tienda/"
           className="inline-flex items-center text-blue-900 hover:text-amber-500 transition-colors font-medium"
         >
           <ArrowLeft size={18} className="mr-2" />
