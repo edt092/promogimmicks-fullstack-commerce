@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
+import { Logo } from './Logo';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -32,7 +33,7 @@ export default function Navbar() {
     ? 'text-slate-600 hover:text-sky-600'
     : 'text-white/80 hover:text-white';
 
-  const logoColor = isScrolled && !isMobileMenuOpen ? 'text-slate-900' : 'text-white';
+  const logoVariant = isScrolled && !isMobileMenuOpen ? 'light' : 'dark';
   const toggleColor = isScrolled && !isMobileMenuOpen ? 'text-slate-900' : 'text-white';
 
   return (
@@ -42,11 +43,8 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-full">
 
             {/* Logo */}
-            <Link href="/" className="flex items-center flex-shrink-0">
-              <span className={`text-xl font-bold tracking-tight transition-colors duration-300 ${logoColor}`}>
-                Promo
-              </span>
-              <span className="text-xl font-bold text-sky-500 tracking-tight">Gimmicks</span>
+            <Link href="/" className="flex-shrink-0" aria-label="PromoGimmicks - Inicio">
+              <Logo variant={logoVariant} />
             </Link>
 
             {/* Desktop Nav */}

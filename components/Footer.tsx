@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { MapPin, Phone, Mail } from 'lucide-react';
+import { Logo } from './Logo';
 
 // Icono de WhatsApp SVG
 const WhatsAppIcon = () => (
@@ -66,10 +67,8 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Columna 1: Marca y navegación */}
           <div>
-            <Link href="/" className="inline-block mb-6">
-              <span className="text-2xl font-bold text-white">
-                Promo<span className="text-sky-400">Gimmicks</span>
-              </span>
+            <Link href="/" className="inline-block mb-6" aria-label="PromoGimmicks - Inicio">
+              <Logo markSize={30} />
             </Link>
             <div className="flex items-center gap-2 mb-6">
               <BanderaEcuador />

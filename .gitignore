@@ -56,3 +56,6 @@ __pycache__/
 
 # Local Netlify folder
 .netlify
+
+# Borradores de blog (contenido local, no publicar en GitHub)
+/content/drafts/

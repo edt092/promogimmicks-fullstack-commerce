@@ -48,7 +48,12 @@
       "Bash(grep -v '/`}')",
       "Bash(grep -rn 'href={`/tienda/' components/ app/ --include=\"*.tsx\")",
       "Bash(grep -v '/\\\\`}')",
-      "Bash(grep -rn \"href={.*tienda.*slug.*[^/]\\\\`}\" components/ app/ --include=\"*.tsx\")"
+      "Bash(grep -rn \"href={.*tienda.*slug.*[^/]\\\\`}\" components/ app/ --include=\"*.tsx\")",
+      "Bash(git fetch *)",
+      "Bash(git pull *)",
+      "Bash(git stash *)",
+      "Read(//c/Users/Dagon/Downloads/blog-pg-md/**)",
+      "Bash(npx tsc *)"
     ],
     "deny": [],
     "ask": []

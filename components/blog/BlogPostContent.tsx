@@ -7,6 +7,7 @@ import ProductShowcase from './ProductShowcase';
 import CTABanner from './CTABanner';
 import BlogQuitoContent from './BlogQuitoContent';
 import BlogNavidadContent from './BlogNavidadContent';
+import BlogArticulosPromoContent from './BlogArticulosPromoContent';
 import productsData from '@/data/products.json';
 
 interface BlogPost {
@@ -54,6 +55,9 @@ function BlogContentBySlug({ slug }: { slug: string }) {
   if (slug === 'guia-articulos-promocionales-navidenos-2025') {
     return <BlogNavidadContent />;
   }
+  if (slug === 'articulos-promocionales-ciencia-oculta-cerebro-clientes') {
+    return <BlogArticulosPromoContent />;
+  }
   // El contenido por defecto se renderiza en el componente principal
   return null;
 }
@@ -63,7 +67,10 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
   const [tocOpen, setTocOpen] = useState(true);
 
   // Verificar si este post tiene contenido específico
-  const hasCustomContent = post.slug === 'productos-promocionales-baratos-quito-2025' || post.slug === 'guia-articulos-promocionales-navidenos-2025';
+  const hasCustomContent =
+    post.slug === 'productos-promocionales-baratos-quito-2025' ||
+    post.slug === 'guia-articulos-promocionales-navidenos-2025' ||
+    post.slug === 'articulos-promocionales-ciencia-oculta-cerebro-clientes';
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
