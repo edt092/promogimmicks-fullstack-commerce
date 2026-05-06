@@ -53,7 +53,14 @@
       "Bash(git pull *)",
       "Bash(git stash *)",
       "Read(//c/Users/Dagon/Downloads/blog-pg-md/**)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(python3 *)",
+      "Bash(git *)",
+      "Bash(Get-Content \"C:\\\\Users\\\\Dagon\\\\Downloads\\\\promo-1\\\\Metadatos.csv\" -Encoding UTF8)",
+      "Bash(Select-Object -First 5)",
+      "Bash(Get-ChildItem -Path \"E:\\\\coding\\\\proyectos-personales\\\\archivados\\\\promogimmicks\" -Force)",
+      "Bash(Select-Object Name, FullName)",
+      "PowerShell(Get-Content \"E:\\\\coding\\\\proyectos-personales\\\\archivados\\\\promogimmicks\\\\data\\\\blog-posts.json\" -Encoding UTF8 | ConvertFrom-Json | Select-Object slug, titulo, fecha_publicacion, @{N='content_len';E={$_.contenido.Length}})"
     ],
     "deny": [],
     "ask": []

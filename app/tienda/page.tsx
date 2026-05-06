@@ -1,11 +1,33 @@
+import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import TiendaGrid from '@/components/TiendaGrid';
 import GoldenShimmerText from '@/components/GoldenShimmerText';
+import productsDataRaw from '@/data/products.json';
+import categoriesData from '@/data/categories.json';
+
+interface Product {
+  id: string;
+  nombre: string;
+  slug: string;
+  categoria: string;
+  categoria_slug: string;
+}
+
+const productsData = productsDataRaw as Product[];
+
+const productsByCategory = productsData.reduce<Record<string, Product[]>>((acc, p) => {
+  if (!acc[p.categoria_slug]) acc[p.categoria_slug] = [];
+  acc[p.categoria_slug].push(p);
+  return acc;
+}, {});
 
 export const metadata = {
   title: 'Tienda - PromoGimmicks | Productos Promocionales',
   description: 'Explora nuestro catálogo completo de productos promocionales. Artículos de escritura, drinkware, tecnología, textil y más.',
+  alternates: {
+    canonical: 'https://promogimmicks.com/tienda/',
+  },
 };
 
 export default function TiendaPage() {
@@ -52,6 +74,47 @@ export default function TiendaPage() {
       <section className="py-8 md:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <TiendaGrid />
+        </div>
+      </section>
+
+      {/* Catálogo completo por categoría — server-rendered para SEO */}
+      <section className="py-16 bg-gray-50 border-t border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-blue-900 mb-2">
+            Catálogo completo de productos promocionales
+          </h2>
+          <p className="text-gray-500 mb-10 text-sm">
+            {productsData.length} productos personalizables con tu logo — envíos a Ecuador y Colombia
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+            {categoriesData.map((cat) => {
+              const catProducts = productsByCategory[cat.slug] ?? [];
+              if (catProducts.length === 0) return null;
+              return (
+                <div key={cat.slug}>
+                  <Link
+                    href={`/tienda/categoria/${cat.slug}/`}
+                    className="font-semibold text-blue-900 hover:text-amber-600 transition-colors block mb-3 text-base"
+                  >
+                    {cat.name}{' '}
+                    <span className="text-gray-400 font-normal text-sm">({catProducts.length})</span>
+                  </Link>
+                  <ul className="space-y-1">
+                    {catProducts.map((product) => (
+                      <li key={product.id}>
+                        <Link
+                          href={`/tienda/${product.slug}/`}
+                          className="text-sm text-gray-600 hover:text-blue-700 hover:underline transition-colors"
+                        >
+                          {product.nombre}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 

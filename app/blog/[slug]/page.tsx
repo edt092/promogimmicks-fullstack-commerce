@@ -25,11 +25,14 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     title: post.seo_title,
     description: post.seo_description,
     keywords: post.tags.join(', '),
+    alternates: {
+      canonical: `${SITE_URL}/blog/${post.slug}/`,
+    },
     openGraph: {
       title: post.seo_title,
       description: post.seo_description,
       type: 'article',
-      url: `${SITE_URL}/blog/${post.slug}`,
+      url: `${SITE_URL}/blog/${post.slug}/`,
       images: [
         {
           url: post.imagen_destacada.startsWith('http') ? post.imagen_destacada : `${SITE_URL}${post.imagen_destacada}`,

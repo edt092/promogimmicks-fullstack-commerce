@@ -1088,3 +1088,24 @@
 /tienda/set-escritorio-ecologico-baltimore-pro/  /tienda/categoria/oficina/  301
 /tienda/taza-termica-vinga-corporate-pro/  /tienda/categoria/mugs/  301
 /tienda/tendencias-promocionales-2025-corporate/  /tienda/  301
+
+# Old category slug redirects (renamed/removed categories — with and without trailing slash)
+/tienda/categoria/drinkware               /tienda/categoria/mugs/              301
+/tienda/categoria/drinkware/              /tienda/categoria/mugs/              301
+/tienda/categoria/bolsos-y-mochilas       /tienda/categoria/maletines/         301
+/tienda/categoria/bolsos-y-mochilas/      /tienda/categoria/maletines/         301
+/tienda/categoria/articulos-de-escritura  /tienda/categoria/articulos-escritura/ 301
+/tienda/categoria/articulos-de-escritura/ /tienda/categoria/articulos-escritura/ 301
+/tienda/categoria/deportes-y-recreacion   /tienda/categoria/deportes/          301
+/tienda/categoria/deportes-y-recreacion/  /tienda/categoria/deportes/          301
+/tienda/categoria/textil-y-vestuario      /tienda/                             301
+/tienda/categoria/textil-y-vestuario/     /tienda/                             301
+/tienda/categoria/salud-y-bienestar       /tienda/                             301
+/tienda/categoria/salud-y-bienestar/      /tienda/                             301
+/tienda/categoria/accesorios              /tienda/                             301
+/tienda/categoria/accesorios/             /tienda/                             301
+/tienda/categoria/eco                     /tienda/categoria/ecologia/          301
+/tienda/categoria/eco/                    /tienda/categoria/ecologia/          301
+
+# Blog trailing-slash canonicalization
+/blog  /blog/  301

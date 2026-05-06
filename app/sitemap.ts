@@ -8,7 +8,7 @@ const SITE_URL = 'https://promogimmicks.com'
 export default function sitemap(): MetadataRoute.Sitemap {
   // Fechas fijas para evitar que Google re-rastree todo en cada deploy
   const GEO_UPDATED = new Date('2025-11-01')
-  const STORE_UPDATED = new Date('2026-04-13')
+  const STORE_UPDATED = new Date('2026-05-05')
 
   // Páginas estáticas principales
   const staticPages: MetadataRoute.Sitemap = [
