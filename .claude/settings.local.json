@@ -60,7 +60,9 @@
       "Bash(Select-Object -First 5)",
       "Bash(Get-ChildItem -Path \"E:\\\\coding\\\\proyectos-personales\\\\archivados\\\\promogimmicks\" -Force)",
       "Bash(Select-Object Name, FullName)",
-      "PowerShell(Get-Content \"E:\\\\coding\\\\proyectos-personales\\\\archivados\\\\promogimmicks\\\\data\\\\blog-posts.json\" -Encoding UTF8 | ConvertFrom-Json | Select-Object slug, titulo, fecha_publicacion, @{N='content_len';E={$_.contenido.Length}})"
+      "PowerShell(Get-Content \"E:\\\\coding\\\\proyectos-personales\\\\archivados\\\\promogimmicks\\\\data\\\\blog-posts.json\" -Encoding UTF8 | ConvertFrom-Json | Select-Object slug, titulo, fecha_publicacion, @{N='content_len';E={$_.contenido.Length}})",
+      "Bash(Get-ChildItem -Path \"E:\\\\coding\\\\proyectos-personales\\\\archivados\\\\promogimmicks\" -Directory -ErrorAction SilentlyContinue)",
+      "Bash(Select-Object Name)"
     ],
     "deny": [],
     "ask": []
