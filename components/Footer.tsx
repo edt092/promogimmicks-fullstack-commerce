@@ -25,15 +25,6 @@ const BanderaEcuador = () => (
   </svg>
 );
 
-// Bandera de Colombia SVG
-const BanderaColombia = () => (
-  <svg width="32" height="24" viewBox="0 0 32 24" className="rounded shadow-sm">
-    <rect width="32" height="12" fill="#FCD116" />
-    <rect y="12" width="32" height="6" fill="#003893" />
-    <rect y="18" width="32" height="6" fill="#CE1126" />
-  </svg>
-);
-
 // Icono de alianza/handshake SVG
 const IconoAlianza = () => (
   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" className="text-sky-400">
@@ -72,10 +63,8 @@ export default function Footer() {
             </Link>
             <div className="flex items-center gap-2 mb-6">
               <BanderaEcuador />
-              <IconoAlianza />
-              <BanderaColombia />
             </div>
-            <p className="text-gray-400 text-sm mb-4">Ecuador & Colombia</p>
+            <p className="text-gray-400 text-sm mb-4">Ecuador</p>
             <nav aria-label="Enlaces principales">
               <ul className="flex flex-wrap gap-4">
                 <li>
@@ -144,21 +133,11 @@ export default function Footer() {
                 <Phone className="text-sky-400 mt-1 flex-shrink-0" size={20} aria-hidden="true" />
                 <div className="space-y-2">
                   <div>
-                    <span className="text-sm text-gray-400">Ecuador</span>
                     <a
                       href="tel:+593998594123"
                       className="block text-white hover:text-sky-400 transition-colors"
                     >
                       +593 99 859 4123
-                    </a>
-                  </div>
-                  <div>
-                    <span className="text-sm text-gray-400">Colombia</span>
-                    <a
-                      href="tel:+573155595134"
-                      className="block text-white hover:text-sky-400 transition-colors"
-                    >
-                      +57 315 559 5134
                     </a>
                   </div>
                 </div>
@@ -185,18 +164,8 @@ export default function Footer() {
               <div className="flex items-start gap-3">
                 <MapPin className="text-sky-400 mt-1 flex-shrink-0" size={20} aria-hidden="true" />
                 <div>
-                  <span className="text-sm text-gray-400">Ecuador</span>
                   <p className="text-white text-sm">
                     Av. Las Palmas, 63, Ecuador
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <MapPin className="text-sky-400 mt-1 flex-shrink-0" size={20} aria-hidden="true" />
-                <div>
-                  <span className="text-sm text-gray-400">Colombia</span>
-                  <p className="text-white text-sm">
-                    Calle 22 #1571 los cedros, Colombia
                   </p>
                 </div>
               </div>

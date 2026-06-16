@@ -3,6 +3,14 @@
 # Redirects for old product URLs (pre-scraper catalog, April 2026)
 # Products that had slug changes: redirect to new URL or /tienda/
 
+# Colombia pages removed — redirect to Ecuador equivalents
+/productos-promocionales-colombia/  /productos-promocionales-ecuador/  301
+/productos-promocionales-colombia/bogota/  /productos-promocionales-ecuador/quito/  301
+/productos-promocionales-colombia/medellin/  /productos-promocionales-ecuador/guayaquil/  301
+/productos-promocionales-colombia/cali/  /productos-promocionales-ecuador/  301
+/productos-promocionales-colombia/barranquilla/  /productos-promocionales-ecuador/  301
+/productos-promocionales-colombia/cartagena/  /productos-promocionales-ecuador/  301
+
 /tienda/abanico/  /tienda/abanico-2697/  301
 /tienda/abanico-con-mango-stick-produccion-nacional/  /tienda/abanico-con-mango-stick-produccion-nacional-5382/  301
 /tienda/abanico-finger-produccion-nacional/  /tienda/abanico-finger-produccion-nacional-5377/  301

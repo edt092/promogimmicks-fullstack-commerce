@@ -6,7 +6,7 @@ import { ArrowRight, ChevronDown } from 'lucide-react';
 
 export default function HeroSection() {
   return (
-    <section id="inicio" className="relative h-screen w-full overflow-hidden">
+    <section id="inicio" className="relative min-h-screen w-full">
       {/* Video Background */}
       <div className="absolute inset-0 w-full h-full overflow-hidden">
         <video
@@ -32,7 +32,7 @@ export default function HeroSection() {
       </div>
 
       {/* Content — starts below navbar (pt-16) and centers in remaining space */}
-      <div className="absolute inset-0 z-10 flex flex-col pt-16">
+      <div className="relative z-10 flex flex-col min-h-screen pt-16">
         <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 text-center pb-4 sm:pb-8">
 
         {/* Label badge */}
@@ -43,7 +43,7 @@ export default function HeroSection() {
           className="inline-flex items-center gap-2 bg-sky-500/20 border border-sky-400/30 text-sky-300 text-xs font-semibold tracking-widest uppercase px-4 py-1.5 rounded-full mb-3 sm:mb-8"
         >
           <span className="w-1.5 h-1.5 bg-sky-400 rounded-full animate-pulse" />
-          Ecuador &amp; Colombia
+          Ecuador
         </motion.div>
 
         {/* Main headline */}
@@ -66,7 +66,7 @@ export default function HeroSection() {
           className="text-sm sm:text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-5 sm:mb-10 leading-relaxed"
         >
           Merchandising, artículos promocionales e importación directa.
-          Personalización garantizada para empresas en Ecuador y Colombia.
+          Personalización garantizada para empresas en Ecuador.
         </motion.p>
 
         {/* CTAs */}
@@ -101,7 +101,7 @@ export default function HeroSection() {
           {[
             { value: '+1,000', label: 'Productos' },
             { value: '+500', label: 'Clientes' },
-            { value: '2', label: 'Países' },
+            { value: '10+', label: 'Años' },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
               <p className="text-xl sm:text-3xl font-extrabold text-white">{stat.value}</p>

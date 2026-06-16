@@ -44,7 +44,7 @@ const categoryContent: Record<string, { tagline: string; usos: string[]; atribut
   'precio-bomba': {
     tagline: 'artículo promocional de excelente relación costo-impacto',
     usos: ['Distribución masiva en eventos y ferias', 'Kits de bienvenida de bajo costo', 'Premios en sorteos y dinámicas', 'Obsequios para campañas de activación'],
-    atributos: ['Precio competitivo para grandes volúmenes', 'Personalización básica con logo', 'Disponibilidad inmediata en stock', 'Ideal para distribución masiva en Ecuador y Colombia'],
+    atributos: ['Precio competitivo para grandes volúmenes', 'Personalización básica con logo', 'Disponibilidad inmediata en stock', 'Ideal para distribución masiva en Ecuador'],
   },
   'ecologia': {
     tagline: 'producto ecológico que comunica los valores sustentables de tu empresa',
@@ -79,7 +79,7 @@ const categoryContent: Record<string, { tagline: string; usos: string[]; atribut
   'variedades': {
     tagline: 'artículo promocional versátil para diferentes ocasiones y públicos',
     usos: ['Distribución en eventos masivos y ferias', 'Kits de temporada navideña o especial', 'Obsequios para campañas especiales de marca', 'Premios y reconocimientos corporativos'],
-    atributos: ['Gran variedad de opciones de personalización', 'Disponible en múltiples colores', 'Precio accesible para volúmenes medios', 'Entrega rápida en Ecuador y Colombia'],
+    atributos: ['Gran variedad de opciones de personalización', 'Disponible en múltiples colores', 'Precio accesible para volúmenes medios', 'Entrega rápida en Ecuador'],
   },
   'infantil': {
     tagline: 'artículo infantil ideal para actividades con familias y niños',
@@ -196,7 +196,7 @@ const categoryContent: Record<string, { tagline: string; usos: string[]; atribut
 const defaultContent = {
   tagline: 'artículo promocional personalizado para impulsar tu marca',
   usos: ['Regalos corporativos para clientes y aliados', 'Distribución en ferias y eventos empresariales', 'Kits de bienvenida para empleados nuevos', 'Obsequios en campañas de fidelización'],
-  atributos: ['Personalización con logo en alta calidad', 'Disponible en múltiples colores y acabados', 'Envíos a Ecuador y Colombia con entrega rápida', 'Asesoría de diseño e impresión incluida'],
+  atributos: ['Personalización con logo en alta calidad', 'Disponible en múltiples colores y acabados', 'Envíos a Ecuador con entrega rápida', 'Asesoría de diseño e impresión incluida'],
 };
 
 export default function ProductDetailView({ product }: ProductDetailViewProps) {
@@ -337,7 +337,7 @@ export default function ProductDetailView({ product }: ProductDetailViewProps) {
           <div className="grid grid-cols-2 gap-4 pt-6 border-t border-gray-200">
             {[
               { icon: Award, title: 'Calidad Premium', desc: 'Materiales de primera' },
-              { icon: Truck, title: 'Envío Nacional', desc: 'Ecuador y Colombia' },
+              { icon: Truck, title: 'Envío Nacional', desc: 'Todo Ecuador' },
               { icon: Shield, title: 'Garantía', desc: 'Satisfacción total' },
               { icon: MessageCircle, title: 'Soporte', desc: 'Asesoría personalizada' }
             ].map((item, idx) => (
@@ -393,7 +393,7 @@ export default function ProductDetailView({ product }: ProductDetailViewProps) {
           <p className="text-sm text-gray-500">
             ¿Necesitas el <strong>{product.nombre}</strong> en grandes cantidades?
             Cotiza directamente por WhatsApp y recibe atención personalizada de nuestro equipo.
-            Trabajamos con empresas de todos los tamaños en <strong>Ecuador y Colombia</strong>.
+            Trabajamos con empresas de todos los tamaños en <strong>Ecuador</strong>.
             Ver más <Link href={`/tienda/categoria/${product.categoria_slug}/`} className="text-blue-900 hover:text-amber-500 font-medium transition-colors">artículos de {product.categoria}</Link>.
           </p>
         </div>

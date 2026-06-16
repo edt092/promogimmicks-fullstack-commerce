@@ -20,7 +20,6 @@ export const metadata: Metadata = {
       "x-default": SITE_URL,
       "es": SITE_URL,
       "es-EC": `${SITE_URL}/productos-promocionales-ecuador`,
-      "es-CO": `${SITE_URL}/productos-promocionales-colombia`,
     },
   },
 };

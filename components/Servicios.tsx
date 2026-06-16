@@ -44,7 +44,7 @@ const proceso = [
   { icon: ClipboardList, paso: '01', titulo: 'Cotización en 24 h', descripcion: 'Cuéntanos tu proyecto por WhatsApp o correo. Recibe propuesta detallada con precios, plazos y opciones de personalización.' },
   { icon: Palette, paso: '02', titulo: 'Arte y muestra virtual', descripcion: 'Nuestro equipo de diseño aplica tu logo al producto y te envía prueba digital para aprobación antes de producir.' },
   { icon: Package, paso: '03', titulo: 'Producción con seguimiento', descripcion: 'Iniciamos producción con actualizaciones de estado en cada etapa. Control de calidad riguroso antes del despacho.' },
-  { icon: Truck, paso: '04', titulo: 'Entrega en Ecuador y Colombia', descripcion: 'Enviamos con embalaje seguro y documentación completa. Cobertura en todas las ciudades principales de ambos países.' },
+  { icon: Truck, paso: '04', titulo: 'Entrega en Ecuador', descripcion: 'Enviamos con embalaje seguro y documentación completa. Cobertura en todas las ciudades principales del país.' },
 ];
 
 export default function Servicios() {
@@ -64,7 +64,7 @@ export default function Servicios() {
             Nuestros Servicios
           </h2>
           <p className="text-lg text-gray-700 max-w-3xl mx-auto">
-            Soluciones integrales de merchandising y productos promocionales para empresas en Ecuador y Colombia.
+            Soluciones integrales de merchandising y productos promocionales para empresas en Ecuador.
             Desde la idea hasta la entrega, gestionamos todo el proceso.
           </p>
         </motion.div>

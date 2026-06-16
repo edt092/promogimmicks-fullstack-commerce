@@ -25,10 +25,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 
   const absoluteImageUrl = `${SITE_URL}${product.imagen_url}`;
 
-  // Usar campos SEO del JSON con localización para Ecuador y Colombia
   const baseTitle = product.seo_title || `${product.nombre} Personalizado`;
-  const title = `${baseTitle} | Ecuador y Colombia`;
-  const description = `${product.seo_description || product.descripcion_corta} Envíos a Quito, Guayaquil, Bogotá y Medellín.`;
+  const title = `${baseTitle} | Ecuador`;
+  const description = `${product.seo_description || product.descripcion_corta} Envíos a Quito, Guayaquil y todo Ecuador.`;
   const keywords = product.seo_keywords || `${product.nombre}, productos promocionales, merchandising, ${product.categoria}, regalo corporativo, personalizado`;
 
   return {
@@ -91,8 +90,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
         "name": "PromoGimmicks"
       },
       "areaServed": [
-        { "@type": "Country", "name": "Ecuador" },
-        { "@type": "Country", "name": "Colombia" }
+        { "@type": "Country", "name": "Ecuador" }
       ]
     },
     "category": product.categoria

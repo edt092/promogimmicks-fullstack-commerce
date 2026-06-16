@@ -84,7 +84,7 @@ export default function TiendaPage() {
             Catálogo completo de productos promocionales
           </h2>
           <p className="text-gray-500 mb-10 text-sm">
-            {productsData.length} productos personalizables con tu logo — envíos a Ecuador y Colombia
+            {productsData.length} productos personalizables con tu logo — envíos a todo Ecuador
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
             {categoriesData.map((cat) => {

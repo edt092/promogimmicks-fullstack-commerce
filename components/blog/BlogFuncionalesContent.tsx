@@ -698,7 +698,7 @@ export default function BlogFuncionalesContent() {
         <CTABanner
           variant="primary"
           title="Tu Marca en las Manos de tus Clientes, Todos los Días"
-          subtitle="Más de 199 productos promocionales de uso diario. Personalización garantizada, entrega en Ecuador y Colombia."
+          subtitle="Más de 199 productos promocionales de uso diario. Personalización garantizada, entrega en todo Ecuador."
         />
       </div>
 

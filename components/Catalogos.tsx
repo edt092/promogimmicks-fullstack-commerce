@@ -302,7 +302,7 @@ export default function Catalogos() {
           </h2>
           <p className="text-lg text-gray-700 max-w-3xl mx-auto">
             Encuentra el artículo publicitario perfecto para tu campaña de marketing.
-            Miles de opciones en productos promocionales para empresas en Ecuador y Colombia.
+            Miles de opciones en productos promocionales para empresas en Ecuador.
           </p>
         </motion.div>
 
