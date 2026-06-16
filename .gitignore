@@ -59,3 +59,16 @@ __pycache__/
 
 # Borradores de blog (contenido local, no publicar en GitHub)
 /content/drafts/
+
+# Archivos no funcionales para el código
+README.md
+/screenshots/
+sitemap_fetched.xml
+*.backup
+pnpm-lock.yaml
+pnpm-workspace.yaml
+
+# Markdown de contenido/documentación local
+*.md
+!app/**/*.md
+!components/**/*.md
