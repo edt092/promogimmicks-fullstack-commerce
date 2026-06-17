@@ -60,11 +60,6 @@ __pycache__/
 # Borradores de blog (contenido local, no publicar en GitHub)
 /content/drafts/
 
-# Scripts locales con credenciales — nunca commitear
-/scripts/generate_descriptions.py
-.env
-.env.local
-
 # Archivos no funcionales para el código
 README.md
 /screenshots/
@@ -73,7 +68,8 @@ sitemap_fetched.xml
 pnpm-lock.yaml
 pnpm-workspace.yaml
 
-# Markdown de contenido/documentación local
+# Markdown de contenido/documentación local (excepto README del proyecto)
 *.md
+!README.md
 !app/**/*.md
 !components/**/*.md
