@@ -60,6 +60,11 @@ __pycache__/
 # Borradores de blog (contenido local, no publicar en GitHub)
 /content/drafts/
 
+# Scripts locales con credenciales — nunca commitear
+/scripts/generate_descriptions.py
+.env
+.env.local
+
 # Archivos no funcionales para el código
 README.md
 /screenshots/
