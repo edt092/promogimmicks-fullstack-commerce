@@ -142,18 +142,6 @@ export default function Footer() {
                   </div>
                 </div>
               </div>
-              <a
-                href="https://wa.me/593998594123"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="relative inline-flex items-center justify-center w-12 h-12 bg-[#25D366] hover:bg-[#1da851] rounded-full transition-colors mt-3"
-                aria-label="Escríbenos por WhatsApp"
-              >
-                <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-30"></span>
-                <span className="relative z-10">
-                  <WhatsAppIcon />
-                </span>
-              </a>
             </address>
           </div>
 
