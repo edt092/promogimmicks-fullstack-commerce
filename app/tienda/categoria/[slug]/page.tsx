@@ -466,9 +466,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
                   <p className="text-sm font-medium text-gray-800 line-clamp-2 group-hover:text-blue-600 transition-colors">
                     {product.nombre}
                   </p>
-                  {product.codigo && (
-                    <p className="text-xs text-gray-500 mt-1">{product.codigo}</p>
-                  )}
+                  <p className="text-xs text-gray-500 mt-1">{product.sku}</p>
                 </div>
               </Link>
             ))}

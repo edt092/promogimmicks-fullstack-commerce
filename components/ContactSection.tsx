@@ -68,7 +68,7 @@ export default function ContactSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-blue-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-navy mb-4">
             Hablemos de tu Proyecto
           </h2>
           <p className="text-lg text-gray-700 max-w-3xl mx-auto">
@@ -90,7 +90,7 @@ export default function ContactSection() {
               <div>
                 <label
                   htmlFor="nombre"
-                  className="block text-sm font-semibold text-blue-900 mb-2"
+                  className="block text-sm font-semibold text-navy mb-2"
                 >
                   Nombre Completo
                 </label>
@@ -109,7 +109,7 @@ export default function ContactSection() {
               <div>
                 <label
                   htmlFor="correo"
-                  className="block text-sm font-semibold text-blue-900 mb-2"
+                  className="block text-sm font-semibold text-navy mb-2"
                 >
                   Correo Electrónico
                 </label>
@@ -128,7 +128,7 @@ export default function ContactSection() {
               <div>
                 <label
                   htmlFor="telefono"
-                  className="block text-sm font-semibold text-blue-900 mb-2"
+                  className="block text-sm font-semibold text-navy mb-2"
                 >
                   Teléfono
                 </label>
@@ -147,7 +147,7 @@ export default function ContactSection() {
               <div>
                 <label
                   htmlFor="solicitud"
-                  className="block text-sm font-semibold text-blue-900 mb-2"
+                  className="block text-sm font-semibold text-navy mb-2"
                 >
                   Tu Solicitud
                 </label>
@@ -217,7 +217,7 @@ export default function ContactSection() {
             className="flex flex-col justify-center"
           >
             <div className="mb-8">
-              <h3 className="text-2xl font-bold text-blue-900 mb-6">
+              <h3 className="text-2xl font-bold text-navy mb-6">
                 Síguenos en Redes Sociales
               </h3>
               <div className="flex gap-4">
@@ -253,7 +253,7 @@ export default function ContactSection() {
 
             <div className="space-y-6">
               <div className="bg-blue-50 rounded-2xl p-6">
-                <h4 className="text-lg font-bold text-blue-900 mb-2">
+                <h4 className="text-lg font-bold text-navy mb-2">
                   Horario de Atención
                 </h4>
                 <p className="text-gray-700">
@@ -264,7 +264,7 @@ export default function ContactSection() {
               </div>
 
               <div className="bg-sky-50 rounded-2xl p-6">
-                <h4 className="text-lg font-bold text-blue-900 mb-2">
+                <h4 className="text-lg font-bold text-navy mb-2">
                   Respuesta Rápida
                 </h4>
                 <p className="text-gray-700">

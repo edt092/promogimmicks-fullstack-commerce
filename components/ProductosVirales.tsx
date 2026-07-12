@@ -58,13 +58,15 @@ export default function ProductosVirales() {
               Cada artículo es elegido por su innovación, calidad de personalización
               y potencial de impacto en el mercado corporativo.
             </p>
-            <Link
-              href="/#contacto"
+            <a
+              href="https://wa.me/593998594123?text=Hola%2C%20me%20interesa%20consultar%20disponibilidad%20de%20productos%20promocionales"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-600 text-white font-bold px-7 py-3.5 rounded-full transition-all duration-300 shadow-md shadow-sky-200 hover:shadow-sky-300 group"
             >
               Consultar disponibilidad
               <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-            </Link>
+            </a>
           </motion.div>
 
           {/* Slider */}

@@ -12,6 +12,7 @@ interface Product {
   descripcion_corta: string;
   imagen_url: string;
   codigo?: string | null;
+  sku?: string;
 }
 
 interface ProductCardProps {
@@ -72,6 +73,9 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
 
       {/* Content */}
       <div className="p-4">
+        {product.sku && (
+          <p className="text-[10px] font-semibold text-brand uppercase tracking-wide mb-1">{product.sku}</p>
+        )}
         <h3 className="text-sm font-semibold text-slate-800 mb-1.5 line-clamp-2 min-h-[2.5rem] group-hover:text-sky-700 transition-colors">
           {product.nombre}
         </h3>

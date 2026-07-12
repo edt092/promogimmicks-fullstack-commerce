@@ -73,3 +73,4 @@ pnpm-workspace.yaml
 !README.md
 !app/**/*.md
 !components/**/*.md
+.tmp-screens/

@@ -86,7 +86,7 @@ export default function TiendaPromo() {
   };
 
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 relative overflow-hidden">
+    <section className="py-16 md:py-24 bg-gradient-to-br from-navy via-navy-600 to-navy relative overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 left-0 w-96 h-96 bg-sky-500 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
@@ -151,13 +151,13 @@ export default function TiendaPromo() {
                 onClick={prevSlide}
                 className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110"
               >
-                <ChevronLeft className="text-blue-900" size={24} />
+                <ChevronLeft className="text-navy" size={24} />
               </button>
               <button
                 onClick={nextSlide}
                 className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110"
               >
-                <ChevronRight className="text-blue-900" size={24} />
+                <ChevronRight className="text-navy" size={24} />
               </button>
 
               {/* Slide indicators */}
@@ -208,7 +208,7 @@ export default function TiendaPromo() {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   href="/tienda/"
-                  className="group inline-flex items-center justify-center gap-3 bg-white text-blue-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-sky-500 hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl"
+                  className="group inline-flex items-center justify-center gap-3 bg-white text-navy px-8 py-4 rounded-xl font-bold text-lg hover:bg-sky-500 hover:text-white transition-all duration-300 shadow-lg hover:shadow-xl"
                 >
                   <ShoppingBag size={22} />
                   Ver Tienda
@@ -244,7 +244,7 @@ export default function TiendaPromo() {
               onClick={() => setCurrentSlide(index)}
               className={`p-4 rounded-xl text-center transition-all duration-300 ${
                 index === currentSlide
-                  ? 'bg-white text-blue-900 shadow-lg scale-105'
+                  ? 'bg-white text-navy shadow-lg scale-105'
                   : 'bg-white/10 text-white hover:bg-white/20'
               }`}
             >

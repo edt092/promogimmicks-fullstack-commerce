@@ -4,11 +4,22 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #0f172a;
-  --brand-primary: #1e3a8a;
-  --brand-accent: #0ea5e9;
-  --brand-accent-dark: #0284c7;
-  --brand-accent-light: #e0f2fe;
+  --foreground: #1E2229;
+
+  /* Paleta oficial PromoGimmicks */
+  --navy: #0A1A2F;
+  --brand: #1565FF;
+  --sky: #00BFFF;
+  --danger: #FF2D2D;
+  --ink: #1E2229;
+  --slate: #6B7280;
+  --mist: #E5E7EB;
+
+  /* Compat con nombres usados en componentes existentes */
+  --brand-primary: #0A1A2F;
+  --brand-accent: #00BFFF;
+  --brand-accent-dark: #1565FF;
+  --brand-accent-light: #E5FAFF;
 }
 
 * {
@@ -27,7 +38,6 @@ body {
   background: var(--background);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
 }
 
 /* Animaciones personalizadas */
@@ -58,6 +68,13 @@ body {
   }
   .overflow-x-auto::-webkit-scrollbar { display: none; }
 }
+
+/* Slider táctil sin scrollbar visible (todas las resoluciones) */
+.no-scrollbar {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar { display: none; }
 
 /* Loading skeleton */
 @keyframes shimmer {
@@ -185,4 +202,144 @@ body {
   background-clip: text;
   color: transparent;
   animation: blueTextShimmer 3s linear infinite;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Jerarquía tipográfica — escala consistente para todas las páginas nuevas
+   ───────────────────────────────────────────────────────────────────────── */
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.h1-display {
+  font-size: clamp(2.25rem, 4vw + 1rem, 4.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.h2-section {
+  font-size: clamp(1.75rem, 2.5vw + 0.75rem, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.h3-card {
+  font-size: clamp(1.125rem, 1vw + 0.75rem, 1.5rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.body-lead {
+  font-size: clamp(1rem, 0.5vw + 0.9rem, 1.25rem);
+  line-height: 1.65;
+  color: var(--slate);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Microinteracciones, 3D y estilo high-end
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* Tilt 3D suave al hover — tarjetas de producto/categoría */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+  will-change: transform;
+}
+.tilt-card:hover {
+  transform: perspective(1000px) rotateX(2deg) rotateY(-2deg) translateY(-6px) scale(1.015);
+}
+
+/* Botón magnético — leve escala + sombra dinámica */
+.btn-magnetic {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+}
+.btn-magnetic:hover {
+  transform: translateY(-2px) scale(1.03);
+}
+.btn-magnetic:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Glass card — paneles translúcidos sobre fondos oscuros */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Blobs flotantes de fondo — profundidad ambiental */
+@keyframes floatSlow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(2%, -4%) scale(1.05); }
+}
+.float-blob {
+  animation: floatSlow 9s ease-in-out infinite;
+}
+
+/* Subrayado animado para enlaces de texto */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 2px;
+  background: var(--sky);
+  border-radius: 999px;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.link-underline:hover::after {
+  width: 100%;
+}
+
+/* Reveal de entrada para grids (fallback CSS cuando no hay Framer Motion) */
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.reveal-up {
+  animation: revealUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Ribbon de badges (NUEVO / OFERTA) con esquina cortada */
+.badge-ribbon {
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 92% 100%, 0 100%);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Homepage redesign 2026 — secciones editoriales (Hero y siguientes)
+   ───────────────────────────────────────────────────────────────────────── */
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+}
+
+/* Anillo de radar pulsante — pin activo del mapa de cobertura (Cobertura.tsx) */
+@keyframes mapPinPulse {
+  0% { transform: scale(0.6); opacity: 0.9; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+.map-pin-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: mapPinPulse 2.2s cubic-bezier(0.2, 0.7, 0.3, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

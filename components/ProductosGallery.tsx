@@ -31,7 +31,7 @@ export default function ProductosGallery() {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-blue-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-navy mb-4">
             Nuestros Productos
           </h2>
           <p className="text-lg text-gray-700 max-w-3xl mx-auto">
@@ -70,8 +70,8 @@ export default function ProductosGallery() {
           className="text-center mt-12"
         >
           <Link
-            href="/tienda/"
-            className="inline-flex items-center gap-2 bg-blue-900 hover:bg-sky-600 text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 shadow-lg group"
+            href="/productos/"
+            className="btn-magnetic inline-flex items-center gap-2 bg-navy hover:bg-sky-600 text-white font-semibold px-8 py-4 rounded-full transition-colors duration-300 shadow-lg group"
           >
             Ver toda la tienda
             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />

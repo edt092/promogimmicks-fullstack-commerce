@@ -10,8 +10,8 @@ const servicios = [
     title: 'Impresión y Personalización',
     description:
       'Serigrafía, tampografía, impresión digital full color, grabado láser, bordado y sublimación. Aplicamos la técnica correcta según el material y el diseño para garantizar la máxima calidad en cada artículo.',
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-50',
+    color: 'text-brand',
+    bgColor: 'bg-brand-50',
   },
   {
     icon: Megaphone,
@@ -26,8 +26,8 @@ const servicios = [
     title: 'Importación Directa',
     description:
       'Importamos desde fabricantes en Asia, Europa y América, eliminando intermediarios. Acceso a productos exclusivos, muestras físicas antes de producción masiva y opciones a medida: colores Pantone, empaque personalizado, MOQ especial.',
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-50',
+    color: 'text-brand',
+    bgColor: 'bg-brand-50',
   },
 ];
 
@@ -60,7 +60,7 @@ export default function Servicios() {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-blue-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-navy mb-4">
             Nuestros Servicios
           </h2>
           <p className="text-lg text-gray-700 max-w-3xl mx-auto">
@@ -88,7 +88,7 @@ export default function Servicios() {
                   <Icon className={`${servicio.color}`} size={32} />
                 </div>
 
-                <p className="text-2xl font-bold text-blue-900 mb-4 group-hover:text-sky-500 transition-colors duration-300">
+                <p className="text-2xl font-bold text-navy mb-4 group-hover:text-sky-500 transition-colors duration-300">
                   {servicio.title}
                 </p>
 
@@ -109,7 +109,7 @@ export default function Servicios() {
           className="mb-20"
         >
           <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-bold text-blue-900 mb-3">
+            <h2 className="text-3xl md:text-4xl font-bold text-navy mb-3">
               Técnicas de personalización disponibles
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
@@ -130,7 +130,7 @@ export default function Servicios() {
               >
                 <CheckCircle2 className="text-sky-500 flex-shrink-0 mt-0.5" size={20} />
                 <div>
-                  <p className="font-bold text-blue-900 mb-1">{t.nombre}</p>
+                  <p className="font-bold text-navy mb-1">{t.nombre}</p>
                   <p className="text-gray-600 text-sm leading-relaxed">{t.descripcion}</p>
                 </div>
               </motion.div>
@@ -144,7 +144,7 @@ export default function Servicios() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 rounded-3xl p-8 md:p-12"
+          className="bg-gradient-to-br from-navy via-navy-600 to-navy rounded-3xl p-8 md:p-12"
         >
           <div className="text-center mb-10">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">

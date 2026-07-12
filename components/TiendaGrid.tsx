@@ -15,6 +15,7 @@ interface Product {
   imagen_url: string;
   imagen_original_url: string;
   codigo: string | null;
+  sku: string;
   seo_title: string;
   seo_description: string;
   seo_keywords: string;
@@ -37,6 +38,7 @@ export default function TiendaGrid() {
       return product.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.descripcion_corta.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.categoria.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (product.codigo && product.codigo.toLowerCase().includes(searchTerm.toLowerCase()));
     });
   }, [searchTerm]);

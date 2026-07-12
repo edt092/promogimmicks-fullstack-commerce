@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Sora } from 'next/font/google';
+import { Manrope } from 'next/font/google';
 import "./globals.css";
 
-const sora = Sora({
+const manrope = Manrope({
   subsets: ['latin'],
-  variable: '--font-sora',
+  variable: '--font-manrope',
   display: 'swap',
-  weight: ['300', '400', '500', '600', '700', '800'],
+  weight: ['400', '500', '600', '700', '800'],
 });
 
 const SITE_URL = "https://promogimmicks.com";
@@ -30,8 +30,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={sora.variable}>
-      <body className="font-sora">
+    <html lang="es" className={manrope.variable}>
+      <body className="font-manrope">
         {children}
         <a
           href="https://wa.me/593998594123?text=Hola%2C%20me%20interesa%20cotizar%20productos%20promocionales"

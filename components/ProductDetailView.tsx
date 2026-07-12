@@ -14,6 +14,7 @@ interface Product {
   descripcion_corta: string;
   imagen_url: string;
   codigo?: string | null;
+  sku?: string;
 }
 
 interface ProductDetailViewProps {
@@ -210,7 +211,7 @@ export default function ProductDetailView({ product }: ProductDetailViewProps) {
   const content = categoryContent[product.categoria_slug] ?? defaultContent;
 
   const handleCotizar = () => {
-    const mensaje = `Hola! Me interesa cotizar el producto: ${product.nombre}\n\nCategoría: ${product.categoria}${product.codigo ? `\nCódigo: ${product.codigo}` : ''}\n\n¿Podrían enviarme información sobre precios, cantidades mínimas y opciones de personalización?`;
+    const mensaje = `Hola! Me interesa cotizar el producto: ${product.nombre}\n\nCategoría: ${product.categoria}${product.sku ? `\nSKU: ${product.sku}` : ''}\n\n¿Podrían enviarme información sobre precios, cantidades mínimas y opciones de personalización?`;
     const whatsappUrl = `https://wa.me/593998594123?text=${encodeURIComponent(mensaje)}`;
     window.open(whatsappUrl, '_blank');
   };
@@ -269,9 +270,9 @@ export default function ProductDetailView({ product }: ProductDetailViewProps) {
             </div>
           </div>
 
-          {product.codigo && (
+          {(product.sku || product.codigo) && (
             <div className="text-center text-sm text-gray-500">
-              Código de referencia: <span className="font-medium text-gray-700">{product.codigo}</span>
+              SKU: <span className="font-medium text-gray-700">{product.sku ?? product.codigo}</span>
             </div>
           )}
         </div>
