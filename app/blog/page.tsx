@@ -11,15 +11,15 @@ export const metadata = {
 
 export default function BlogPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-24 md:pt-32 pb-16 md:pb-20 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 overflow-hidden">
+      <section className="relative pt-24 md:pt-32 pb-16 md:pb-20 bg-gradient-to-br from-navy-900 via-navy-600 to-navy-900 overflow-hidden">
         {/* Decoración de fondo */}
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-amber-500 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
+          <div className="absolute top-0 left-0 w-96 h-96 bg-sky-500 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-brand rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -31,13 +31,13 @@ export default function BlogPage() {
             </div>
 
             {/* Título */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+            <h1 className="h1-display text-white">
               Consejos y Estrategias
-              <span className="block text-amber-400 mt-2">para tu Marca</span>
+              <span className="block text-sky-500 mt-2">para tu Marca</span>
             </h1>
 
             {/* Descripción */}
-            <p className="text-lg md:text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl text-brand-100 max-w-3xl mx-auto leading-relaxed">
               Descubre guías prácticas, tendencias del mercado y consejos expertos
               para maximizar el impacto de tus productos promocionales.
             </p>
@@ -45,11 +45,11 @@ export default function BlogPage() {
             {/* Categorías destacadas */}
             <div className="flex flex-wrap justify-center gap-4 pt-6">
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/20">
-                <Lightbulb size={18} className="text-amber-400" />
+                <Lightbulb size={18} className="text-sky-500" />
                 <span className="text-white text-sm">Guías Prácticas</span>
               </div>
               <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/20">
-                <TrendingUp size={18} className="text-amber-400" />
+                <TrendingUp size={18} className="text-sky-500" />
                 <span className="text-white text-sm">Tendencias 2025</span>
               </div>
             </div>
@@ -75,26 +75,26 @@ export default function BlogPage() {
 
           {blogPosts.length === 0 && (
             <div className="text-center py-20">
-              <BookOpen className="mx-auto text-gray-300 mb-6" size={80} />
-              <h3 className="text-2xl font-bold text-gray-700 mb-3">Próximamente más contenido</h3>
-              <p className="text-gray-500">Estamos preparando artículos increíbles para ti.</p>
+              <BookOpen className="mx-auto text-slate-200 mb-6" size={80} />
+              <h3 className="h2-section text-slate-700 mb-3">Próximamente más contenido</h3>
+              <p className="text-slate-500">Estamos preparando artículos increíbles para ti.</p>
             </div>
           )}
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-900 to-blue-800">
+      <section className="py-16 bg-gradient-to-r from-navy-900 to-navy-600">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="h2-section text-white mb-4">
             ¿Listo para impulsar tu marca?
           </h2>
-          <p className="text-blue-100 text-lg mb-8">
+          <p className="text-brand-100 text-lg mb-8">
             Explora nuestro catálogo de productos promocionales y encuentra el regalo perfecto para tu empresa.
           </p>
           <a
             href="/tienda/"
-            className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            className="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
           >
             Ver Catálogo de Productos
           </a>

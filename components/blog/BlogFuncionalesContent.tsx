@@ -47,24 +47,24 @@ export default function BlogFuncionalesContent() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 
       {/* Tabla de contenidos */}
-      <div className="mb-10 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+      <div className="mb-10 bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
         <button
           onClick={() => setTocOpen(!tocOpen)}
-          className="w-full flex items-center justify-between p-6 bg-gradient-to-r from-blue-50 to-white hover:from-blue-100 transition-colors"
+          className="w-full flex items-center justify-between p-6 bg-gradient-to-r from-brand-50 to-white hover:from-brand-100 transition-colors"
         >
-          <h2 className="text-xl font-bold text-blue-900">Tabla de Contenidos</h2>
-          {tocOpen ? <ChevronUp size={24} className="text-blue-600" /> : <ChevronDown size={24} className="text-blue-600" />}
+          <h2 className="h3-card text-navy-900">Tabla de Contenidos</h2>
+          {tocOpen ? <ChevronUp size={24} className="text-brand" /> : <ChevronDown size={24} className="text-brand" />}
         </button>
         {tocOpen && (
           <nav className="p-6 pt-0">
-            <ol className="space-y-2 text-gray-700">
+            <ol className="space-y-2 text-slate-700">
               {TOC_ITEMS.map((title, i) => (
                 <li key={i}>
                   <a
                     href={`#sec-${i + 1}`}
-                    className="hover:text-amber-600 transition-colors flex items-center gap-2"
+                    className="hover:text-sky-600 transition-colors flex items-center gap-2"
                   >
-                    <span className="w-6 h-6 bg-blue-100 text-blue-900 rounded-full text-xs flex items-center justify-center font-bold flex-shrink-0">
+                    <span className="w-6 h-6 bg-brand-100 text-navy-900 rounded-full text-xs flex items-center justify-center font-bold flex-shrink-0">
                       {i + 1}
                     </span>
                     {title}
@@ -77,50 +77,50 @@ export default function BlogFuncionalesContent() {
       </div>
 
       {/* Intro */}
-      <div className="prose prose-lg max-w-none prose-headings:text-blue-900 prose-a:text-amber-600 prose-a:no-underline hover:prose-a:underline">
-        <p className="text-lg text-gray-700 leading-relaxed">
+      <div className="prose prose-lg max-w-none prose-headings:text-navy-900 prose-a:text-sky-600 prose-a:no-underline hover:prose-a:underline">
+        <p className="text-lg text-slate-700 leading-relaxed">
           El 89% de los consumidores conserva un promocional si lo usa al menos una vez al día. El 91% lo tira si no encuentra utilidad en las primeras 48 horas.{' '}
           <strong>El margen entre el éxito y el olvido es de dos días.</strong>
         </p>
-        <p className="text-gray-700 leading-relaxed">
+        <p className="text-slate-700 leading-relaxed">
           Seamos directos. Si estás buscando <em>promocionales funcionales que tus clientes usarán todos los días</em>, ya sabes lo que es abrir un cajón lleno de artículos que nadie quiere. Bolígrafos que no escriben, llaveros que se rompen al segundo uso, tazas que se destiñen en el lavavajillas. Eso no es marketing. Eso es una fogata de dinero.
         </p>
-        <p className="text-gray-700 leading-relaxed">
+        <p className="text-slate-700 leading-relaxed">
           En 2026, la saturación publicitaria será aún mayor. Pero hay un territorio donde la IA no puede competir: <strong>el tacto diario de un promocional bien elegido que se integra en la rutina matinal de tu cliente.</strong>
         </p>
       </div>
 
       {/* Sección 1 */}
       <section id="sec-1" className="scroll-mt-24 mt-12">
-        <h2 className="text-2xl md:text-3xl font-bold text-blue-900 mb-6">
+        <h2 className="h2-section text-navy-900 mb-6">
           1. La Era del Promocional Invisible: Por Qué la Funcionalidad Diaria es el Nuevo Lujo
         </h2>
-        <div className="prose prose-lg max-w-none text-gray-700">
+        <div className="prose prose-lg max-w-none text-slate-700">
           <p>
             Hasta hace poco, los promocionales buscaban visibilidad. Hoy, los que realmente funcionan buscan <strong>integración invisible en la rutina</strong>. El mejor promocional no es el que más brilla. Es aquel que tu cliente toca a las 7:23 de la mañana, sin pensar en tu marca, pero con tu marca siempre presente.
           </p>
         </div>
 
-        <div className="mt-6 bg-blue-50 rounded-2xl p-6 border border-blue-100">
-          <h3 className="text-lg font-bold text-blue-900 mb-4">El Concepto del &quot;Ancla Somática Diario&quot;</h3>
-          <p className="text-gray-700 mb-4">
+        <div className="mt-6 bg-brand-50 rounded-2xl p-6 border border-brand-100">
+          <h3 className="h3-card text-navy-900 mb-4">El Concepto del &quot;Ancla Somática Diario&quot;</h3>
+          <p className="text-slate-700 mb-4">
             En neuromarketing, un ancla es un estímulo que desencadena una respuesta emocional automática. Cuando un promocional se integra en un ritual diario, se convierte en un <strong>ancla somática</strong>. Tu cliente ya no decide usarlo. Simplemente, su día no funciona igual sin él.
           </p>
-          <p className="font-semibold text-blue-900 mb-3">Los 3 rituales diarios donde tu promocional debe colarse en 2026:</p>
+          <p className="font-semibold text-navy-900 mb-3">Los 3 rituales diarios donde tu promocional debe colarse en 2026:</p>
           <div className="grid md:grid-cols-3 gap-4">
             {[
               { tiempo: '06:00 – 09:00', nombre: 'Ritual Matinal', desc: 'Café, hidratación, planificación del día.' },
               { tiempo: '09:00 – 13:00', nombre: 'Ritual de Productividad', desc: 'Escritorio, cables, organización, concentración.' },
               { tiempo: '13:00 – 20:00', nombre: 'Ritual de Movilidad', desc: 'Transporte, gimnasio, reuniones externas, viajes.' },
             ].map((r, i) => (
-              <div key={i} className="bg-white rounded-xl p-4 border border-blue-200 shadow-sm">
-                <p className="text-amber-600 font-bold text-sm mb-1">{r.tiempo}</p>
-                <p className="font-semibold text-blue-900 mb-1">{r.nombre}</p>
-                <p className="text-gray-600 text-sm">{r.desc}</p>
+              <div key={i} className="bg-white rounded-xl p-4 border border-brand-100 shadow-sm">
+                <p className="text-sky-600 font-bold text-sm mb-1">{r.tiempo}</p>
+                <p className="font-semibold text-navy-900 mb-1">{r.nombre}</p>
+                <p className="text-slate-500 text-sm">{r.desc}</p>
               </div>
             ))}
           </div>
-          <p className="text-gray-600 text-sm mt-4 italic">
+          <p className="text-slate-500 text-sm mt-4 italic">
             Si tu promocional no resuelve un micro-dolor en alguno de estos tres bloques, está condenado al olvido.
           </p>
         </div>
@@ -138,21 +138,21 @@ export default function BlogFuncionalesContent() {
 
       {/* Sección 2: Árbol de decisión */}
       <section id="sec-2" className="scroll-mt-24 mt-12">
-        <h2 className="text-2xl md:text-3xl font-bold text-blue-900 mb-6">
+        <h2 className="h2-section text-navy-900 mb-6">
           2. Árbol de Decisión: ¿Cómo Elegir un Promocional que se Use a Diario en 2026?
         </h2>
-        <p className="text-gray-700 mb-6">
+        <p className="text-slate-700 mb-6">
           Sigue este flujo para encontrar el promocional funcional perfecto para tu audiencia. Un promocional no puede ser bueno para todo el mundo — la funcionalidad diaria exige <strong>especificidad quirúrgica</strong>.
         </p>
 
         {/* Árbol visual */}
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-md p-6 overflow-x-auto">
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-md p-6 overflow-x-auto">
           <div className="flex flex-col items-center gap-4 min-w-[480px]">
-            <div className="bg-blue-900 text-white rounded-xl px-6 py-3 font-bold text-center">
+            <div className="bg-navy-900 text-white rounded-xl px-6 py-3 font-bold text-center">
               Quiero un promocional de uso diario
             </div>
-            <div className="w-px h-6 bg-gray-300"></div>
-            <div className="bg-amber-500 text-white rounded-xl px-6 py-3 font-semibold text-center text-sm">
+            <div className="w-px h-6 bg-slate-200"></div>
+            <div className="bg-sky-500 text-white rounded-xl px-6 py-3 font-semibold text-center text-sm">
               ¿En qué momento del día quiero que mi cliente lo use?
             </div>
             <div className="grid grid-cols-3 gap-4 w-full">
@@ -174,15 +174,15 @@ export default function BlogFuncionalesContent() {
                 },
               ].map((branch, i) => (
                 <div key={i} className="flex flex-col items-center gap-2">
-                  <div className="bg-blue-100 text-blue-900 rounded-lg px-3 py-2 text-xs font-bold text-center w-full">
+                  <div className="bg-brand-100 text-navy-900 rounded-lg px-3 py-2 text-xs font-bold text-center w-full">
                     {branch.tiempo}
                   </div>
-                  <div className="w-px h-4 bg-gray-300"></div>
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-xs text-gray-700 text-center w-full">
+                  <div className="w-px h-4 bg-slate-200"></div>
+                  <div className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-700 text-center w-full">
                     {branch.pregunta}
                   </div>
-                  <div className="w-px h-4 bg-gray-300"></div>
-                  <div className="bg-green-50 border border-green-200 rounded-lg px-3 py-2 text-xs text-green-800 font-medium text-center w-full">
+                  <div className="w-px h-4 bg-slate-200"></div>
+                  <div className="bg-sky-50 border border-sky-100 rounded-lg px-3 py-2 text-xs text-navy-900 font-medium text-center w-full">
                     {branch.resultado}
                   </div>
                 </div>
@@ -194,23 +194,23 @@ export default function BlogFuncionalesContent() {
 
       {/* Sección 3: Matriz */}
       <section id="sec-3" className="scroll-mt-24 mt-12">
-        <h2 className="text-2xl md:text-3xl font-bold text-blue-900 mb-6">
+        <h2 className="h2-section text-navy-900 mb-6">
           3. Matriz de Inversión: Costo Real vs. Días de Uso Anuales
         </h2>
-        <p className="text-gray-700 mb-6">
+        <p className="text-slate-700 mb-6">
           No mires el precio unitario. Mira el <strong>Costo por Día de Uso (CDU)</strong>. Esta herramienta justifica la apuesta por promocionales de calidad.
         </p>
 
-        <div className="relative border-2 border-gray-200 rounded-2xl overflow-hidden">
+        <div className="relative border-2 border-slate-200 rounded-2xl overflow-hidden">
           {/* Eje Y */}
-          <div className="absolute left-0 top-0 bottom-0 w-8 flex items-center justify-center bg-gray-50 border-r border-gray-200">
-            <span className="text-xs text-gray-500 font-semibold" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>
+          <div className="absolute left-0 top-0 bottom-0 w-8 flex items-center justify-center bg-slate-50 border-r border-slate-200">
+            <span className="text-xs text-slate-500 font-semibold" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>
               Días de uso al año ↑
             </span>
           </div>
           {/* Eje X */}
-          <div className="absolute bottom-0 left-8 right-0 h-8 flex items-center justify-center bg-gray-50 border-t border-gray-200">
-            <span className="text-xs text-gray-500 font-semibold">Costo unitario →</span>
+          <div className="absolute bottom-0 left-8 right-0 h-8 flex items-center justify-center bg-slate-50 border-t border-slate-200">
+            <span className="text-xs text-slate-500 font-semibold">Costo unitario →</span>
           </div>
 
           <div className="ml-8 mb-8 grid grid-cols-2">
@@ -221,8 +221,8 @@ export default function BlogFuncionalesContent() {
                 desc: 'Inversión baja, uso diario.',
                 detail: 'Agendas de papel de piedra, cables retráctiles multi-cabezal, soportes de móvil plegables.',
                 cdu: 'CDU: 0,01€ – 0,03€/día',
-                color: 'bg-green-50 border-green-300',
-                badge: 'bg-green-600',
+                color: 'bg-sky-50 border-sky-300',
+                badge: 'bg-sky-600',
                 recomendacion: '80% de tu pedido',
               },
               {
@@ -231,8 +231,8 @@ export default function BlogFuncionalesContent() {
                 desc: 'Inversión media-alta, uso diario garantizado.',
                 detail: 'Tazas térmicas con control de temperatura, mochilas anti-robo, auriculares bone conduction.',
                 cdu: 'CDU: 0,05€ – 0,15€/día',
-                color: 'bg-amber-50 border-amber-300',
-                badge: 'bg-amber-500',
+                color: 'bg-sky-50 border-sky-300',
+                badge: 'bg-sky-500',
                 recomendacion: '20% para clientes VIP',
               },
               {
@@ -241,8 +241,8 @@ export default function BlogFuncionalesContent() {
                 desc: 'Barato y se usa poco.',
                 detail: 'Bolígrafos de plástico, llaveros genéricos, abanicos de feria.',
                 cdu: 'CDU: Indeterminado (se pierden antes de usarse)',
-                color: 'bg-red-50 border-red-200',
-                badge: 'bg-red-500',
+                color: 'bg-danger-50 border-danger-50',
+                badge: 'bg-danger-500',
                 recomendacion: '0% — Evitar',
               },
               {
@@ -251,8 +251,8 @@ export default function BlogFuncionalesContent() {
                 desc: 'Caro y se usa poco.',
                 detail: 'Figuras decorativas pesadas, gadgets tecnológicos con curva de aprendizaje alta.',
                 cdu: 'CDU: 2€ – 5€/día (si es que se usa)',
-                color: 'bg-red-50 border-red-200',
-                badge: 'bg-red-400',
+                color: 'bg-danger-50 border-danger-50',
+                badge: 'bg-danger-400',
                 recomendacion: '0% — Evitar',
               },
             ].map((cuadrante, i) => (
@@ -262,24 +262,24 @@ export default function BlogFuncionalesContent() {
                     {cuadrante.num}
                   </span>
                   <div>
-                    <p className="font-bold text-gray-900 text-sm">{cuadrante.title}</p>
-                    <p className="text-gray-600 text-xs">{cuadrante.desc}</p>
+                    <p className="font-bold text-slate-900 text-sm">{cuadrante.title}</p>
+                    <p className="text-slate-500 text-xs">{cuadrante.desc}</p>
                   </div>
                 </div>
-                <p className="text-gray-700 text-xs mb-2">{cuadrante.detail}</p>
-                <p className="text-gray-500 text-xs italic mb-2">{cuadrante.cdu}</p>
-                <p className="text-xs font-semibold text-gray-800">Recomendación: {cuadrante.recomendacion}</p>
+                <p className="text-slate-700 text-xs mb-2">{cuadrante.detail}</p>
+                <p className="text-slate-500 text-xs italic mb-2">{cuadrante.cdu}</p>
+                <p className="text-xs font-semibold text-slate-900">Recomendación: {cuadrante.recomendacion}</p>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="mt-6 bg-blue-50 rounded-xl p-5 border border-blue-100">
-          <p className="font-bold text-blue-900 mb-2">Principio de Compra Inteligente:</p>
-          <ul className="space-y-1 text-gray-700 text-sm">
-            <li className="flex items-start gap-2"><span className="text-green-600 font-bold mt-0.5">✓</span><span><strong>80% del pedido del Cuadrante II:</strong> bajo costo, altísima frecuencia de uso.</span></li>
-            <li className="flex items-start gap-2"><span className="text-amber-500 font-bold mt-0.5">✓</span><span><strong>20% del pedido al Cuadrante IV:</strong> reservado para clientes de alto valor.</span></li>
-            <li className="flex items-start gap-2"><span className="text-red-500 font-bold mt-0.5">✗</span><span><strong>0% a los Cuadrantes I y III:</strong> en 2026 no hay excusa para regalar objetos abandonados.</span></li>
+        <div className="mt-6 bg-brand-50 rounded-xl p-5 border border-brand-100">
+          <p className="font-bold text-navy-900 mb-2">Principio de Compra Inteligente:</p>
+          <ul className="space-y-1 text-slate-700 text-sm">
+            <li className="flex items-start gap-2"><span className="text-sky-600 font-bold mt-0.5">✓</span><span><strong>80% del pedido del Cuadrante II:</strong> bajo costo, altísima frecuencia de uso.</span></li>
+            <li className="flex items-start gap-2"><span className="text-sky-500 font-bold mt-0.5">✓</span><span><strong>20% del pedido al Cuadrante IV:</strong> reservado para clientes de alto valor.</span></li>
+            <li className="flex items-start gap-2"><span className="text-danger-500 font-bold mt-0.5">✗</span><span><strong>0% a los Cuadrantes I y III:</strong> en 2026 no hay excusa para regalar objetos abandonados.</span></li>
           </ul>
         </div>
       </section>
@@ -296,10 +296,10 @@ export default function BlogFuncionalesContent() {
 
       {/* Sección 4: Checklist */}
       <section id="sec-4" className="scroll-mt-24 mt-12">
-        <h2 className="text-2xl md:text-3xl font-bold text-blue-900 mb-6">
+        <h2 className="h2-section text-navy-900 mb-6">
           4. Checklist de 7 Puntos: ¿Este Promocional se Usará Todos los Días?
         </h2>
-        <p className="text-gray-700 mb-6">
+        <p className="text-slate-700 mb-6">
           Ante cualquier promocional que estés considerando, haz este test. Debe cumplir al menos <strong>5 de los 7 criterios</strong>.
         </p>
 
@@ -341,20 +341,20 @@ export default function BlogFuncionalesContent() {
               desc: 'En 2026, el plástico brillante es percibido como tóxico y barato. ¿Tu promocional está hecho de materiales que envejecen con dignidad? Acero, madera, vidrio borosilicato, RPET texturizado.',
             },
           ].map((item) => (
-            <div key={item.num} className="flex gap-4 bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
-              <div className="flex-shrink-0 w-8 h-8 bg-blue-900 text-white rounded-full flex items-center justify-center font-bold text-sm">
+            <div key={item.num} className="flex gap-4 bg-white rounded-xl p-5 border border-slate-100 shadow-sm">
+              <div className="flex-shrink-0 w-8 h-8 bg-navy-900 text-white rounded-full flex items-center justify-center font-bold text-sm">
                 {item.num}
               </div>
               <div>
-                <p className="font-bold text-blue-900 mb-1">{item.titulo}</p>
-                <p className="text-gray-700 text-sm">{item.desc}</p>
+                <p className="font-bold text-navy-900 mb-1">{item.titulo}</p>
+                <p className="text-slate-700 text-sm">{item.desc}</p>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="mt-6 bg-amber-50 border-l-4 border-amber-500 p-6 rounded-r-xl">
-          <p className="text-amber-900 font-medium">
+        <div className="mt-6 bg-sky-50 border-l-4 border-sky-500 p-6 rounded-r-xl">
+          <p className="text-navy-900 font-medium">
             <strong>Dato clave:</strong> Según la ASI (Advertising Specialty Institute), los promocionales que se usan al menos una vez al día generan una media de <strong>1.400 impresiones de marca al año por unidad</strong>. Tu promocional diario es el anuncio más barato del planeta.
           </p>
         </div>
@@ -371,17 +371,17 @@ export default function BlogFuncionalesContent() {
 
       {/* Sección 5: Tabla Top 10 */}
       <section id="sec-5" className="scroll-mt-24 mt-12">
-        <h2 className="text-2xl md:text-3xl font-bold text-blue-900 mb-6">
+        <h2 className="h2-section text-navy-900 mb-6">
           5. Top 10: Los Promocionales que se Usan a Diario en 2026
         </h2>
-        <p className="text-gray-700 mb-6">
+        <p className="text-slate-700 mb-6">
           Basado en estudios de retención de producto y análisis de tendencias de consumo para 2026.
         </p>
 
-        <div className="overflow-x-auto rounded-2xl border border-gray-200 shadow-md">
+        <div className="overflow-x-auto rounded-2xl border border-slate-200 shadow-md">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-blue-900 text-white">
+              <tr className="bg-navy-900 text-white">
                 <th className="px-4 py-3 text-left font-semibold w-8">#</th>
                 <th className="px-4 py-3 text-left font-semibold">Promocional</th>
                 <th className="px-4 py-3 text-left font-semibold hidden md:table-cell">Ritual Diario</th>
@@ -396,7 +396,7 @@ export default function BlogFuncionalesContent() {
                   desc: 'Mantiene el café a 55°C exactos durante 4h. LED integrado sin botones.',
                   ritual: 'Café matinal. Escritorio.',
                   dias: '300+',
-                  color: 'bg-amber-50',
+                  color: 'bg-sky-50',
                 },
                 {
                   pos: 2,
@@ -412,7 +412,7 @@ export default function BlogFuncionalesContent() {
                   desc: 'Sin app, sin bluetooth. Luz que parpadea suavemente cada hora.',
                   ritual: 'Hidratación durante toda la jornada laboral.',
                   dias: '320',
-                  color: 'bg-amber-50',
+                  color: 'bg-sky-50',
                 },
                 {
                   pos: 4,
@@ -428,7 +428,7 @@ export default function BlogFuncionalesContent() {
                   desc: 'Papel que no se rasga, no se moja, no usa árboles. Bolígrafo de punta de metal líquido.',
                   ritual: 'Planificación diaria matinal. Reuniones.',
                   dias: '280',
-                  color: 'bg-amber-50',
+                  color: 'bg-sky-50',
                 },
                 {
                   pos: 6,
@@ -444,7 +444,7 @@ export default function BlogFuncionalesContent() {
                   desc: 'Abrebotellas, destornillador, llave fija, clip para billetes. Todo en 6cm. Grabado láser.',
                   ritual: 'Salir de casa cada mañana. Coger las llaves.',
                   dias: '365',
-                  color: 'bg-amber-50',
+                  color: 'bg-sky-50',
                 },
                 {
                   pos: 8,
@@ -460,7 +460,7 @@ export default function BlogFuncionalesContent() {
                   desc: 'Frascos de vidrio con tapa de bambú y cuchara dosificadora magnética.',
                   ritual: 'Cocinar cada día. Añadir sabor a platos y bebidas.',
                   dias: '300',
-                  color: 'bg-amber-50',
+                  color: 'bg-sky-50',
                 },
                 {
                   pos: 10,
@@ -471,19 +471,19 @@ export default function BlogFuncionalesContent() {
                   color: 'bg-white',
                 },
               ].map((item) => (
-                <tr key={item.pos} className={`${item.color} border-b border-gray-100`}>
+                <tr key={item.pos} className={`${item.color} border-b border-slate-100`}>
                   <td className="px-4 py-3">
-                    <span className="w-7 h-7 bg-blue-900 text-white rounded-full text-xs flex items-center justify-center font-bold">
+                    <span className="w-7 h-7 bg-navy-900 text-white rounded-full text-xs flex items-center justify-center font-bold">
                       {item.pos}
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <p className="font-semibold text-blue-900">{item.nombre}</p>
-                    <p className="text-gray-500 text-xs mt-1">{item.desc}</p>
+                    <p className="font-semibold text-navy-900">{item.nombre}</p>
+                    <p className="text-slate-500 text-xs mt-1">{item.desc}</p>
                   </td>
-                  <td className="px-4 py-3 text-gray-600 text-xs hidden md:table-cell">{item.ritual}</td>
+                  <td className="px-4 py-3 text-slate-500 text-xs hidden md:table-cell">{item.ritual}</td>
                   <td className="px-4 py-3 text-center">
-                    <span className="bg-green-100 text-green-800 font-bold text-xs px-2 py-1 rounded-full">{item.dias}</span>
+                    <span className="bg-sky-100 text-navy-900 font-bold text-xs px-2 py-1 rounded-full">{item.dias}</span>
                   </td>
                 </tr>
               ))}
@@ -504,10 +504,10 @@ export default function BlogFuncionalesContent() {
 
       {/* Sección 6: Envejecimiento noble */}
       <section id="sec-6" className="scroll-mt-24 mt-12">
-        <h2 className="text-2xl md:text-3xl font-bold text-blue-900 mb-6">
+        <h2 className="h2-section text-navy-900 mb-6">
           6. El Factor &quot;Envejecimiento Noble&quot;: Cómo Asegurar Funcionalidad a Largo Plazo
         </h2>
-        <p className="text-gray-700 mb-6">
+        <p className="text-slate-700 mb-6">
           Un promocional que se usa todos los días sufre desgaste. Esto no es un problema. Es una oportunidad. Un promocional que envejece mal destruye tu marca. Un promocional que envejece bien se convierte en un objeto amado.
         </p>
 
@@ -532,10 +532,10 @@ export default function BlogFuncionalesContent() {
               emoji: '♾️',
             },
           ].map((item) => (
-            <div key={item.num} className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
+            <div key={item.num} className="bg-white rounded-xl p-5 border border-slate-100 shadow-sm">
               <div className="text-2xl mb-3">{item.emoji}</div>
-              <h3 className="font-bold text-blue-900 mb-2">{item.titulo}</h3>
-              <p className="text-gray-600 text-sm">{item.desc}</p>
+              <h3 className="h3-card text-navy-900 mb-2">{item.titulo}</h3>
+              <p className="text-slate-500 text-sm">{item.desc}</p>
             </div>
           ))}
         </div>
@@ -552,20 +552,20 @@ export default function BlogFuncionalesContent() {
 
       {/* Sección 7: Regla de las 5 palabras */}
       <section id="sec-7" className="scroll-mt-24 mt-12">
-        <h2 className="text-2xl md:text-3xl font-bold text-blue-900 mb-6">
+        <h2 className="h2-section text-navy-900 mb-6">
           7. La Regla de las 5 Palabras: Copywriting en Promocionales Funcionales
         </h2>
-        <p className="text-gray-700 mb-4">
+        <p className="text-slate-700 mb-4">
           Un promocional de uso diario no es una valla publicitaria. El texto visible debe ser de <strong>5 palabras o menos</strong>. Idealmente, entre 0 y 3.
         </p>
 
-        <div className="overflow-x-auto rounded-2xl border border-gray-200 shadow-md">
+        <div className="overflow-x-auto rounded-2xl border border-slate-200 shadow-md">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="px-4 py-3 text-left text-gray-700 font-semibold">Promocional</th>
-                <th className="px-4 py-3 text-left text-red-700 font-semibold">Mal copy</th>
-                <th className="px-4 py-3 text-left text-green-700 font-semibold">Buen copy</th>
+              <tr className="bg-slate-50 border-b border-slate-200">
+                <th className="px-4 py-3 text-left text-slate-700 font-semibold">Promocional</th>
+                <th className="px-4 py-3 text-left text-danger-600 font-semibold">Mal copy</th>
+                <th className="px-4 py-3 text-left text-brand-600 font-semibold">Buen copy</th>
               </tr>
             </thead>
             <tbody>
@@ -591,18 +591,18 @@ export default function BlogFuncionalesContent() {
                   bien: 'Etiqueta de tela cosida en el borde: "Abrígate. Nosotros velamos."',
                 },
               ].map((row, i) => (
-                <tr key={i} className={`border-b border-gray-100 ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
-                  <td className="px-4 py-3 font-medium text-blue-900">{row.tipo}</td>
-                  <td className="px-4 py-3 text-red-700 text-xs">{row.mal}</td>
-                  <td className="px-4 py-3 text-green-700 text-xs font-medium">{row.bien}</td>
+                <tr key={i} className={`border-b border-slate-100 ${i % 2 === 0 ? 'bg-white' : 'bg-slate-50'}`}>
+                  <td className="px-4 py-3 font-medium text-navy-900">{row.tipo}</td>
+                  <td className="px-4 py-3 text-danger-600 text-xs">{row.mal}</td>
+                  <td className="px-4 py-3 text-brand-600 text-xs font-medium">{row.bien}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
 
-        <div className="mt-5 bg-blue-50 rounded-xl p-5 border border-blue-100">
-          <p className="text-blue-900 text-sm">
+        <div className="mt-5 bg-brand-50 rounded-xl p-5 border border-brand-100">
+          <p className="text-navy-900 text-sm">
             <strong>Principio de neuromarketing esencial:</strong> El promocional funcional debe ser, ante todo, del cliente. Tu marca es un acompañante silencioso, no el protagonista. Cuando el objeto es tan bueno que el cliente lo ama, buscará él mismo tu logo. Y ahí, el recuerdo es imborrable.
           </p>
         </div>
@@ -610,10 +610,10 @@ export default function BlogFuncionalesContent() {
 
       {/* Sección 8: Era post-digital */}
       <section id="sec-8" className="scroll-mt-24 mt-12">
-        <h2 className="text-2xl md:text-3xl font-bold text-blue-900 mb-6">
+        <h2 className="h2-section text-navy-900 mb-6">
           8. Promocionales en la Era Post-Digital: El Renacer de lo Tangible
         </h2>
-        <p className="text-gray-700 mb-6">
+        <p className="text-slate-700 mb-6">
           2026 no será el año del metaverso para los promocionales. Será justo lo contrario: <strong>la venganza de lo analógico</strong>. Cuanto más nos sumerjan las pantallas, más valorará nuestro cerebro los objetos que se tocan, que huelen, que pesan.
         </p>
 
@@ -622,25 +622,25 @@ export default function BlogFuncionalesContent() {
             {
               titulo: 'Desconexión activa',
               desc: 'Objetos que invitan a alejarse de la pantalla. Una pelota anti-estrés de madera torneada, un cuaderno de papel de piedra, un juego de mesa de bolsillo. Tu promocional será el refugio offline de tu cliente.',
-              color: 'bg-green-50 border-green-200',
-              titleColor: 'text-green-900',
+              color: 'bg-sky-50 border-sky-100',
+              titleColor: 'text-navy-900',
             },
             {
               titulo: 'Personalización masiva a bajo costo',
               desc: 'La impresión digital UV y el grabado láser ya permiten personalizar cada unidad con el nombre del cliente. Un promocional con el nombre del usuario se usa el doble de días al año. El cerebro ama ver su nombre escrito.',
-              color: 'bg-blue-50 border-blue-200',
-              titleColor: 'text-blue-900',
+              color: 'bg-brand-50 border-brand-100',
+              titleColor: 'text-navy-900',
             },
             {
               titulo: 'Segunda vida garantizada',
               desc: 'El promocional debe poder repararse, rellenarse o reciclarse al 100%. Una agenda con recambios de papel de piedra, un bolígrafo que se rellena en cualquier papelería. La obsolescencia programada es enemiga de la funcionalidad diaria.',
-              color: 'bg-amber-50 border-amber-200',
-              titleColor: 'text-amber-900',
+              color: 'bg-sky-50 border-sky-100',
+              titleColor: 'text-navy-900',
             },
           ].map((item, i) => (
             <div key={i} className={`${item.color} border rounded-xl p-5`}>
               <h3 className={`font-bold ${item.titleColor} mb-3`}>{item.titulo}</h3>
-              <p className="text-gray-700 text-sm">{item.desc}</p>
+              <p className="text-slate-700 text-sm">{item.desc}</p>
             </div>
           ))}
         </div>
@@ -658,37 +658,37 @@ export default function BlogFuncionalesContent() {
 
       {/* Sección 9: Conclusión */}
       <section id="sec-9" className="scroll-mt-24 mt-12">
-        <h2 className="text-2xl md:text-3xl font-bold text-blue-900 mb-6">
+        <h2 className="h2-section text-navy-900 mb-6">
           9. Conclusión: El Promocional Funcional es un Acto de Respeto
         </h2>
-        <p className="text-gray-700 leading-relaxed mb-4">
+        <p className="text-slate-700 leading-relaxed mb-4">
           Elegir un promocional que tu cliente usará todos los días no es una decisión de catálogo. Es un acto de empatía radical. Es decir:
         </p>
-        <blockquote className="border-l-4 border-amber-500 pl-6 py-2 my-6 bg-amber-50 rounded-r-xl">
-          <p className="text-amber-900 italic text-lg leading-relaxed">
+        <blockquote className="border-l-4 border-sky-500 pl-6 py-2 my-6 bg-sky-50 rounded-r-xl">
+          <p className="text-navy-900 italic text-lg leading-relaxed">
             &quot;He pensado en ti. En tu café de las 7:23. En tu espalda dolorida después de 8 horas frente al ordenador. En tu pánico cuando el móvil llega al 2%. En tu necesidad de silencio. En tu deseo de calor. Y te he traído esto. No para que me recuerdes. Para que estés mejor.&quot;
           </p>
         </blockquote>
-        <p className="text-gray-700 leading-relaxed">
+        <p className="text-slate-700 leading-relaxed">
           Los promocionales funcionales no gritan. Susurran. Y en un mundo de gritos publicitarios, <strong>un susurro diario vale más que mil banners</strong>.
         </p>
 
-        <div className="mt-8 bg-gradient-to-r from-blue-900 to-blue-800 rounded-2xl p-8 text-center">
-          <h3 className="text-2xl font-bold text-white mb-3">
+        <div className="mt-8 bg-gradient-to-r from-navy-900 to-navy-600 rounded-2xl p-8 text-center">
+          <h3 className="h2-section text-white mb-3">
             ¿Listo para seleccionar promocionales que se usen cada día del año?
           </h3>
-          <p className="text-blue-100 mb-6">
+          <p className="text-brand-100 mb-6">
             Analizamos el ritual diario de tus clientes y te proponemos 3 promocionales de uso diario con copywriting emocional incluido. Sin compromiso. Con toda la ciencia.
           </p>
           <Link
             href="/tienda/"
-            className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300"
+            className="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300"
           >
             Solicitar Diagnóstico de Promocionales Funcionales
           </Link>
         </div>
 
-        <p className="text-gray-400 text-xs mt-6 text-center italic">
+        <p className="text-slate-400 text-xs mt-6 text-center italic">
           Artículo documentado con datos proyectados de la Advertising Specialty Institute (ASI), principios de neuromarketing de Robert Cialdini y Daniel Kahneman, y tendencias de consumo post-digital de WGSN.
         </p>
       </section>
