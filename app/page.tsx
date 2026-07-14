@@ -1,6 +1,9 @@
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
+import CategoriasGrid from '@/components/CategoriasGrid';
 import ProductosDestacadosSlider from '@/components/ProductosDestacadosSlider';
+import CatalogoPorCategoria from '@/components/CatalogoPorCategoria';
+import PromocionesSlider from '@/components/PromocionesSlider';
 import PropuestaValor from '@/components/PropuestaValor';
 import Proceso from '@/components/Proceso';
 import SeleccionObjetivo from '@/components/SeleccionObjetivo';
@@ -8,7 +11,6 @@ import Personalizacion from '@/components/Personalizacion';
 import RegalosCorporativos from '@/components/RegalosCorporativos';
 import Cobertura from '@/components/Cobertura';
 import Confianza from '@/components/Confianza';
-import PromocionesSlider from '@/components/PromocionesSlider';
 import FAQ from '@/components/FAQ';
 import LlamadaFinal from '@/components/LlamadaFinal';
 import Footer from '@/components/Footer';
@@ -17,7 +19,10 @@ export default function Home() {
     <main className="min-h-screen">
       <Navbar />
       <HeroSection />
+      <CategoriasGrid />
       <ProductosDestacadosSlider />
+      <CatalogoPorCategoria />
+      <PromocionesSlider />
       <PropuestaValor />
       <Proceso />
       <SeleccionObjetivo />
@@ -25,7 +30,6 @@ export default function Home() {
       <RegalosCorporativos />
       <Cobertura />
       <Confianza />
-      <PromocionesSlider />
       <FAQ />
       <LlamadaFinal />
       <Footer />

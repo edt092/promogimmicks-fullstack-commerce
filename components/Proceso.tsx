@@ -31,13 +31,6 @@ const STEPS: Step[] = [
   },
   {
     number: '03',
-    eyebrow: 'Personalizar',
-    title: 'Define la personalización',
-    description: 'Revisamos contigo las opciones disponibles de color, ubicación del logotipo y técnica de marcación.',
-    image: '/img/hero/promocionales.png',
-  },
-  {
-    number: '04',
     eyebrow: 'Concretar',
     title: 'Recibe tu cotización',
     description: 'Obtén una propuesta basada en las características confirmadas de tu pedido.',
@@ -222,7 +215,7 @@ export default function Proceso() {
     <section id="proceso" ref={sectionRef} aria-labelledby="process-title" className="relative overflow-clip bg-white text-navy-900">
       <div className="process__header w-full max-w-[120rem] mx-auto px-5 sm:px-8 lg:px-[5rem] grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-x-4 lg:gap-x-6 items-start py-28 md:py-32 lg:py-48">
         <p ref={eyebrowRef} className="col-span-4 lg:col-start-1 lg:col-span-2 pt-3 text-navy-900/[55%] text-xs font-semibold tracking-[0.13em] uppercase">
-          Cómo trabajamos · 01—04
+          Cómo trabajamos · 01—03
         </p>
 
         <div className="col-span-4 md:col-span-8 lg:col-start-3 lg:col-span-8 mt-6 lg:mt-0 overflow-hidden pb-[0.08em]">
@@ -250,7 +243,7 @@ export default function Proceso() {
       >
         <div className="process__stage-header sticky top-0 z-10 lg:absolute lg:top-8 lg:left-[5rem] lg:right-[5rem] px-5 sm:px-8 lg:px-0 py-4 lg:py-0 bg-white/90 lg:bg-transparent backdrop-blur lg:backdrop-blur-0 grid grid-cols-1 lg:grid-cols-[1fr_minmax(18rem,42rem)] gap-3 lg:gap-8 items-start border-b border-navy-900/10 lg:border-none">
           <p ref={statusRef} className="m-0 text-navy-900/[55%] text-xs font-semibold tracking-[0.1em] uppercase">
-            Paso 1 de 4
+            Paso 1 de 3
           </p>
 
           <div
@@ -258,7 +251,7 @@ export default function Proceso() {
             role="progressbar"
             aria-label="Progreso del proceso de cotización"
             aria-valuemin={1}
-            aria-valuemax={4}
+            aria-valuemax={3}
             aria-valuenow={1}
             className="min-w-0"
           >
@@ -269,7 +262,6 @@ export default function Proceso() {
               <span>01</span>
               <span>02</span>
               <span>03</span>
-              <span>04</span>
             </span>
           </div>
         </div>

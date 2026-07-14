@@ -217,9 +217,9 @@ export default function Cobertura() {
   const active = CITIES[activeIndex];
 
   return (
-    <section id="cobertura" ref={sectionRef} aria-labelledby="geo-coverage-title" className="relative overflow-clip bg-[#f8f3e9] text-navy-900" style={{ paddingBlock: 'clamp(9rem, 16vw, 18rem) clamp(10rem, 19vw, 21rem)' }}>
+    <section id="cobertura" ref={sectionRef} aria-labelledby="geo-coverage-title" className="relative overflow-clip bg-[#f8f3e9] text-navy-900" style={{ paddingBlock: 'clamp(5rem, 9vw, 9rem) clamp(6rem, 10vw, 10rem)' }}>
       <div className="w-full max-w-[120rem] mx-auto px-5 sm:px-8 lg:px-[5rem]">
-        <header className="grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-x-4 lg:gap-x-6 items-start pb-24 lg:pb-40">
+        <header className="grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-x-4 lg:gap-x-6 items-start pb-14 lg:pb-20">
           <p ref={eyebrowRef} className="col-span-4 lg:col-start-1 lg:col-span-2 pt-3 text-navy-900/[55%] text-xs font-semibold tracking-[0.13em] uppercase">
             Cobertura nacional · Ecuador
           </p>
@@ -235,7 +235,7 @@ export default function Cobertura() {
           </div>
           <div className="col-span-4 md:col-span-6 lg:col-start-8 lg:col-span-5 mt-8 lg:mt-28 overflow-hidden">
             <p ref={introRef} className="max-w-[42ch] text-navy-900/70" style={{ fontSize: 'clamp(1rem, 1.2vw, 1.22rem)', lineHeight: 1.65 }}>
-              Atendemos solicitudes de artículos promocionales personalizados para empresas y organizaciones en Ecuador. Consulta las opciones disponibles y las condiciones aplicables para tu ciudad.
+              Consulta las opciones disponibles y las condiciones aplicables para tu ciudad.
             </p>
           </div>
         </header>
@@ -249,7 +249,7 @@ export default function Cobertura() {
                 aria-hidden="true"
                 className="relative overflow-hidden text-white"
                 style={{
-                  minHeight: 'min(76svh, 52rem)',
+                  minHeight: 'min(56svh, 36rem)',
                   background: 'radial-gradient(circle at 54% 42%, rgba(0,191,255,0.12), transparent 42%), #060F1C',
                   perspective: '1600px',
                 }}
@@ -423,10 +423,6 @@ export default function Cobertura() {
                         <div className="grid gap-x-6 gap-y-1 py-4 border-t border-navy-900/[13%]" style={{ gridTemplateColumns: 'minmax(8rem, 0.75fr) 1.25fr' }}>
                           <dt className="text-navy-900/[48%] text-[0.68rem] font-semibold tracking-[0.1em] uppercase">Categorías demandadas</dt>
                           <dd className="m-0 text-navy-900/[72%] text-sm" style={{ lineHeight: 1.55 }}>{city.categories}</dd>
-                        </div>
-                        <div className="grid gap-x-6 gap-y-1 py-4 border-t border-navy-900/[13%]" style={{ gridTemplateColumns: 'minmax(8rem, 0.75fr) 1.25fr' }}>
-                          <dt className="text-navy-900/[48%] text-[0.68rem] font-semibold tracking-[0.1em] uppercase">Experiencia local</dt>
-                          <dd className="m-0 text-navy-900/[72%] text-sm" style={{ lineHeight: 1.55 }}>Consultar disponibilidad</dd>
                         </div>
                       </dl>
 

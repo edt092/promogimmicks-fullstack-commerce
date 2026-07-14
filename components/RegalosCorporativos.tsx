@@ -13,7 +13,6 @@ export default function RegalosCorporativos() {
   const eyebrowRef = useRef<HTMLParagraphElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const primaryRef = useRef<HTMLParagraphElement>(null);
-  const secondaryRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
@@ -34,7 +33,7 @@ export default function RegalosCorporativos() {
 
       const ctx = gsap.context(() => {
         if (prefersReduced) {
-          gsap.set([canvas, mediaRef.current, eyebrowRef.current, titleRef.current, primaryRef.current, secondaryRef.current, ctaRef.current], {
+          gsap.set([canvas, mediaRef.current, eyebrowRef.current, titleRef.current, primaryRef.current, ctaRef.current], {
             opacity: 1,
             autoAlpha: 1,
             y: 0,
@@ -51,8 +50,7 @@ export default function RegalosCorporativos() {
           .from(eyebrowRef.current, { autoAlpha: 0, y: 16, duration: 0.7, ease: 'power3.out' }, 0.35)
           .from(titleRef.current, { autoAlpha: 0, y: 54, duration: 1.05, ease: 'power4.out' }, 0.42)
           .from(primaryRef.current, { autoAlpha: 0, y: 28, duration: 0.85, ease: 'power3.out' }, 0.68)
-          .from(secondaryRef.current, { autoAlpha: 0, y: 22, duration: 0.75, ease: 'power3.out' }, 0.8)
-          .from(ctaRef.current, { autoAlpha: 0, y: 28, scale: 0.96, duration: 0.8, ease: 'power3.out' }, 0.92);
+          .from(ctaRef.current, { autoAlpha: 0, y: 28, scale: 0.96, duration: 0.8, ease: 'power3.out' }, 0.8);
 
         gsap.fromTo(
           mediaRef.current,
@@ -107,12 +105,12 @@ export default function RegalosCorporativos() {
       ref={sectionRef}
       aria-labelledby="corporate-gifts-title"
       className="relative overflow-clip"
-      style={{ background: '#f9f6ef', padding: 'clamp(9rem, 17vw, 20rem) clamp(1.25rem, 4vw, 5rem)' }}
+      style={{ background: '#f9f6ef', padding: 'clamp(5rem, 10vw, 10rem) clamp(1.25rem, 4vw, 5rem)' }}
     >
       <div
         ref={canvasRef}
         className="relative w-full max-w-[120rem] mx-auto overflow-hidden grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 items-end lg:items-center"
-        style={{ minHeight: 'min(88svh, 62.5rem)', background: '#060F1C', isolation: 'isolate' }}
+        style={{ minHeight: 'min(58svh, 38rem)', background: '#060F1C', isolation: 'isolate' }}
       >
         <div ref={mediaRef} aria-hidden="true" className="absolute inset-0" style={{ zIndex: -3 }}>
           <Image
@@ -138,7 +136,7 @@ export default function RegalosCorporativos() {
 
         <div aria-hidden="true" className="absolute inset-2 lg:inset-8 pointer-events-none" style={{ zIndex: -1, border: '1px solid rgba(242,236,223,0.18)' }} />
 
-        <div className="col-span-4 md:col-span-8 lg:col-start-3 lg:col-span-8 relative z-10 min-w-0 flex flex-col items-start lg:items-center text-left lg:text-center py-24 px-5 lg:px-0" style={{ paddingBlock: 'clamp(7rem, 13vh, 11rem)' }}>
+        <div className="col-span-4 md:col-span-8 lg:col-start-3 lg:col-span-8 relative z-10 min-w-0 flex flex-col items-start lg:items-center text-left lg:text-center py-24 px-5 lg:px-0" style={{ paddingBlock: 'clamp(4rem, 7vh, 6rem)' }}>
           <p ref={eyebrowRef} className="m-0 text-white/[66%] text-xs font-semibold tracking-[0.13em] uppercase">
             Relaciones que trascienden el momento
           </p>
@@ -156,10 +154,7 @@ export default function RegalosCorporativos() {
 
           <div className="flex flex-col items-start lg:items-center mt-9 lg:mt-16">
             <p ref={primaryRef} className="m-0 max-w-[55ch] text-white/[82%] text-left lg:text-center" style={{ fontSize: 'clamp(1.05rem, 1.35vw, 1.35rem)', lineHeight: 1.65 }}>
-              Los regalos corporativos pueden ayudarte a reconocer a tu equipo, agradecer a tus clientes y acompañar momentos importantes de la empresa. Combina diferentes productos para crear una propuesta alineada con la ocasión, la audiencia y la identidad de tu marca.
-            </p>
-            <p ref={secondaryRef} className="max-w-[60ch] text-white/[62%] text-left lg:text-center mt-6" style={{ fontSize: 'clamp(0.9rem, 1vw, 1.05rem)', lineHeight: 1.65 }}>
-              Descubre alternativas para incorporaciones, aniversarios, fin de año, eventos, programas de fidelización y relaciones comerciales.
+              Reconoce a tu equipo, agradece a tus clientes y acompaña los momentos importantes de tu empresa con una propuesta alineada a tu marca.
             </p>
           </div>
 

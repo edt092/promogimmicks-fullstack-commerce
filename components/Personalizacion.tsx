@@ -20,29 +20,15 @@ const TECHNIQUES: Technique[] = [
     image: '/img/tecnicas/serigrafia.png',
   },
   {
-    key: 'pad-printing',
-    index: '02',
-    title: 'Tampografía',
-    description: 'Adecuada para determinados artículos pequeños o con superficies que requieren una aplicación precisa.',
-    image: '/img/tecnicas/tampografia.png',
-  },
-  {
-    key: 'sublimation',
-    index: '03',
-    title: 'Sublimación',
-    description: 'Recomendada para productos compatibles con esta técnica cuando el diseño requiere color y mayor detalle.',
-    image: '/img/tecnicas/sublimacion.png',
-  },
-  {
     key: 'laser',
-    index: '04',
+    index: '02',
     title: 'Grabado láser',
     description: 'Produce un acabado permanente y sobrio en materiales compatibles, especialmente útil para obsequios corporativos.',
     image: '/img/tecnicas/grabado-laser.png',
   },
   {
     key: 'embroidery',
-    index: '05',
+    index: '03',
     title: 'Bordado',
     description: 'Una opción resistente para textiles, gorras, mochilas y otros productos compatibles.',
     image: '/img/tecnicas/bordados.png',
@@ -165,7 +151,7 @@ export default function Personalizacion() {
     >
       <div className="craftsmanship__header w-full max-w-[120rem] mx-auto px-5 sm:px-8 lg:px-[5rem] grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-x-4 lg:gap-x-6 items-start py-32 md:py-36 lg:py-56">
         <p ref={eyebrowRef} className="col-span-4 lg:col-start-1 lg:col-span-2 pt-3 text-white/[54%] text-xs font-semibold tracking-[0.13em] uppercase">
-          Estudio de acabados · 01—05
+          Estudio de acabados · 01—03
         </p>
         <div className="col-span-4 md:col-span-6 lg:col-start-3 lg:col-span-8 mt-6 lg:mt-0 overflow-hidden pb-[0.08em]">
           <h2
@@ -203,7 +189,7 @@ export default function Personalizacion() {
             <div className="flex justify-between items-center gap-8 pt-5 text-white/[48%] text-xs font-semibold tracking-[0.1em] uppercase">
               <p className="m-0">
                 <span className="text-sky-300" style={{ fontVariantNumeric: 'tabular-nums' }}>{TECHNIQUES[activeIndex].index}</span>
-                <span aria-hidden="true"> / 05</span>
+                <span aria-hidden="true"> / 03</span>
               </p>
               <p className="m-0">{TECHNIQUES[activeIndex].image ? TECHNIQUES[activeIndex].title : 'Fotografía de acabado en preparación'}</p>
             </div>
@@ -248,12 +234,6 @@ export default function Personalizacion() {
               </p>
             </article>
           ))}
-
-          <aside className="mt-16 py-8 border-y border-white/[16%]">
-            <p className="max-w-[45ch] text-white/[48%] text-sm" style={{ lineHeight: 1.65 }}>
-              Las técnicas disponibles dependen del material, la forma del producto, el diseño y la cantidad solicitada. Confirma la compatibilidad antes de aprobar tu pedido.
-            </p>
-          </aside>
         </div>
       </div>
     </section>

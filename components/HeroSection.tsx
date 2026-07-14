@@ -3,7 +3,6 @@
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import CategoriasSlider from './CategoriasSlider';
 
 const WHATSAPP_QUOTE_URL =
   'https://wa.me/593998594123?text=Hola%2C%20me%20interesa%20crear%20un%20proyecto%20de%20art%C3%ADculos%20promocionales%20personalizados';
@@ -336,21 +335,6 @@ export default function HeroSection() {
         aria-hidden="true"
         className="hero-transition absolute bottom-0 left-0 right-0 h-[14vh] bg-gradient-to-b from-transparent to-white"
       />
-      <div className="hero-next-intro relative z-10 bg-white pt-8 md:pt-10 lg:pt-12 pb-[16vh] px-5 sm:px-8 lg:px-10 -mt-px">
-        <div className="max-w-[1920px] mx-auto grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-x-4 lg:gap-x-6">
-          <a
-            href="#categorias"
-            className="col-span-4 lg:col-start-11 lg:col-span-2 inline-flex items-center gap-2 text-navy-900 font-semibold text-sm hover:text-brand transition-colors self-start"
-          >
-            Descubrir categorías
-            <span aria-hidden="true">→</span>
-          </a>
-
-          <div id="categorias" className="col-span-4 md:col-span-8 lg:col-span-12">
-            <CategoriasSlider />
-          </div>
-        </div>
-      </div>
     </section>
   );
 }

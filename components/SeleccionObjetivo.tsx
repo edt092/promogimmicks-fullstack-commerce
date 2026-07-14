@@ -27,18 +27,8 @@ const OBJECTIVES: Objective[] = [
     caption: 'Visibilidad en movimiento',
   },
   {
-    key: 'employees',
-    number: '02',
-    title: 'Para colaboradores',
-    description: 'Crea kits para bienvenida, reconocimiento, aniversarios, capacitaciones o actividades de integración.',
-    linkText: 'Explorar regalos para colaboradores',
-    href: '/tienda/',
-    image: '/img/productos/reloj-inteligente-korbin-plus-10353.jpg',
-    caption: 'Artículos promocionales que crean pertenencia',
-  },
-  {
     key: 'clients',
-    number: '03',
+    number: '02',
     title: 'Para clientes',
     description: 'Refuerza relaciones comerciales con artículos útiles que mantengan tu marca presente después de cada interacción.',
     linkText: 'Explorar regalos para clientes',
@@ -48,7 +38,7 @@ const OBJECTIVES: Objective[] = [
   },
   {
     key: 'sustainable',
-    number: '04',
+    number: '03',
     title: 'Para campañas sostenibles',
     description: 'Descubre productos promocionales con materiales alternativos para iniciativas que buscan comunicar una visión más responsable.',
     linkText: 'Explorar promocionales ecológicos',
@@ -109,7 +99,7 @@ export default function SeleccionObjetivo() {
     <section id="seleccion-por-objetivo" ref={sectionRef} aria-labelledby="objective-title" className="relative overflow-clip bg-white text-navy-900 pt-28 md:pt-32 lg:pt-56">
       <div className="w-full max-w-[120rem] mx-auto px-5 sm:px-8 lg:px-[5rem] grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-x-4 lg:gap-x-6 items-start pb-24 lg:pb-40">
         <p ref={eyebrowRef} className="col-span-4 lg:col-start-1 lg:col-span-2 pt-3 text-navy-900/[56%] text-xs font-semibold tracking-[0.13em] uppercase">
-          Selecciona tu propósito · 01—04
+          Selecciona tu propósito · 01—03
         </p>
         <div className="col-span-4 md:col-span-7 lg:col-start-3 lg:col-span-8 mt-6 lg:mt-0 overflow-hidden pb-[0.08em]">
           <h2
@@ -154,7 +144,7 @@ export default function SeleccionObjetivo() {
             <div className="absolute top-8 left-8 z-10 flex gap-2 text-white/60 text-xs tracking-[0.1em]" style={{ fontVariantNumeric: 'tabular-nums' }}>
               <span className="text-white">{OBJECTIVES[activeIndex].number}</span>
               <span aria-hidden="true">/</span>
-              <span aria-hidden="true">04</span>
+              <span aria-hidden="true">03</span>
             </div>
           </div>
 

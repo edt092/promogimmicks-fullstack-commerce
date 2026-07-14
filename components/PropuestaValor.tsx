@@ -25,20 +25,6 @@ const BENEFITS: Benefit[] = [
     description: 'Selecciona el producto y consulta las técnicas disponibles para incorporar tu logotipo, mensaje o identidad visual.',
     desktopCols: 'lg:col-start-3 lg:col-span-10',
   },
-  {
-    number: '03',
-    label: 'Asesoría',
-    title: 'Atención para empresas',
-    description: 'Recibe orientación para comparar opciones de acuerdo con el uso, cantidad, material, presupuesto y fecha requerida.',
-    desktopCols: 'lg:col-start-1 lg:col-span-9',
-  },
-  {
-    number: '04',
-    label: 'Alcance',
-    title: 'Cobertura en Ecuador',
-    description: 'Gestionamos solicitudes de empresas que buscan artículos promocionales en distintas ciudades del país. Confirma con nuestro equipo la disponibilidad y condiciones de entrega para tu ubicación.',
-    desktopCols: 'lg:col-start-2 lg:col-span-11',
-  },
 ];
 
 export default function PropuestaValor() {
@@ -196,7 +182,7 @@ export default function PropuestaValor() {
                 className="max-w-[40ch] text-white/[72%]"
                 style={{ fontSize: 'clamp(1rem, 1.15vw, 1.2rem)', lineHeight: 1.62, letterSpacing: '-0.012em' }}
               >
-                Un producto promocional funciona mejor cuando combina utilidad, presentación y coherencia con la identidad de la marca. Te ayudamos a encontrar una alternativa adecuada para tu audiencia y tipo de campaña.
+                Te ayudamos a encontrar el producto adecuado para tu audiencia y tipo de campaña.
               </p>
             </div>
           </header>

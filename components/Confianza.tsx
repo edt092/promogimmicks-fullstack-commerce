@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import productsDataRaw from '@/data/products.json';
 
 interface Product {
@@ -13,12 +12,6 @@ const productsData = productsDataRaw as Product[];
 const TOTAL_PRODUCTS = productsData.length;
 const TOTAL_CATEGORIES = new Set(productsData.map((p) => p.categoria)).size;
 const VERIFIED_LABEL = new Date().toLocaleDateString('es-EC', { year: 'numeric', month: 'long' });
-
-const USEFUL_LINKS = [
-  { label: 'Explorar catálogo completo', href: '/tienda/' },
-  { label: 'Novedades', href: '/novedades/' },
-  { label: 'Promociones', href: '/promociones/' },
-];
 
 export default function Confianza() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -93,14 +86,14 @@ export default function Confianza() {
       ref={sectionRef}
       aria-labelledby="trust-title"
       className="relative overflow-clip text-navy-900"
-      style={{ background: '#eee7da', paddingBlock: 'clamp(9rem, 16vw, 18rem) clamp(10rem, 18vw, 20rem)' }}
+      style={{ background: '#eee7da', paddingBlock: 'clamp(5rem, 9vw, 9rem) clamp(6rem, 10vw, 10rem)' }}
     >
       <div className="w-full max-w-[120rem] mx-auto px-5 sm:px-8 lg:px-[5rem] grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8">
         {/* A. Intro */}
         <header
           ref={(el) => { cardRefs.current[0] = el; }}
           className="lg:col-span-8 min-w-0 p-7 lg:p-16 flex flex-col justify-between"
-          style={{ background: '#f7f3eb', minHeight: '28rem' }}
+          style={{ background: '#f7f3eb', minHeight: '20rem' }}
         >
           <p className="m-0 text-navy-900/[64%] text-xs font-semibold tracking-[0.13em] uppercase">
             Experiencia, evidencia y transparencia
@@ -108,12 +101,12 @@ export default function Confianza() {
           <h2
             id="trust-title"
             className="h2-section max-w-[10ch]"
-            style={{ marginTop: 'clamp(3rem, 8vw, 8rem)', textWrap: 'balance' }}
+            style={{ marginTop: 'clamp(2rem, 5vw, 5rem)', textWrap: 'balance' }}
           >
             Una solución promocional respaldada por atención especializada
           </h2>
-          <p className="max-w-[49ch] text-navy-900/[64%]" style={{ fontSize: 'clamp(1rem, 1.25vw, 1.25rem)', lineHeight: 1.65, marginTop: 'clamp(3rem, 6vw, 6rem)' }}>
-            En PromoGimmicks ayudamos a empresas a seleccionar artículos promocionales de acuerdo con su campaña, audiencia y forma de uso. Nuestro objetivo es facilitar el proceso desde la elección del producto hasta la definición de su personalización.
+          <p className="max-w-[49ch] text-navy-900/[64%]" style={{ fontSize: 'clamp(1rem, 1.25vw, 1.25rem)', lineHeight: 1.65, marginTop: 'clamp(2rem, 4vw, 4rem)' }}>
+            Te ayudamos a seleccionar artículos promocionales según tu campaña, audiencia y forma de uso.
           </p>
         </header>
 
@@ -167,9 +160,9 @@ export default function Confianza() {
         <article
           ref={(el) => { cardRefs.current[2] = el; }}
           className="lg:col-span-7 min-w-0 relative overflow-hidden"
-          style={{ minHeight: '30rem' }}
+          style={{ minHeight: '20rem' }}
         >
-          <figure className="relative m-0 h-full" style={{ minHeight: '30rem', display: 'grid' }}>
+          <figure className="relative m-0 h-full" style={{ minHeight: '20rem', display: 'grid' }}>
             <Image
               src="/img/hero/hero-slide-2.png"
               alt=""
@@ -221,32 +214,6 @@ export default function Confianza() {
             </dl>
           </address>
         </section>
-
-        {/* Useful links, in place of policy pages that don't exist yet */}
-        <nav
-          aria-labelledby="useful-links-title"
-          className="lg:col-start-8 lg:col-span-5 min-w-0 p-7 lg:p-12"
-          style={{ background: '#f7f3eb' }}
-        >
-          <h3 id="useful-links-title" className="m-0 h3-card">
-            Enlaces útiles
-          </h3>
-          <ul className="mt-10 m-0 p-0 list-none">
-            {USEFUL_LINKS.map((link) => (
-              <li key={link.href} className="border-t border-navy-900/[16%] last:border-b">
-                <Link
-                  href={link.href}
-                  className="group relative min-h-[4.75rem] py-4 flex justify-between items-center gap-8 text-navy-900 no-underline"
-                  style={{ fontSize: 'clamp(0.95rem, 1.15vw, 1.15rem)' }}
-                >
-                  <span>{link.label}</span>
-                  <span aria-hidden="true" className="transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1">↗</span>
-                  <span aria-hidden="true" className="absolute left-0 right-0 -bottom-px h-0.5 bg-navy-900 origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100" />
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
       </div>
     </section>
   );
