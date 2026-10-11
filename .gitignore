@@ -73,4 +73,7 @@ pnpm-workspace.yaml
 !README.md
 !app/**/*.md
 !components/**/*.md
+# Informes de implementación SEO/UX versionados con el código
+!reports/seo-*.md
+!reports/uxui-*.md
 .tmp-screens/
