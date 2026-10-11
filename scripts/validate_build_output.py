@@ -190,6 +190,15 @@ def main():
             if target_path and target_path != '/' and not os.path.exists(path_to_html_file(target_path)):
                 dangling.append((frm, to))
 
+    # Netlify compara reglas ignorando la barra final: una regla con comodín cuyo destino es
+    # el mismo patrón + "/" se aplica sobre sí misma en URLs inexistentes -> bucle infinito.
+    for frm, to, status in redirect_rules:
+        if ':' not in frm and '*' not in frm:
+            continue
+        to_path = urlsplit(to).path if to.startswith('http') else to
+        if status.startswith('3') and to_path.rstrip('/') == frm.rstrip('/'):
+            loops.append(f'{frm} (comodín hacia sí mismo con barra final)')
+
     if loops:
         critical_failures += 1
         fail(f'{len(loops)} redirect loops detectados:')
