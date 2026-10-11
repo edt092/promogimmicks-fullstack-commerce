@@ -288,10 +288,9 @@ export default function HeroSection() {
         >
           <Link
             href="/tienda/"
-            aria-label="Explorar el catálogo de artículos promocionales"
             className="group inline-flex items-center justify-center gap-2 h-[58px] px-8 rounded-full bg-white text-navy-900 text-[15px] font-semibold transition-colors duration-200 hover:bg-sky-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-400 focus-visible:outline-offset-4 w-full sm:w-auto"
           >
-            Explorar la colección
+            Ver catálogo
             <span aria-hidden="true" className="inline-block transition-transform duration-200 group-hover:translate-x-1">
               →
             </span>

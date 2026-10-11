@@ -5,6 +5,7 @@ import { Search, X, ShoppingCart } from 'lucide-react';
 import ProductCard from './ProductCard';
 import type { ProductCardData } from '@/lib/catalog';
 import { loadSearchIndex, searchItems, type SearchItem } from '@/lib/search';
+import { whatsappUrl as waLink } from '@/lib/site';
 
 type GridProduct = ProductCardData & { descripcion_corta?: string };
 
@@ -75,6 +76,24 @@ export default function TiendaGrid({ initialProducts, totalCount }: TiendaGridPr
     setVisibleProducts(PRODUCTS_PER_PAGE);
   }, [searchTerm]);
 
+  // La búsqueda vive en la URL (?q=): se puede compartir y se recupera al volver
+  // con Atrás desde una ficha. Static export: se lee en el cliente tras hidratar.
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search).get('q');
+    if (q) setSearchTerm(q);
+  }, []);
+
+  useEffect(() => {
+    const t = window.setTimeout(() => {
+      const url = new URL(window.location.href);
+      const q = searchTerm.trim();
+      if (q) url.searchParams.set('q', q);
+      else url.searchParams.delete('q');
+      if (url.href !== window.location.href) window.history.replaceState(window.history.state, '', url.href);
+    }, 400);
+    return () => window.clearTimeout(t);
+  }, [searchTerm]);
+
   const loadMore = useCallback(() => {
     if (visibleProducts >= total) return;
     ensureIndex();
@@ -102,7 +121,9 @@ export default function TiendaGrid({ initialProducts, totalCount }: TiendaGridPr
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
             <div className="relative flex-1">
+              <label htmlFor="tienda-search" className="block text-sm font-medium text-gray-700 mb-1">Buscar en el catálogo</label>
               <input
+                id="tienda-search"
                 type="text"
                 placeholder="Buscar por nombre, SKU o categoría…"
                 aria-label="Buscar productos en el catálogo"
@@ -110,12 +131,12 @@ export default function TiendaGrid({ initialProducts, totalCount }: TiendaGridPr
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-12 pr-10 py-3.5 text-base border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-gray-50 focus:bg-white"
               />
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+              <Search className="absolute left-4 bottom-[18px] text-gray-400" size={20} aria-hidden="true" />
               {searchTerm && (
                 <button
                   onClick={() => setSearchTerm('')}
                   aria-label="Borrar búsqueda"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-200 rounded-full transition-colors"
+                  className="absolute right-3 bottom-[12px] p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-200 rounded-full transition-colors"
                 >
                   <X size={16} />
                 </button>
@@ -125,7 +146,7 @@ export default function TiendaGrid({ initialProducts, totalCount }: TiendaGridPr
             <p className="text-sm text-gray-500 text-center sm:text-right whitespace-nowrap">
               <span className="font-semibold text-gray-900">{searching && !index ? '…' : total}</span> productos
               {searchTerm && (
-                <span className="ml-2 text-amber-600">
+                <span className="ml-2 text-amber-700">
                   para &quot;{searchTerm}&quot;
                 </span>
               )}
@@ -152,6 +173,7 @@ export default function TiendaGrid({ initialProducts, totalCount }: TiendaGridPr
                   </div>
                 ) : (
                   <button
+                    type="button"
                     onClick={loadMore}
                     className="px-6 py-3 bg-blue-900 text-white rounded-lg font-medium hover:bg-blue-800 transition-colors"
                   >
@@ -180,16 +202,27 @@ export default function TiendaGrid({ initialProducts, totalCount }: TiendaGridPr
           <div className="text-center py-20 animate-fadeIn">
             <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 max-w-md mx-auto">
               <ShoppingCart className="mx-auto text-gray-300 mb-6" size={80} />
-              <h3 className="text-2xl font-bold text-gray-700 mb-3">No encontramos productos</h3>
-              <p className="text-gray-500 text-base mb-6">
-                No hay resultados para &quot;{searchTerm}&quot;
+              <h3 className="text-2xl font-bold text-gray-700 mb-3">Sin coincidencias</h3>
+              <p className="text-gray-600 text-base mb-6">
+                No encontramos coincidencias para «{searchTerm}». Prueba con el tipo de producto (mug, bolígrafo, tomatodo) o su código.
               </p>
-              <button
-                onClick={() => setSearchTerm('')}
-                className="bg-blue-900 hover:bg-blue-800 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
-              >
-                Ver todos los productos
-              </button>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <button
+                  type="button"
+                  onClick={() => setSearchTerm('')}
+                  className="bg-blue-900 hover:bg-blue-800 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
+                >
+                  Limpiar búsqueda
+                </button>
+                <a
+                  href={waLink(`Hola, busco un producto promocional: ${searchTerm}`)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="border-2 border-blue-900 text-blue-900 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50"
+                >
+                  Pedir asesoría por WhatsApp
+                </a>
+              </div>
             </div>
           </div>
         )}

@@ -5,6 +5,7 @@ import {
   SITE_URL, SITE_NAME, SITE_LANGUAGE, WHATSAPP_NUMBER, CONTACT_EMAIL,
   ORGANIZATION_ID, WEBSITE_ID, absoluteUrl, whatsappUrl, jsonLd,
 } from "@/lib/site";
+import MotionProvider from "@/components/MotionProvider";
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -65,7 +66,7 @@ export default function RootLayout({
     <html lang="es" className={manrope.variable}>
       <body className="font-manrope">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(siteSchema) }} />
-        {children}
+        <MotionProvider>{children}</MotionProvider>
         <a
           href={whatsappUrl()}
           target="_blank"
