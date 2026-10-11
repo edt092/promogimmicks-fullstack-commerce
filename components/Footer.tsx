@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { MapPin, Phone, Mail, Send, CheckCircle2 } from 'lucide-react';
 import { Logo } from './Logo';
 import categoriesDataRaw from '@/data/categories.json';
+import { whatsappUrl as waLink } from '@/lib/site';
 
 interface Category {
   slug: string;
@@ -121,7 +122,7 @@ export default function Footer() {
                 <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M22 12a10 10 0 1 0-11.5 9.87v-6.98H7.9V12h2.6V9.8c0-2.57 1.53-4 3.87-4 1.12 0 2.3.2 2.3.2v2.5h-1.3c-1.28 0-1.68.8-1.68 1.62V12h2.86l-.46 2.89h-2.4v6.98A10 10 0 0 0 22 12Z"/></svg>
               </a>
               <a
-                href="https://wa.me/593998594123"
+                href={waLink()}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WhatsApp"
@@ -166,7 +167,9 @@ export default function Footer() {
                 { href: '/novedades/', label: 'Novedades' },
                 { href: '/productos/', label: 'Productos' },
                 { href: '/promociones/', label: 'Promociones' },
-                { href: '/blog', label: 'Blog' },
+                { href: '/blog/', label: 'Blog' },
+                { href: '/nosotros/', label: 'Nosotros' },
+                { href: '/contacto/', label: 'Contacto' },
               ].map((l) => (
                 <li key={l.href}>
                   <Link href={l.href} className="link-underline text-slate-400 hover:text-sky-400 transition-colors text-sm">

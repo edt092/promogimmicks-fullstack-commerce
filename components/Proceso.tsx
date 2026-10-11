@@ -2,9 +2,10 @@
 
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
+import { whatsappUrl as waLink } from '@/lib/site';
 
 const WHATSAPP_QUOTE_URL =
-  'https://wa.me/593998594123?text=Hola%2C%20me%20interesa%20cotizar%20art%C3%ADculos%20promocionales';
+  waLink('Hola, me interesa cotizar artículos promocionales');
 
 interface Step {
   number: string;
@@ -320,7 +321,7 @@ export default function Proceso() {
                 </div>
 
                 <figure aria-hidden="true" className="process-step__visual col-span-4 md:col-span-3 lg:col-start-9 lg:col-span-4 relative overflow-hidden m-0 mt-10 lg:mt-0 aspect-[4/5] bg-slate-200">
-                  <Image src={step.image} alt="" fill sizes="(max-width: 767px) 76vw, 30vw" loading={i === 0 ? undefined : 'lazy'} priority={i === 0} className="object-cover scale-105" style={{ filter: 'grayscale(0.35) saturate(0.75) contrast(1.02)' }} />
+                  <Image src={step.image} alt="" fill sizes="(max-width: 767px) 76vw, 30vw" loading="lazy" className="object-cover scale-105" style={{ filter: 'grayscale(0.35) saturate(0.75) contrast(1.02)' }} />
                   <span aria-hidden="true" className="absolute inset-0 bg-navy-900/[8%]" />
                 </figure>
               </article>

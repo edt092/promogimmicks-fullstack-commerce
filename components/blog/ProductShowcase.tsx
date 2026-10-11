@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { ShoppingCart, Eye, Star, ArrowRight } from 'lucide-react';
+import { whatsappUrl as waLink } from '@/lib/site';
 
 interface Product {
   id: string;
@@ -30,7 +31,7 @@ export default function ProductShowcase({
     e.preventDefault();
     e.stopPropagation();
     const mensaje = `Hola! Me interesa cotizar el producto: ${productName}`;
-    const whatsappUrl = `https://wa.me/593998594123?text=${encodeURIComponent(mensaje)}`;
+    const whatsappUrl = waLink(mensaje);
     window.open(whatsappUrl, '_blank');
   };
 

@@ -3,13 +3,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { ShoppingCart, Eye } from 'lucide-react';
 import Link from 'next/link';
+import { whatsappUrl } from '@/lib/site';
 
 interface Product {
   id: string;
   nombre: string;
   slug: string;
   categoria: string;
-  descripcion_corta: string;
+  descripcion_corta?: string;
   imagen_url: string;
   codigo?: string | null;
   sku?: string;
@@ -40,7 +41,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
     e.preventDefault();
     e.stopPropagation();
     const mensaje = `Hola! Me interesa cotizar el producto: ${product.nombre}`;
-    window.open(`https://wa.me/593998594123?text=${encodeURIComponent(mensaje)}`, '_blank');
+    window.open(whatsappUrl(mensaje), '_blank');
   };
 
   return (

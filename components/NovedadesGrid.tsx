@@ -3,7 +3,6 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { Sparkles, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
-import productsDataRaw from '@/data/products.json';
 
 interface Product {
   id: string;
@@ -11,19 +10,14 @@ interface Product {
   slug: string;
   categoria: string;
   categoria_slug: string;
-  descripcion_corta: string;
+  descripcion_corta?: string;
   imagen_url: string;
   sku: string;
 }
 
-const productsData = productsDataRaw as Product[];
 const PER_PAGE = 20;
-const POOL_SIZE = 300;
-
-// Los productos más recientes son los últimos que el scraper añadió al catálogo
-const novedadesPool = [...productsData].slice(-POOL_SIZE).reverse();
-
-export default function NovedadesGrid() {
+// Pool de novedades (últimos productos añadidos) resuelto en el servidor (app/novedades/page.tsx).
+export default function NovedadesGrid({ products: novedadesPool }: { products: Product[] }) {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [page, setPage] = useState(1);
 
@@ -38,12 +32,12 @@ export default function NovedadesGrid() {
       .map(([slug, v]) => ({ slug, ...v }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 14);
-  }, []);
+  }, [novedadesPool]);
 
   const filtered = useMemo(() => {
     if (!activeCategory) return novedadesPool;
     return novedadesPool.filter((p) => p.categoria_slug === activeCategory);
-  }, [activeCategory]);
+  }, [activeCategory, novedadesPool]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
   const currentPage = Math.min(page, totalPages);

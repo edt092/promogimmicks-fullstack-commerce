@@ -6,23 +6,8 @@ import Link from 'next/link';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import ProductShowcase from './ProductShowcase';
 import CTABanner from './CTABanner';
-import productsData from '@/data/products.json';
-
-const getProductsByCategory = (category: string, limit: number = 4) => {
-  return productsData
-    .filter(p => p.categoria.toLowerCase().includes(category.toLowerCase()))
-    .slice(0, limit);
-};
-
-const getFeaturedProducts = (limit: number = 4) => {
-  const categories = ['Tecnología', 'Drinkware', 'Oficina', 'Accesorios'];
-  const featured: typeof productsData = [];
-  categories.forEach(cat => {
-    const product = productsData.find(p => p.categoria === cat);
-    if (product) featured.push(product);
-  });
-  return featured.slice(0, limit);
-};
+import { useBlogProducts } from './BlogProductsContext';
+import type { BlogProduct } from '@/lib/blog-products';
 
 const TOC_ITEMS = [
   'El Efecto "Gratis": Dopamina y Reciprocidad',
@@ -39,6 +24,7 @@ const TOC_ITEMS = [
 ];
 
 export default function BlogArticulosPromoContent() {
+  const { byCategory: getProductsByCategory, featured: getFeaturedProducts } = useBlogProducts();
   const [tocOpen, setTocOpen] = useState(true);
 
   const techProducts = getProductsByCategory('Tecnología', 4);

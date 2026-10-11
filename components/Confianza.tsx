@@ -2,18 +2,12 @@
 
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
-import productsDataRaw from '@/data/products.json';
 
-interface Product {
-  categoria: string;
-}
-
-const productsData = productsDataRaw as Product[];
-const TOTAL_PRODUCTS = productsData.length;
-const TOTAL_CATEGORIES = new Set(productsData.map((p) => p.categoria)).size;
 const VERIFIED_LABEL = new Date().toLocaleDateString('es-EC', { year: 'numeric', month: 'long' });
 
-export default function Confianza() {
+// Totales calculados en el servidor (app/page.tsx): categorías ACTIVAS por slug.
+// Antes contaba nombres de categoría y mostraba 49 (había slugs crudos como nombre).
+export default function Confianza({ totalProducts: TOTAL_PRODUCTS, totalCategories: TOTAL_CATEGORIES }: { totalProducts: number; totalCategories: number }) {
   const sectionRef = useRef<HTMLElement>(null);
   const cardRefs = useRef<Array<HTMLElement | null>>([]);
   const counterRefs = useRef<Array<HTMLSpanElement | null>>([]);

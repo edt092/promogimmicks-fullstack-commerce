@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ArrowRight, ShoppingBag, MessageCircle, Sparkles, Gift } from 'lucide-react';
+import { whatsappUrl as waLink } from '@/lib/site';
 
 // Badge 100% Personalizables — CSS puro, sin JS/setInterval
 function GoldenShimmerBadge() {
@@ -36,7 +37,7 @@ export default function CTABanner({
 }: CTABannerProps) {
   const handleWhatsApp = () => {
     const mensaje = "Hola! Vengo del blog y me gustaría cotizar productos promocionales para mi empresa.";
-    const whatsappUrl = `https://wa.me/593998594123?text=${encodeURIComponent(mensaje)}`;
+    const whatsappUrl = waLink(mensaje);
     window.open(whatsappUrl, '_blank');
   };
 

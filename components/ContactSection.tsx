@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send, Facebook, CheckCircle2 } from 'lucide-react';
+import { whatsappUrl as waLink } from '@/lib/site';
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -231,7 +232,7 @@ export default function ContactSection() {
                   <Facebook size={28} />
                 </a>
                 <a
-                  href="https://wa.me/593998594123"
+                  href={waLink()}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-14 h-14 bg-green-500 rounded-xl flex items-center justify-center text-white hover:bg-green-600 hover:scale-110 transition-all duration-300 shadow-lg"

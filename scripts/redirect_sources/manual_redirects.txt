@@ -1,0 +1,108 @@
+# Colombia pages removed (2026). Bogotá->Quito y Medellín->Guayaquil NO son equivalentes:
+# todas las ciudades de Colombia apuntan al hub de Ecuador (servicio equivalente más cercano).
+# Pendiente de negocio: si Colombia no se atiende en absoluto, cambiar a 410 (reports/seo-business-inputs.md).
+/productos-promocionales-colombia/  {SITE_URL}/productos-promocionales-ecuador/  301
+/productos-promocionales-colombia/bogota/  {SITE_URL}/productos-promocionales-ecuador/  301
+/productos-promocionales-colombia/medellin/  {SITE_URL}/productos-promocionales-ecuador/  301
+/productos-promocionales-colombia/cali/  {SITE_URL}/productos-promocionales-ecuador/  301
+/productos-promocionales-colombia/barranquilla/  {SITE_URL}/productos-promocionales-ecuador/  301
+/productos-promocionales-colombia/cartagena/  {SITE_URL}/productos-promocionales-ecuador/  301
+
+# Pre-catalog slugs (initial 199-product catalog, ec/t/k/bp prefix format) — redirect to category
+/tienda/bp187-roller-london/  {SITE_URL}/tienda/categoria/articulos-escritura/  301
+/tienda/bp226-boligrafo-london-ii/  {SITE_URL}/tienda/categoria/articulos-escritura/  301
+/tienda/bp281-boligrafo-volga/  {SITE_URL}/tienda/categoria/articulos-escritura/  301
+/tienda/bp293-boligrafo-rio/  {SITE_URL}/tienda/categoria/articulos-escritura/  301
+/tienda/bp305-boligrafo-silverfield-i/  {SITE_URL}/tienda/categoria/articulos-escritura/  301
+/tienda/bp306-roller-silverfield-ii/  {SITE_URL}/tienda/categoria/articulos-escritura/  301
+/tienda/bp308-boligrafo-blake/  {SITE_URL}/tienda/categoria/articulos-escritura/  301
+/tienda/bp310-boligrafo-parky/  {SITE_URL}/tienda/categoria/articulos-escritura/  301
+/tienda/bp315-boligrafo-danke/  {SITE_URL}/tienda/categoria/articulos-escritura/  301
+/tienda/bp321-boligrafo-top-gun/  {SITE_URL}/tienda/categoria/articulos-escritura/  301
+/tienda/bp331-boligrafo-mork/  {SITE_URL}/tienda/categoria/articulos-escritura/  301
+/tienda/bp332-boligrafo-mindy/  {SITE_URL}/tienda/categoria/articulos-escritura/  301
+/tienda/c491-morral-track/  {SITE_URL}/tienda/categoria/maletines/  301
+/tienda/c500-carry-on-larry/  {SITE_URL}/tienda/categoria/maletines/  301
+/tienda/ec736-cable-con-adaptador-madison/  {SITE_URL}/tienda/categoria/tecnologia/  301
+/tienda/ec744-audifonos-bluetooth-dinan/  {SITE_URL}/tienda/categoria/tecnologia/  301
+/tienda/ec749-audifonos-bluetooth-henry/  {SITE_URL}/tienda/categoria/tecnologia/  301
+/tienda/ec756-audifonos-bluetooth-shell/  {SITE_URL}/tienda/categoria/tecnologia/  301
+/tienda/ec780-adaptador-hub-multipuerto/  {SITE_URL}/tienda/categoria/tecnologia/  301
+/tienda/en19juego-de-domino/  {SITE_URL}/tienda/categoria/juegos/  301
+/tienda/k106-botella-vacuum-gaudi/  {SITE_URL}/tienda/categoria/mugs/  301
+/tienda/k109-botella-vacuum-king/  {SITE_URL}/tienda/categoria/mugs/  301
+/tienda/t183-llavero-terra/  {SITE_URL}/tienda/categoria/llaveros/  301
+/tienda/t246-cosmetiquera/  {SITE_URL}/tienda/categoria/cuidado-personal/  301
+/tienda/t303-set-de-vinos-bamboo/  {SITE_URL}/tienda/categoria/bar-y-vino/  301
+/tienda/t487-herramientero-multi/  {SITE_URL}/tienda/categoria/herramientas/  301
+/tienda/t513-set-de-escritorio-de-bambu/  {SITE_URL}/tienda/categoria/ecologia/  301
+/tienda/t560-linterna-hand-light/  {SITE_URL}/tienda/categoria/iluminacion/  301
+/tienda/t561-set-de-destornilladores-ch/  {SITE_URL}/tienda/categoria/herramientas/  301
+/tienda/t574-set-de-asado-bbq-master/  {SITE_URL}/tienda/categoria/hogar/  301
+/tienda/t594-porta-lapices-ecologico-ma/  {SITE_URL}/tienda/categoria/ecologia/  301
+/tienda/t595-espejo-de-bambu-circular-b/  {SITE_URL}/tienda/categoria/ecologia/  301
+/tienda/t604-organizador-de-escritorio-d/  {SITE_URL}/tienda/categoria/oficina/  301
+/tienda/t606-botella-vacuum-isla/  {SITE_URL}/tienda/categoria/mugs/  301
+/tienda/t609-set-de-asado-bbq-masterb/  {SITE_URL}/tienda/categoria/hogar/  301
+/tienda/t621-cuaderno-memo-semanal-workit/  {SITE_URL}/tienda/categoria/oficina/  301
+/tienda/t652-destapador-sacacorchos-cel/  {SITE_URL}/tienda/categoria/bar-y-vino/  301
+/tienda/t667-set-de-vino-con-juego-de-a/  {SITE_URL}/tienda/categoria/bar-y-vino/  301
+/tienda/t669-botella-vacuum-chamonix/  {SITE_URL}/tienda/categoria/mugs/  301
+/tienda/t679-botella-vacuum-sasha/  {SITE_URL}/tienda/categoria/mugs/  301
+/tienda/t688-botella-vacuum-ally/  {SITE_URL}/tienda/categoria/mugs/  301
+/tienda/t696-termo-triter/  {SITE_URL}/tienda/categoria/mugs/  301
+/tienda/t699-botella-vacuum-dorica/  {SITE_URL}/tienda/categoria/mugs/  301
+/tienda/t702-mug-vacuum-magno/  {SITE_URL}/tienda/categoria/mugs/  301
+/tienda/t703-mug-vacuum-capof/  {SITE_URL}/tienda/categoria/mugs/  301
+/tienda/t715-set-de-bano-spa-relax/  {SITE_URL}/tienda/categoria/cuidado-personal/  301
+/tienda/t737-termo-potter/  {SITE_URL}/tienda/categoria/mugs/  301
+/tienda/t769-set-de-destornilladores-bob/  {SITE_URL}/tienda/categoria/herramientas/  301
+/tienda/t777-botella-deportiva-motivacio/  {SITE_URL}/tienda/categoria/deportes/  301
+/tienda/t778-botella-deportiva-motivacio/  {SITE_URL}/tienda/categoria/deportes/  301
+/tienda/t779-botella-deportiva-motivacio/  {SITE_URL}/tienda/categoria/deportes/  301
+/tienda/u320-paraguas-parabello/  {SITE_URL}/tienda/categoria/paraguas/  301
+
+# Scraper-update removed slugs (fd3b43d, 27 products) — redirect to category or /tienda/
+/tienda/alcancia-ahorro-max-corporate/  {SITE_URL}/tienda/categoria/variedades/  301
+/tienda/auriculares-silence-pro/  {SITE_URL}/tienda/categoria/tecnologia/  301
+/tienda/boomcard-rastreo-elite-corporate/  {SITE_URL}/tienda/categoria/tecnologia/  301
+/tienda/boomtag-localizador-corporate/  {SITE_URL}/tienda/categoria/tecnologia/  301
+/tienda/botilito-urbano-kolvo-premium/  {SITE_URL}/tienda/categoria/deportes/  301
+/tienda/catalogo-global-promocionales-2026/  {SITE_URL}/tienda/  301
+/tienda/catalogo-premium-origen-ecuador-colombia/  {SITE_URL}/tienda/  301
+/tienda/cobertor-pillow-ejecutivo/  {SITE_URL}/tienda/categoria/hogar/  301
+/tienda/coleccion-promocionales-premium-2026/  {SITE_URL}/tienda/  301
+/tienda/escritura-fluida-pro/  {SITE_URL}/tienda/categoria/articulos-escritura/  301
+/tienda/impulso-promocional-corporate/  {SITE_URL}/tienda/  301
+/tienda/magmount-eco-corporate-pro/  {SITE_URL}/tienda/categoria/tecnologia/  301
+/tienda/marcas-corporate-identity/  {SITE_URL}/tienda/  301
+/tienda/morral-deportivo-garda-corporate/  {SITE_URL}/tienda/categoria/maletines/  301
+/tienda/morral-luno-corporate-ocean-pro/  {SITE_URL}/tienda/categoria/maletines/  301
+/tienda/novedades-promocionales-corporate/  {SITE_URL}/tienda/  301
+/tienda/novedades-promocionales-elite/  {SITE_URL}/tienda/  301
+/tienda/novedades-promocionales-selectas/  {SITE_URL}/tienda/  301
+/tienda/novelties-corporativo-2026-pro/  {SITE_URL}/tienda/  301
+/tienda/organizador-kappa-travel-corporate/  {SITE_URL}/tienda/categoria/maletines/  301
+/tienda/paraguas-urbano-travel-elite/  {SITE_URL}/tienda/categoria/paraguas/  301
+/tienda/parlante-ritmo-urbano-premium/  {SITE_URL}/tienda/categoria/tecnologia/  301
+/tienda/promocionales-2026-edicion-corporativa/  {SITE_URL}/tienda/  301
+/tienda/rastreador-findit-corporate-pro/  {SITE_URL}/tienda/categoria/tecnologia/  301
+/tienda/set-escritorio-ecologico-baltimore-pro/  {SITE_URL}/tienda/categoria/oficina/  301
+/tienda/taza-termica-vinga-corporate-pro/  {SITE_URL}/tienda/categoria/mugs/  301
+/tienda/tendencias-promocionales-2025-corporate/  {SITE_URL}/tienda/  301
+
+# Nota: los redirects de categorías antiguas/renombradas (drinkware, bolsos-y-mochilas,
+# articulos-de-escritura, deportes-y-recreacion, textil-y-vestuario, salud-y-bienestar,
+# accesorios, eco, mugs-termos, deportes-recreacion) ya NO están hardcodeados aquí — se
+# generan a partir de scripts/redirect_sources/legacy_categories.json (ver bloque 3 del
+# archivo _redirects generado). "libretas" queda pendiente de decisión humana: los
+# productos de esa categoría se repartieron entre oficina/ecologia/articulos-escritura/
+# precio-bomba sin un reemplazo 1:1 claro (ver reports/gsc_audit_report.md).
+
+# Blog trailing-slash canonicalization
+/blog  {SITE_URL}/blog/  301
+
+# /contacto/ existe como página propia desde 2026-10 (app/contacto/page.tsx): solo se
+# normaliza la barra final. (Antes: 410, cuando la página no existía.)
+/contacto  {SITE_URL}/contacto/  301
+/nosotros  {SITE_URL}/nosotros/  301

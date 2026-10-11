@@ -3,9 +3,10 @@
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { whatsappUrl as waLink } from '@/lib/site';
 
 const WHATSAPP_QUOTE_URL =
-  'https://wa.me/593998594123?text=Hola%2C%20me%20interesa%20crear%20un%20proyecto%20de%20art%C3%ADculos%20promocionales%20personalizados';
+  waLink('Hola, me interesa crear un proyecto de artículos promocionales personalizados');
 
 export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -267,7 +268,7 @@ export default function HeroSection() {
               ref={(el) => { lineRefs.current[1] = el; }}
               className="block w-full text-sky-400"
             >
-              diseñados para permanecer.
+              con tu logo, en Ecuador.
             </span>
           </span>
         </h1>

@@ -3,10 +3,15 @@ import Footer from '@/components/Footer';
 import BlogCard from '@/components/BlogCard';
 import blogPosts from '@/data/blog-posts.json';
 import { BookOpen, TrendingUp, Lightbulb } from 'lucide-react';
+import { SITE_URL } from '@/lib/site';
+
 
 export const metadata = {
   title: 'Blog - PromoGimmicks | Consejos de Marketing y Productos Promocionales',
   description: 'Descubre guías, consejos y tendencias sobre productos promocionales, merchandising y marketing. Aprende a impulsar tu marca con estrategias efectivas.',
+  alternates: {
+    canonical: `${SITE_URL}/blog/`,
+  },
 };
 
 export default function BlogPage() {

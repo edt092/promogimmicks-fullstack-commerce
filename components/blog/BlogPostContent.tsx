@@ -9,7 +9,8 @@ import BlogQuitoContent from './BlogQuitoContent';
 import BlogNavidadContent from './BlogNavidadContent';
 import BlogArticulosPromoContent from './BlogArticulosPromoContent';
 import BlogFuncionalesContent from './BlogFuncionalesContent';
-import productsData from '@/data/products.json';
+import { useBlogProducts } from './BlogProductsContext';
+import type { BlogProduct } from '@/lib/blog-products';
 
 interface BlogPost {
   id: string;
@@ -22,31 +23,14 @@ interface BlogPost {
   tiempo_lectura: string;
   autor: string;
   tags: string[];
+  // Aditivo (promo-content-pipeline): posts generados automáticamente traen su cuerpo ya
+  // renderizado en HTML aquí. Los 5 posts existentes no usan este campo (tienen componente propio).
+  contenido_html?: string;
 }
 
 interface BlogPostContentProps {
   post: BlogPost;
 }
-
-// Seleccionar productos por categoría
-const getProductsByCategory = (category: string, limit: number = 4) => {
-  return productsData
-    .filter(p => p.categoria.toLowerCase().includes(category.toLowerCase()))
-    .slice(0, limit);
-};
-
-// Productos mixtos destacados
-const getFeaturedProducts = (limit: number = 4) => {
-  const categories = ['Tecnología', 'Drinkware', 'Oficina', 'Accesorios'];
-  const featured: typeof productsData = [];
-
-  categories.forEach(cat => {
-    const product = productsData.find(p => p.categoria === cat);
-    if (product) featured.push(product);
-  });
-
-  return featured.slice(0, limit);
-};
 
 // Componente para renderizar contenido específico por slug
 function BlogContentBySlug({ slug }: { slug: string }) {
@@ -67,6 +51,7 @@ function BlogContentBySlug({ slug }: { slug: string }) {
 }
 
 export default function BlogPostContent({ post }: BlogPostContentProps) {
+  const { byCategory: getProductsByCategory, featured: getFeaturedProducts } = useBlogProducts();
   const [imageError, setImageError] = useState(false);
   const [tocOpen, setTocOpen] = useState(true);
 
@@ -123,7 +108,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
           {/* Breadcrumb */}
           <Link
-            href="/blog"
+            href="/blog/"
             className="inline-flex items-center gap-2 text-brand-100 hover:text-white transition-colors mb-6"
           >
             <ArrowLeft size={18} />
@@ -192,6 +177,11 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
         {/* Renderizar contenido específico si existe */}
         {hasCustomContent ? (
           <BlogContentBySlug slug={post.slug} />
+        ) : post.contenido_html ? (
+          <div
+            className="prose prose-lg max-w-none prose-headings:text-navy-900 prose-a:text-sky-600 prose-a:no-underline hover:prose-a:underline"
+            dangerouslySetInnerHTML={{ __html: post.contenido_html }}
+          />
         ) : (
           <>
         {/* Table of Contents - Collapsible */}
@@ -662,11 +652,11 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {[
               { slug: 'tecnologia', label: '⚡ Tecnología' },
-              { slug: 'drinkware', label: '☕ Drinkware' },
+              { slug: 'tomatodos-y-botilitos-personalizados', label: '☕ Tomatodos y botilitos' },
               { slug: 'oficina', label: '🖊️ Oficina' },
-              { slug: 'bolsos-y-mochilas', label: '🎒 Bolsos y Mochilas' },
-              { slug: 'eco', label: '🌿 Productos Eco' },
-              { slug: 'articulos-de-escritura', label: '✒️ Escritura' },
+              { slug: 'maletines', label: '🎒 Maletines y morrales' },
+              { slug: 'ecologia', label: '🌿 Ecología' },
+              { slug: 'articulos-escritura', label: '✒️ Escritura' },
             ].map((cat) => (
               <Link
                 key={cat.slug}
@@ -690,7 +680,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
         {/* Navegación */}
         <div className="mt-8 pt-8 border-t border-slate-200">
           <Link
-            href="/blog"
+            href="/blog/"
             className="inline-flex items-center gap-2 text-navy-900 hover:text-sky-600 font-semibold transition-colors"
           >
             <ArrowLeft size={18} />

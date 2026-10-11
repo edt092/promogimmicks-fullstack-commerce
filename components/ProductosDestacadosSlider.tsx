@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import productsDataRaw from '@/data/products.json';
 
 interface Product {
   id: string;
@@ -15,29 +14,8 @@ interface Product {
   imagen_url: string;
 }
 
-const productsData = productsDataRaw as Product[];
 
-// Una categoría representativa por tarjeta, para mostrar la variedad real del catálogo.
-const FEATURED_CATEGORY_SLUGS = [
-  'tecnologia',
-  'mugs',
-  'articulos-escritura',
-  'gorras',
-  'llaveros',
-  'deportes',
-  'oficina',
-  'paraguas',
-  'maletines',
-  'vasos-personalizados',
-  'termos-personalizados',
-  'bar-y-vino',
-];
-
-const FEATURED_PRODUCTS = FEATURED_CATEGORY_SLUGS
-  .map((slug) => productsData.find((p) => p.categoria_slug === slug))
-  .filter((p): p is Product => Boolean(p));
-
-export default function ProductosDestacadosSlider() {
+export default function ProductosDestacadosSlider({ products: FEATURED_PRODUCTS }: { products: Product[] }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(true);
@@ -134,7 +112,6 @@ export default function ProductosDestacadosSlider() {
                   fill
                   sizes="(max-width: 640px) 68vw, 300px"
                   loading={i < 3 ? undefined : 'lazy'}
-                  priority={i < 3}
                   className="object-contain p-6 transition-transform duration-500 ease-out group-hover:scale-105"
                 />
                 <span className="absolute top-3 left-3 bg-navy-900/90 text-white text-[10px] font-semibold px-2.5 py-1 rounded-full">

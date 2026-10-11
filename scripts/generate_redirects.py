@@ -1,424 +1,251 @@
 """
-Generate Netlify _redirects entries for old product URLs that no longer exist.
-Old catalog had different slug patterns; this maps them to new slugs or /tienda/.
+Genera public/_redirects de forma reproducible e idempotente.
+
+Fuente de verdad (todo versionado, nada hardcodeado en este script):
+  scripts/redirect_sources/legacy_slugs.json           slug histórico -> slug actual | null
+  scripts/redirect_sources/legacy_categories.json       slug de categoría histórico -> ruta destino
+  scripts/redirect_sources/legacy_category_queries.json nombre de categoría (query ?categoria=) -> slug actual | null
+  scripts/redirect_sources/manual_redirects.txt         reglas que no se derivan de datos (Colombia, /contacto, etc.)
+
+Orden del archivo final (primera regla que matchea gana, Netlify procesa de arriba hacia abajo):
+  1. manual_redirects.txt                (rutas exactas específicas)
+  2. redirects de query string (facetas) (rutas exactas + condición de query)
+  3. redirects de categorías históricas   (con y sin slash, destino absoluto)
+  4. redirects de productos históricos    (con y sin slash, destino absoluto; 410 si no hay reemplazo)
+  5. trailing-slash genérico              (patrones dinámicos + páginas estáticas, destino absoluto)
+  6. host/protocolo (www, http)           (absoluto + force, red de seguridad final)
+
+Los bloques 1-4 usan siempre una URL de destino ABSOLUTA (SITE_URL de site.config.json),
+de modo que cualquier combinación de entrada (www + slug viejo, sin slash + slug viejo, etc.)
+resuelve en un solo salto 301, sin encadenar host-fix -> slug-fix.
+
+Nunca hace matching difuso: solo usa lo que ya está resuelto en legacy_slugs.json
+(exact SKU/ID o slug+sufijo numérico, ver scripts/redirect_sources/legacy_slugs.json).
+No re-ejecuta el matching difuso aquí para no introducir falsos positivos silenciosos.
 """
-import json, re, os
+import json
+import os
+import sys
+from urllib.parse import quote
 
 ROOT = os.path.join(os.path.dirname(__file__), '..')
+def load_site_config():
+    with open(os.path.join(ROOT, 'site.config.json'), encoding='utf-8') as f:
+        return json.load(f)
 
-with open(os.path.join(ROOT, 'data', 'products.json'), encoding='utf-8') as f:
-    current = json.load(f)
 
-current_slugs = set(p['slug'] for p in current)
+SITE_CONFIG = load_site_config()
+# Host canónico único compartido con Next.js (site.config.json). No hardcodear aquí.
+SITE_URL = SITE_CONFIG['siteUrl'].rstrip('/')
+SOURCES = os.path.join(ROOT, 'scripts', 'redirect_sources')
 
-# Full list of slugs from the old product catalog (pre-scraper, ~1002 products)
-# These were the slugs Google had indexed before April 2026
-old_slugs = [
-    "abanico","abanico-con-mango-stick-produccion-nacional","abanico-finger-produccion-nacional",
-    "abanico-plegable-frisbee-flexible","abrigo-impermeable",
-    "accesorio-en-silicona-para-gafas-y-audifonos-oferta","advant-2-1-resaltador-cera",
-    "advant-2-1-resaltador-de-tinta","agarradera-en-polietileno-nuevo",
-    "agarradera-para-bolso-compacto-con-carabinero","aireador-electrico-para-vino-precio-bomba",
-    "akker-bbq-electrico","alcancia-balon-produccion-nacional","alcancia-cerdito-produccion-nacional",
-    "alcancia-con-portaboligrafo","alcancia-cow-oferta","alcancia-elefante-2-1",
-    "alcancia-estrella-135cm-produccion-nacional","alcancia-estrella-16cm-produccion-nacional",
-    "alcancia-flex-produccion-nacional","alcancia-hippo","alcancia-mini-cerdito-cristal-produccion-nacional",
-    "alcancia-mini-piggy","alcancia-piggy-max","alcancia-piggy-produccion-nacional",
-    "alcohol-etilico-70-produccion-nacional","antiestres-doctor","aplausometro-manos-produccion-nacional",
-    "aplausometro-redondo-produccion-nacional","aplausometro-triangular-produccion-nacional",
-    "aro-de-pilates-ring-precio-bomba","aro-de-silicona-para-mug-orbit","aspiradora-para-carro",
-    "aston-stylus-metalico","audifono-bluetooth-manos-libres-2-1-oferta","audifonos-bluetooth-airbone",
-    "audifonos-bluetooth-air-i7","audifonos-bluetooth-anc-nuevo","audifonos-bluetooth-bassline-go-boompods",
-    "audifonos-bluetooth-big-display","audifonos-bluetooth-dj-ii-con-lector-tf",
-    "audifonos-bluetooth-earshots-boompods-oferta","audifonos-bluetooth-fresh",
-    "audifonos-bluetooth-jumper","audifonos-bluetooth-sportpods-boompods","audifonos-bluetooth-vibe-boompods",
-    "audifonos-boom-precio-bomba","audifonos-bowie-con-manos-libres-tipo-c",
-    "bajalenguas-plastico-produccion-nacional","balde-multiusos","balmax-stylus-precio-bomba",
-    "bamboo-sticky-pad-precio-bomba","banda-elastica-doble","banda-elastica-gym-nuevo","banda-finger",
-    "barcelona-solido-precio-bomba","bbq-grill-con-nevera-lonchera","bbq-grill-cook",
-    "bbq-grill-soccer-cook-nuevo","billy-precio-bomba","bola-antiestres-neon-63cm",
-    "bola-antiestres-rubber","bola-antiestres-tricolor","bola-para-mascotas","bola-pop-it",
-    "boligrafo-alden","boligrafo-aldrich-metalizado","boligrafo-aldrich-solido","boligrafo-ashby",
-    "boligrafo-aston-cartoon","boligrafo-aston-eco","boligrafo-ballpop-oferta",
-    "boligrafo-baniri-bamboo","boligrafo-boost-nuevo","boligrafo-brink-stylus","boligrafo-calvin",
-    "boligrafo-carson-3-1-precio-bomba","boligrafo-carter-eco-precio-bomba","boligrafo-cartoon-mini",
-    "boligrafo-deluxe-eco-oferta","boligrafo-devo","boligrafo-dormin-bamboo",
-    "boligrafo-flom-4-1-antibacteriano-precio-bomba","boligrafo-forest-bamboo","boligrafo-foster",
-    "boligrafo-helmet","boligrafo-holographic-precio-bomba","boligrafo-jenkin-precio-bomba",
-    "boligrafo-jeringa","boligrafo-kent","boligrafo-kord-bamboo","boligrafo-landon","boligrafo-lit",
-    "boligrafo-locket-precio-bomba","boligrafo-luana","boligrafo-medic","boligrafo-metalico-shell-oferta",
-    "boligrafo-mini-dwell","boligrafo-mop-like-stylus","boligrafo-scroll-nuevo",
-    "boligrafo-spray-max-antibacteriano-precio-bomba","boligrafo-tankist-stylus",
-    "boligrafo-ventura-barril-plata","boligrafo-ventura-spray-antibacteriano-oferta",
-    "boligrafo-ziwei-bamboo","bolsa-clear-anny-produccion-nacional",
-    "bolsa-clear-trenza-con-ribete-produccion-nacional","bolsa-clear-zuzy-con-ribete-produccion-nacional",
-    "bolsa-en-algodon-botanik-100gr","bolsa-en-algodon-botanik-135gr","bolsa-en-algodon-con-fuelle-100gr",
-    "bolsa-en-algodon-con-fuelle-135gr","bolsa-en-algodon-corcho-135gr","bolsa-en-algodon-shopper-290gr",
-    "bolsa-en-cambrel-arcadia","bolsa-en-cambrel-bawel","bolsa-en-cambrel-baxter",
-    "bolsa-en-cambrel-con-fuelle","bolsa-en-cambrel-franky","bolsa-en-cambrel-market",
-    "bolsa-en-cambrel-multiusos-vita-prod-nacional","bolsa-en-cambrel-queen","bolsa-en-cambrel-reflectiva",
-    "bolsa-en-yute-wine-oferta","bolsa-holt-eco-120gr","bolsa-metalizada",
-    "bolsa-plegable-para-paraguas-hansel-oferta","bolsa-portapapeles-produccion-nacional",
-    "bolsa-reflectiva-security","bolsa-termica-600ml","bolso-venecia-nacional",
-    "botilito-carabinero-pvc-750ml-produccion-nacional","botilito-en-aluminio-para-sublimacion-parsons-750ml",
-    "botilito-en-aluminio-parsons-700ml","botilito-en-pvc-curvy-525ml-produccion-nacional",
-    "botilito-en-pvc-helice-650ml-produccion-nacional","botilito-en-tritan-bugsy-630ml",
-    "botilito-en-tritan-swat-600ml-oferta","botilito-en-vidrio-calypso-chili-750ml-precio-bomba",
-    "botilito-igloo-500ml-produccion-nacional-ver-tapa-energy","botilito-infussion-800ml",
-    "botilito-maxi-supra-pet-900ml-produccion-nacional","botilito-metalico-anders-500ml-precio-bomba",
-    "botilito-metalico-atomic-500ml","botilito-metalico-barry-600ml-precio-bomba",
-    "botilito-metalico-hans-600ml","botilito-metalico-jumbo-750ml","botilito-metalico-jupiter-500-ml",
-    "botilito-metalico-marcello-800ml","botilito-metalico-otto-600-ml",
-    "botilito-metalico-para-sublimacion-gipsy-700ml","botilito-metalico-para-sublimacion-wolfgang-500ml",
-    "botilito-metalico-shelby-600ml","botilito-metalico-sport-bottle-500ml",
-    "botilito-metalico-sublimacion-sport-bottle-500ml","botilito-metalico-troy-700ml-oferta",
-    "botilito-metalico-uv-c-clean-500ml","botilito-metalico-vortex-600ml","botilito-metalico-wolfgang-500-ml",
-    "botilito-metalico-wood-700ml-precio-bomba","botilito-mini-spring-550ml-tapa-importada-o-nacional",
-    "botilito-plastico-counter-650ml-precio-bomba","botilito-plastico-frontier-petg-610ml",
-    "botilito-plastico-pillbox-750ml","botilito-plastico-santino-650ml-oferta",
-    "botilito-plastico-wonder-650ml-produccion-nacional","botilito-pvc-mercury-850ml-precio-bomba",
-    "botilitosamson-650ml-produccion-nacional",
-    "botilito-saturno-pvc-850ml-produccion-nacional-ver-mu-35-tapa-pesta",
-    "botilito-siluet-500-ml-ver-tipo-tapa-produccion-nacional","botilito-spider-pvc-650-ml-produccion-nacional",
-    "botilito-sport-650ml-produccion-nacional","botilito-sport-laguna-800ml",
-    "botilito-sport-titan-650-ml-produccion-nacional","botilito-supra-en-pet-610ml-produccion-nacional",
-    "botilito-urban-650ml-produccion-nacional","boton-plastico-para-portacarnet-oferta",
-    "bowl-plastico-produccion-nacional","cable-multicargador-tyler",
-    "caja-de-te-produccion-nacional-precio-bomba","calculadora-brody","calculadora-clipboard",
-    "calculadora-executive-12-digitos","calculadora-multicolor-12-digitos","calculadora-multifuncion-oferta",
-    "candado-de-clave-metalico","candado-de-clave-tsa-nuevo","canguro-athos-rpet",
-    "canguro-compacto-master-ocean","canguro-dior","canguro-en-poliester","canguro-en-poliester-pocket",
-    "canguro-gemini-produccion-nacional","canguro-london-produccion-nacional","canguro-master-ocean",
-    "canguro-moldik","canguro-orion","canguro-para-moviles-nylon","canguro-reflective",
-    "canguro-sauris-precio-bomba","canguro-snap-rpet","canguro-strike-urban-travel","carabinero",
-    "cargador-inalambrico-con-cable-multicargador-oferta","cargador-inalambrico-con-libreta-y-boligrafo",
-    "cargador-inalambrico-con-reloj-bamboo","cargador-inalambrico-cubik",
-    "cargador-inalambrico-flexi-pad-precio-bomba","cargador-inalambrico-multiorganizador-precio-bomba",
-    "cargador-inalambrico-office-precio-bomba","carpeta-folder-a4-crown",
-    "carpeta-folder-congress-produccion-nacional","carpeta-folder-london","carpeta-folder-sencillo-en-pvc",
-    "carpeta-folder-swiss-peak-a5","carpeta-folder-zipper","cartoon",
-    "cartuchera-en-cambrel-kidz-sin-diseno","cepillo-con-espejo-kolors","cepillo-con-espejo-sully",
-    "cepillo-con-espejo-ulys","chaqueta-en-pvc","chaqueta-urban-travel-wear",
-    "chip-para-memoria-usb-precio-neto",
-    "cinta-blanca-especial-para-sublimacion-produccion-nacional-sobre-pedido","cinta-portacarnet-puzzle",
-    "clip-de-golf-para-gorra","clip-portamensajes-car-precio-bomba","clip-portamensajes-house-oferta",
-    "clip-portamensajes-mini-car-oferta","cobija-en-fleece","cobija-pillow",
-    "cojin-terapeutico-produccion-nacional","comprimidos-produccion-nacional",
-    "copa-cilindrica-2oz-cristal-produccion-nacional","copa-para-vino-7oz-produccion-nacional",
-    "corazon-antiestres","corneta-stadium-produccion-nacional","cosmetiquera-farrow","cosmetiquera-monroe",
-    "cosmetiquera-terra-nuevo","cosmetiquera-travel-produccion-nacional","cosmetiquera-venecia",
-    "costurero-ovalado","costurero-sammy","cubo-pop-it","cuello-multifuncional-para-sublimacion",
-    "cuerpo-plastico-para-abanico-tela-impresa-prod-nal","descorchador-de-dos-tiempos-kiblack",
-    "destapador-bamboo","destapador-botella-con-iman-produccion-nacional",
-    "destapador-clip-produccion-nacional","destapador-eco-wine","destapador-electrico-cork",
-    "destapador-electrico-para-vino","destapador-nacul","destapador-rectangular-produccion-nacional",
-    "domino-grande-ver-estuche-produccion-nacional","ducal-eco-precio-bomba","dwyn-metalico","ecologik",
-    "espejo-bamboo","espejo-circular","espejo-cork-ii","espejo-doble-steffi-oferta",
-    "espejo-doble-tod-oferta","espejo-doble-zonder-oferta","espejo-joyero-bamboo","espejo-magnolia",
-    "espejo-starlett","esponja-para-maquillaje-drop","esterilizador-con-luz-uv-led-klean-bamboo-oferta",
-    "esterilizador-con-luz-uv-smart-oferta","esterilizador-inalambrico-con-luz-uv-led-klean-oferta",
-    "estuche-aluminio","estuche-ariston","estuche-carton-produccion-nacional",
-    "estuche-doble-regal-prod-nacional","estuche-metalico-para-memoria-usb-oferta",
-    "estuche-multifuncion-produccion-nacional","estuche-multiusos-boxx-produccion-nacional",
-    "estuche-multiusos-en-silicona-kamelot","estuche-para-moviles-flex-waterproof",
-    "estuche-para-resaltador-de-cera-fiona","estuche-para-resaltador-magico-produccion-nacional",
-    "estuche-plastico-de-tres-cuerpos-produccion-nacional","floyd-stylus","focus-ii-resaltador-de-cera",
-    "frisbee-aero-produccion-nacional","frisbee-dinamo-produccion-nacional","frisbee-enjoy-produccion-nacional",
-    "frisbee-flexible-produccion-nacional","frisbee-original-produccion-nacional","frisbee-pop-precio-bomba",
-    "funda-para-boligrafos-rpet","funda-para-moviles-protector","funda-portacelular-reflect-sport-rpet",
-    "funda-portacelular-sport-rpet","funda-portalaptop-impact-rpet","funda-portalaptop-swiss-peak",
-    "gafas-fashion","gafas-gambler","gafas-kilpan-eco","gafas-terapeuticas-produccion-nacional",
-    "gancho-portacartera","gel-antibacterial-300ml","gel-antibacterial-bella-15ml",
-    "gel-antibacterial-color-30ml-oferta","gel-antibacterial-con-dispensador-60ml",
-    "gel-antibacterial-moss-30ml","gel-antibacterial-round-40ml",
-    "gel-antibacterial-transparente-produccion-nacional","golf-tees-7cm","golf-tees-7cm-bamboo",
-    "gorra-brixton-urban-travel","gorra-eco-6-cascos","gorra-emergency","gorra-fashion-urban-travel",
-    "gorra-golf","gorra-mesh","gorra-mesh-urban-travel","gorra-modena","gorra-sport-en-microfibra-urban-travel",
-    "gorra-trucker","gota-antiestres","grayson-stylus","hamond-stylus","herramientero-bamboo-box",
-    "hielera-plastica-produccion-nacional","hojas-de-jabon-antibacteriano-con-estuche",
-    "hojas-de-jabon-antibacteriano-repuesto","identificador-de-maletas-cork","identificador-de-maletas-eco",
-    "identificador-de-maletas-pop","jarra-plastica-ovalada-1000ml-produccion-nacional",
-    "juego-cartas-y-domino-eco","juego-de-raquetas-wood-beach","juego-desestresante-con-clips",
-    "juego-imantado-desestresante","juego-portatil-produccion-nacional",
-    "juego-portavasos-en-acero-inoxidable-produccion-nacional-precio-bomba","juego-triqui",
-    "kaiser-stylus","klean-antibacteriano-oferta","lamont","lampara-usb-snake",
-    "lampara-usb-swan-precio-bomba","lapiz-eco","lapiz-eco-natural-nuevo","lapiz-golf-pencil",
-    "lapiz-infinity-con-borrador","lapiz-infinity-eco","lapiz-metallic-oferta","lapiz-neon",
-    "lapiz-plastic-clip-de-golf","lapiz-rojo-check-para-contabilidad","libreta-arista","libreta-century",
-    "libreta-con-boligrafo-gulliver-eco","libreta-con-boligrafo-hard-top-100-hojas-produccion-nacional",
-    "libreta-con-boligrafo-recycle-eco","libreta-con-portalapices-produccion-nacional","libreta-cork",
-    "libreta-futbol-produccion-nacional","libreta-igor-80-hojas","libreta-igor-jumbo-precio-bomba",
-    "libreta-like-it-produccion-nacional","libreta-pollux-eco","libreta-woody-ecologica-produccion-nacional",
-    "limpiador-pantallas-30ml-con-microfibra-produccion-nacional","linterna-carabinero-bamboo",
-    "linterna-cob-power","linterna-de-9-leds-flynt","linterna-dinamo-con-radio","linterna-doctor",
-    "linterna-loop","linterna-neck","linterna-recargable-head-nuevo","linterna-recargable-morven",
-    "linterna-tom","liquido-antibacterial-holder-spray-10ml-produccion-nacional-precio-bomba",
-    "liquido-antibacterial-pump-spray-10ml-produccion-nacional","llavero-antiestres-ball",
-    "llavero-antiestres-ball-soccer","llavero-bici","llavero-car-ii","llavero-casco","llavero-con-capa",
-    "llavero-con-capa-poncho-soccer","llavero-con-nivelador-magnet","llavero-corcho-oferta",
-    "llavero-destapador-campello","llavero-destapador-car","llavero-destapador-house",
-    "llavero-destapador-like-it","llavero-destapador-nash","llavero-destapador-orbis",
-    "llavero-destapador-stiked","llavero-destapador-truman","llavero-destapador-viggo-eco",
-    "llavero-double","llavero-linterna-carabinero","llavero-linterna-flat","llavero-linterna-lamp",
-    "llavero-linterna-like-it-con-stylus","llavero-linterna-puck","llavero-metro-con-destapador-mimic",
-    "llavero-metro-con-nivelador","llavero-metro-light-nuevo","llavero-ml-103","llavero-ml-345",
-    "llavero-ml-347","llavero-ml-356","llavero-ml-367","llavero-ml-368","llavero-ml-393","llavero-ml-401",
-    "llavero-ml-402","llavero-ml-404","llavero-ml-405","llavero-ml-406","llavero-ml-407","llavero-ml-408",
-    "llavero-ml-409","llavero-ml-410","llavero-ml-411","llavero-ml-412","llavero-ml-413",
-    "llavero-pastillero-capsula","llavero-pito-con-destapador-precio-bomba","llavero-pito-maxi",
-    "llavero-plastico-multiusos-anticontacto-produccion-nacional","llavero-pop","llavero-relajante",
-    "llavero-silicone-silicona","llavero-silver-ml-145","llavero-silver-ml-196","llavero-silver-ml-259",
-    "llavero-silver-ml-262","localizador-de-llaves",
-    "loman-roller-pen-ver-mina-roller-europea-o-china","lonchera-journey-produccion-nacional",
-    "maletin-deportivo-florida","maletin-master-ocean","maletin-portadocumentos-urban-travel",
-    "maletin-trolley-bag-norris-oferta","maletin-trolley-city","maletin-trolley-florida-weekend-oferta",
-    "maletin-urban-travel","maracas-colombia-produccion-nacional","marvel-stylus","masajeador-corazon",
-    "masajeador-face","masajeador-hyper-eco-nuevo","masajeador-mink","matraca-sencilla-produccion-nacional",
-    "maxi-mug-produccion-nacional","mecanismo-para-reloj-analogo-con-manecillas","medidor-de-masa-muscular",
-    "medidor-de-presion-para-neumaticos-nuevo","memo-clip-bamboo-ii",
-    "memoria-mini-usb-en-imitacion-cuero-precio-neto","memoria-usb-boligrafo-king-precio-neto",
-    "memoria-usb-boligrafo-wood-precio-neto","memoria-usb-braxton-precio-neto",
-    "memoria-usb-carabinero-precio-neto","memoria-usb-credit-card-eco-precio-neto",
-    "memoria-usb-credit-card-precio-neto","memoria-usb-credit-card-zilda-bamboo-precio-neto",
-    "memoria-usb-eco-precio-neto","memoria-usb-hook-precio-neto","memoria-usb-llave-precio-neto",
-    "memoria-usb-manilla-bandy-ii-precio-neto","memoria-usb-manilla-slimmy-ver-chip-of-228-ch-precio-neto",
-    "memoria-usb-mini-bamboo-precio-neto","memoria-usb-mini-crystal-precio-neto",
-    "memoria-usb-portacelular-30-precio-neto","memoria-usb-swivel-precio-neto",
-    "memo-stick-personalizados","memo-sticky-set-bamboo","memo-sticky-set-ring","metro-arkitect-2",
-    "metro-arkitect-eco","metro-carabinero-stanley","metro-destapador-bamboo","metro-llavero-car",
-    "metro-llavero-house","metro-llavero-kurtis","metro-llavero-saloon","metro-llavero-truck",
-    "metro-neumatic","metro-oliver","metro-oval-eco","metro-paddy","metro-retractil-button",
-    "metro-square-bamboo-precio-bomba","mezclador-en-acero-inoxidable","milla-roller-stylus",
-    "mini-bolsa-en-algodon-100gms-nuevo","mini-bolsa-en-cambrel","mini-botilito-ergo-420ml-produccion-nacional",
-    "mini-cancha-basket","minidomino-produccion-nacional","mini-herramientero-blazor-nuevo",
-    "mini-lampara-para-laptop","mini-libreta-con-boligrafo-tavish","mini-libreta-cork",
-    "mini-libreta-duo-produccion-nacional-ver-ref-bolian","mini-libreta-forest","mini-libreta-sevilla-80-hojas",
-    "mini-linterna-bamboo","mini-linterna-ozen-nuevo","mini-llavero-pito","mini-masajeador-marilyn",
-    "mini-monedero-en-silicona","minimug-en-acero-con-tapa-180ml",
-    "mininevera-cooler-con-portacomida-produccion-nacional","mini-paraguas-arc-clipper-21",
-    "mini-paraguas-biondi-21","mini-paraguas-brenna-19","mini-paraguas-hansel-21","mini-paraguas-lloyd-21",
-    "mini-paraguas-maverick-21","mini-paraguas-strap-21","mini-set-de-colores-baby",
-    "mini-set-de-colores-x-12-unidades","mini-set-de-destornilladores-koda","miniset-de-escritorio",
-    "mini-set-de-herramientas-avante","mini-tarro-panos-humedos-antibacterial-30und",
-    "mini-ventilador-usb-de-escritorio-ii","mobile-holder-3-1-produccion-nacional",
-    "molde-de-silicona-ice-face-precio-bomba","mop-bicolor","mop-medic-stylus","mop-stylus",
-    "morral-antirrobo-backpack-rpet-precio-bomba","morral-backpack-antirrobo-bobby-soft",
-    "morral-backpack-antirrobo-chili","morral-backpack-antirrobo-royal","morral-backpack-bizz-20",
-    "morral-backpack-bobby-edge","morral-backpack-catoy","morral-backpack-compacto-master-ocean",
-    "morral-backpack-crosby-urban-travel","morral-backpack-derex","morral-backpack-elegant-precio-bomba",
-    "morral-backpack-flex-gym","morral-backpack-genesis-urban-travel","morral-backpack-jinx-urban-travel",
-    "morral-backpack-kepler-urban-travel","morral-backpack-king-urban-travel",
-    "morral-backpack-legacy-urban-travel","morral-backpack-mangini-urban-travel",
-    "morral-backpack-master-ocean","morral-backpack-nordic-oferta","morral-backpack-plegable-molly",
-    "morral-backpack-prince-urban-travel","morral-backpack-reflective",
-    "morral-backpack-reflect-precio-bomba","morral-backpack-retro-produccion-nacional",
-    "morral-backpack-rush-produccion-nacional","morral-backpack-soft-pack","morral-backpack-strings",
-    "morral-backpack-telesto-rpet","morral-city-backpack","morral-city-backpack-trolley","mouse-bamboo",
-    "mouse-inalambrico-lumo-nuevo","mouse-pad-3-1-lcd","mouse-pad-calendar-produccion-nacional-precio-bomba",
-    "mouse-pad-con-cargador-inalambrico-dexter","mouse-pad-con-cargador-inalambrico-slim-15w",
-    "mouse-pad-cork-con-apoya-munecas","mouse-pad-ergonomico-produccion-nacional",
-    "mouse-pad-frost-produccion-nacional","mouse-pad-plastificado","mouse-pad-sencillo","mouse-pad-vaniat",
-    "mug-ceramica-con-corcho-11-oz","mug-ceramica-con-cuchara-trump-10oz","mug-ceramica-cuadrado-10-oz",
-    "mug-ceramica-neon-11oz-oferta","mug-ceramica-ottis-11oz-oferta","mug-ceramica-para-sublimacion-i-11oz",
-    "mug-ceramica-sublimacion-magic-color-11oz","mug-ceramica-tablero-11oz-con-tiza-precio-bomba",
-    "mug-ceramica-zenith-12oz","mug-doble-pared-en-acero-ii-16oz","mug-firenze-ceramica-neon-10oz-oferta",
-    "mug-kid-produccion-nacional","mug-mediano-club-produccion-nacional","mug-metalico-bamboo-eco-350ml",
-    "mug-metalico-con-bamboo-500ml","mug-metalico-doble-pared-coffee-urban-travel-380ml",
-    "mug-metalico-galileo-16oz","mug-metalico-grant-urban-travel-500ml","mug-metalico-mask-350ml",
-    "mug-metalico-moritz-450-ml","mug-metalico-para-sublimacion-galileo-450ml",
-    "mug-metalico-para-sublimacion-mask-350ml","mug-metalico-peyton-470-ml","mug-metalico-quest-450ml",
-    "mug-metalico-slash-550ml","mug-metalico-star-350ml","mug-metalico-warmer-450ml",
-    "mug-oxford-ceramica-11oz","mug-plastico-morgan-300ml-produccion-nacional",
-    "mug-plastico-morning-320ml-produccion-nacional","mug-plastico-newport-480ml-produccion-nacional",
-    "mug-plastico-orbit-12oz-produccion-nacional","mug-plastico-osiris-360ml-produccion-nacional",
-    "mug-plastico-shaker-14-oz-produccion-nacional","mug-plastico-stash-500-ml-nuevo",
-    "multiorganizador-para-cartera-y-maletin","nevera-cooler-bag-goal-produccion-nacional",
-    "nevera-cooler-bag-picnic","nevera-cooler-bag-soccer-ball-produccion-nacional",
-    "nevera-cooler-bag-trolley","nevera-cooler-hexagon","nevera-cooler-kendrik-produccion-nacional",
-    "nevera-cooler-lunchy-precio-bomba","nevera-cooler-max-produccion-nacional",
-    "nevera-cooler-spring-produccion-nacional","nevera-cooler-trendy-produccion-nacional",
-    "nevera-lonchera-con-set-bbq","nevera-wine-cooler-bag-produccion-nacional",
-    "nolton-stylus-precio-bomba","organizador-cosmet","organizador-de-cables-oval-produccion-nacional",
-    "organizador-de-escritorio-bamboo-con-cargador-oferta",
-    "organizador-de-escritorio-harmony-produccion-nacional","organizador-de-escritorio-office",
-    "organizador-de-viaje-city","organizador-de-viaje-cork","organizador-de-viaje-florida",
-    "organizador-de-viaje-master-ocean","organizador-de-viaje-maxi-master-ocean",
-    "organizador-de-viaje-swiss-peak-kool","organizador-de-viaje-swiss-peak-rpet",
-    "organizador-de-viaje-tango-rpet","organizador-de-viaje-zipper",
-    "organizador-light-con-cargador-inalambrico-oferta",
-    "organizador-multiusos-con-esterilizador-uvc-led-oferta","organizador-multiusos-link-nuevo",
-    "organizador-multiusos-lyra","organizador-para-bicicleta-reflect-precio-bomba",
-    "organizador-swiss-peak-office-oferta","palmer-stylus","pano-en-microfibra",
-    "panos-humedos-antibacterial-60und-precio-bomba","panos-humedos-antibacterial-klean-60und",
-    "paraguas-23","paraguas-27","paraguas-30-halley-urban-travel","paraguas-brook-27",
-    "paraguas-brook-ergo-27","paraguas-brook-ergo-27-2","paraguas-colombia-27","paraguas-corbett-27",
-    "paraguas-dayton-23","paraguas-fiori-23","paraguas-flex-golf-16","paraguas-freerain-23",
-    "paraguas-golf-cuadrado-30","paraguas-golf-ii-30","paraguas-golf-redondo-27","paraguas-kahlo-23-nuevo",
-    "paraguas-kahlo-urban-travel-23","paraguas-kenny-215","paraguas-lancelot-27","paraguas-osmond-21",
-    "paraguas-profesional-en-fibra-de-vidrio-30","paraguas-scorpius-urban-travel-21",
-    "paraguas-trendy-poliester-27","paraguas-trendy-poliester-27-2","parrot","pascal-stylus-neon-4-1",
-    "pastillero-dharma","pastillero-eco","pastillero-giratorio-precio-bomba","pastillero-radion-nuevo",
-    "pastillero-tank","pastillero-vaso-2-en-1","pesa-de-viaje-digital",
-    "pila-recargable-2600-mah-con-pesa-de-equipaje-ii","pila-recargable-con-cargador-inalambrico-4000mah",
-    "pila-recargable-en-aluminio-4000mah","pila-recargable-en-bamboo-nipax-5000mah-ii",
-    "pila-recargable-power-bank-con-boton-2200mah","pitillo-reutilizable-metalico-bamboo-precio-bomba",
-    "pitillo-reutilizable-metalico-wheat","pito-con-luz-vision-nuevo","planeador-semanal-ecologico",
-    "poncho-pvc-con-estuche","portaboligrafos-3-en-1-produccion-nacional",
-    "portaboligrafos-flex-produccion-nacional","portaboligrafos-frost-produccion-nacional",
-    "portaboligrafos-lumi-rpet","portacelular-plastico-produccion-nacional","portacomida-produccion-nacional",
-    "portacomidas-con-cubiertos-eco-davis","portacomidas-con-cubiertos-eco-nature",
-    "portacomidas-con-cubiertos-eco-square-ii-produccion-nacional","portacomidas-eco-denver",
-    "portacomidas-eco-holder-antibacteriano","portacomidas-electrico",
-    "portacomida-sencillo-con-cubiertos-produccion-nacional","portadocumentos-de-viaje-paris",
-    "portadocumentos-de-viaje-swiss-peak","portadocumentos-de-viajes-y-de-cables-neox-rpet-nuevo",
-    "portadocumentos-de-viaje-y-de-cables-rpet","portadocumentos-heritage-swiss-peak",
-    "portadocumentos-security","portadocumentos-vintra-nuevo",
-    "portaidentificador-de-carnet-con-destapador-precio-bomba","portaidentificador-de-carnet-con-metro",
-    "portaidentificador-de-carnet-medic","portaidentificador-de-carnet-redondo-ii",
-    "portalapices-cilindrico-nacional","portaminas-jester-coffee-precio-bomba","portanotas-yakari-oferta",
-    "portapapel-car-oferta","portapasaporte-security","portapasaporte-vester-urban-travel",
-    "portarretrato-almanaque-produccion-nacional","portarretrato-cork","portarretrato-verena",
-    "portataco-duo-produccion-nacional","portatacos-con-portalapices-produccion-nacional",
-    "portatarjetas-arc-produccion-nacional","portatarjetas-con-organizador-de-cables",
-    "portatarjetas-en-silicona-doctor-oferta","portatarjetas-ml-182-precio-bomba",
-    "portatarjetas-ml-275-oferta","porta-tarjetas-ml-307-precio-bomba","portatarjetas-ml-376-oferta",
-    "portatarjetas-ml-384-oferta","portatarjetas-plastico-produccion-nacional","portatarjetas-pump",
-    "portatarjetas-pump-bamboo-precio-bomba","portavasos-plastico-set-x-4-y-base-produccion-nacional",
-    "portavianda-produccion-nacional","portos-oferta",
-    "protector-para-morral-backpack-emergency-produccion-nacional","protector-solar-para-carro",
-    "puerto-usb-edon","puerto-usb-einstein","puerto-usb-massimo-bamboo","puerto-usb-ruler-bamboo",
-    "pulsera-inteligente-gym","pvc-memoria-usb-medic-3d-ver-of-228-ch-precio-neto",
-    "pvc-memoria-usb-soccer-ver-of-228-ch-oferta","quita-motas-adhesivo","quita-motas-adhesivo-repuesto",
-    "rastreador-airtag-boomcard-nuevo","rastreador-airtag-boomtag-nuevo","rastreador-chili-card-nuevo",
-    "regla-flexy-pvc-30cm-produccion-nacional","reloj-con-cargador-inalambrico-denver",
-    "reloj-con-portaboligrafo-bamboo","reloj-de-agua-power","reloj-de-arena-doble-nuevo",
-    "reloj-de-pared-colors-produccion-nacional","reloj-de-pared-cosmos-produccion-nacional",
-    "reloj-de-pared-tempo-produccion-nacional","reloj-de-pared-tremont-produccion-nacional",
-    "reloj-de-pared-wall-metal-clock","reloj-digital-bowen-oferta","reloj-digital-utopus-precio-bomba",
-    "reloj-dual-produccion-nacional","reloj-inteligente-brish-nuevo","reloj-inteligente-fyllex-nuevo",
-    "reloj-inteligente-korbin-plus","reloj-led-bamboo","reloj-mondrian-cuadrado-produccion-nacional",
-    "reloj-portaboligrafo-crystal-bamboo","reloj-portaboligrafos-cork","reloj-quincy-produccion-nacional",
-    "reloj-wall-bamboo","resaltador-de-cera-fiona","resaltadores-jeringa-nuevo",
-    "resaltador-magico-de-cera-triangulo","resaltador-magico-en-cera",
-    "resaltador-magico-en-cera-flower-5-colores","resaltador-winston","royce-neon-3-1-oferta",
-    "sanduchera-plastica-produccion-nacional","set-bbq-bamboo","set-bbq-con-delantal",
-    "set-bbq-novak-precio-bomba","set-bbq-stanton","set-boligrafo-y-portaminas-bamboo",
-    "set-crayolas-dexter","set-de-2-utensilios-para-queso-book-oferta","set-de-bandas-elasticas-oferta",
-    "set-de-bar-martini","set-de-bar-y-portavino-cork","set-de-bar-y-portavino-ii","set-de-bbq-6-piezas",
-    "set-de-bbq-en-aluminio-6-piezas","set-de-belleza-halston","set-de-boligrafos-flock-oferta",
-    "set-de-boligrafos-swiss-peak-luzern","set-de-boligrafo-y-libreta-swiss-peak-lux",
-    "set-de-bomba-de-vacio-precio-bomba","set-de-brochas-cayden","set-de-cables-de-carga-mini-kit",
-    "set-de-cables-de-carga-tyson","set-de-cafe-eco-precio-bomba","set-de-carro-universal-ii-oferta",
-    "set-de-cartas-eco","set-de-clips-smiley-faces","set-de-colores-cartoon","set-de-colores-figgy",
-    "set-de-colores-kidz","set-de-colores-x-6","set-de-contenedores-x-3-unidades-produccion-nacional",
-    "set-de-crayolas-infant","set-de-crayolas-x-6","set-de-cubiertos-eco-material-antibacteriano",
-    "set-de-destornilladores-con-luz-car-oferta","set-de-destornilladores-diplo",
-    "set-de-destornilladores-everest-precio-bomba","set-de-destornilladores-home",
-    "set-de-destornilladores-paddle-precio-bomba","set-de-destornilladores-pen-con-linterna-led",
-    "set-de-destornilladores-pistol","set-de-destornilladores-triangular-precio-bomba",
-    "set-de-escritorio-cotton","set-de-escritorio-en-pu-stickies-y-resaltadores-magicos",
-    "set-de-escritorio-magnum","set-de-escritorio-octagon","set-de-escritorio-sticky-calendar",
-    "set-de-golf-tees","set-de-herramientas-alutool","set-de-herramientas-apache",
-    "set-de-herramientas-big-tire","set-de-herramientas-blackburn-ii",
-    "set-de-herramientas-con-lampara-led-precio-bomba","set-de-herramientas-en-madera",
-    "set-de-herramientas-handle","set-de-herramientas-lantern","set-de-herramientas-motobike",
-    "set-de-herramientas-mustang","set-de-herramientas-neumatic","set-de-herramientas-robust",
-    "set-de-herramientas-saxon","set-de-herramientas-scout","set-de-herramientas-speed",
-    "set-de-herramientas-truck","set-de-juego-en-madera-3-1","set-de-lapices-black",
-    "set-de-llavero-y-portatarjetas-ml-372-oferta","set-de-mugs-con-termo-cascade",
-    "set-de-portatarjetas-y-boligrafos-swiss-peak","set-de-portatarjetas-y-llavero-jack-oferta",
-    "set-de-queso-cajun","set-de-queso-edam","set-de-queso-italy",
-    "set-de-resaltadores-magicos-en-cera-flipper","set-de-sushi-precio-bomba",
-    "set-de-tablas-cuisine-oferta","set-de-toallitas-multiusos","set-de-trigo-eco",
-    "set-de-viaje-swiss-peak-travel","set-de-vino-bonard","set-de-vino-bottle","set-de-vino-en-corcho-ii",
-    "set-de-vino-remy-ii","set-dickens-boligrafo-y-portaminas-oferta","set-dony",
-    "set-elegance-boligrafo-y-portaminas","set-enfriador-de-vino-chill-precio-bomba",
-    "set-escolar-college-produccion-nacional","set-escolar-produccion-nacional",
-    "set-jersey-antibacteriano-precio-bomba","set-licorera-malt","set-limpiador-7-en-1","set-manicure-rpet",
-    "set-memo-pad-eco","set-ml-383","set-ml-391","set-ml-398","set-monarch",
-    "set-montgomery-boligrafo-y-roller-oferta","set-nebula","set-resaltador-fingers-ii-eco",
-    "silla-camp-importada-precio-bomba","silla-nevera-cooler-con-espaldar-produccion-nacional",
-    "silla-plegable","skil-oferta","smith","soporte-magnetico-para-moviles",
-    "soporte-para-celular-pop-it-nuevo","soporte-para-moviles-2-1-bamboo","soporte-para-moviles-alarik-ii",
-    "soporte-para-moviles-antiestres","soporte-para-moviles-eco-bamboo","soporte-para-moviles-handy",
-    "soporte-para-moviles-jet","soporte-para-moviles-karter","soporte-para-moviles-nixon",
-    "soporte-para-moviles-pilot","soporte-para-moviles-pop-precio-bomba","soporte-para-moviles-pump",
-    "soporte-para-moviles-pump-bamboo-precio-bomba","soporte-para-moviles-strike-produccion-nacional",
-    "soporte-para-movil-flexi","soporte-para-tablets","speaker-bluetooth-artix-bamboo",
-    "speaker-bluetooth-bamboo-eco","speaker-bluetooth-barack","speaker-bluetooth-barack-bamboo",
-    "speaker-bluetooth-bass-swiss-peak","speaker-bluetooth-beach-35-boompods-nuevo",
-    "speaker-bluetooth-beach-boompods","speaker-bluetooth-bryson","speaker-bluetooth-clock-eco",
-    "speaker-bluetooth-con-lampara-oferta","speaker-bluetooth-lights-eco","speaker-bluetooth-novark-nuevo",
-    "speaker-bluetooth-rainbow","speaker-bluetooth-retro-bamboo-precio-bomba","speaker-bluetooth-rocco",
-    "speaker-bluetooth-soundbar","speaker-bluetooth-waterproof-ii","speaker-bluetooth-zero-boompods",
-    "sporty-bag-aspen","sporty-bag-champion-produccion-nacional","sporty-bag-con-malla",
-    "sporty-bag-cotton-180gr-ii","sporty-bag-crocket","sporty-bag-eco-yute-280gr",
-    "sporty-bag-en-cambrel-ewok","sporty-bag-garda","sporty-bag-kidz-con-diseno",
-    "sporty-bag-kidz-sin-diseno","sporty-bag-metallic-oferta","sporty-bag-molt",
-    "sporty-bag-reflectiva-security","sporty-bag-reflective","sporty-bag-sencilla",
-    "sporty-bag-sencilla-ii-rpet","sporty-bag-spock","sporty-bag-whip","sticky-set-cubik",
-    "sticky-set-doctor","sticky-set-eco","sticky-set-en-trigo-wheat-eco","sticky-set-flag-oferta",
-    "sticky-set-floppy","sticky-set-leader-eco","sticky-set-ottis-oferta","sticky-set-truck-nuevo",
-    "summit-stylus","tablero-week","tajalapiz-plastico-school","talbot-2-1-oferta",
-    "teclado-bluetooth-orbi-nuevo","termo-bamboo-500ml","termo-bullet-350ml",
-    "termo-metalico-calypso-chili-500ml","termo-urban-travel-hydra-500ml","termo-zeus-500-ml",
-    "toalla-cool-sport-2","toalla-cool-sport-box","toalla-cool-sport-con-estuche",
-    "toalla-en-microfibra-multiusos","toalla-golf-toalla-de-mano-tundida-acabado-fino",
-    "toallas-100-algodon-produccion-nacional","torre-de-madera-skill-2",
-    "trolley-morral-backpack-dilbert-precio-bomba","trolley-morral-backpack-senior-urban-travel",
-    "trolley-morral-backpack-urban-travel","vaso-arrow-produccion-nacional","vaso-cervecero-300ml-oferta",
-    "vaso-circular-320ml-produccion-nacional","vaso-con-pitillo-produccion-nacional",
-    "vaso-cuadrado-7oz-cristal-produccion-nacional","vaso-doble-pared-de-seguridad-450ml-prod-nacional",
-    "vaso-glitter-produccion-nacional","vaso-plastico-new-york-20-oz-produccion-nacional",
-    "vaso-plastico-new-york-23-oz-produccion-nacional","vaso-speedy-14-oz-san-produccion-nacional",
-    "vaso-tapa-plastico-14-oz-produccion-nacional","vaso-triangular-250ml-produccion-nacional",
-    "vaso-twister-12-oz-san-produccion-nacional","vaso-yumbo-32oz-produccion-nacional",
-    "ventilador-hook","ventilador-spray","ventilador-usb-heat","ventura-bamboo-infinity","ventura-frost",
-    "ventura-resaltador-cera","ventura-stylus-2","ventura-stylus-4-1","ventura-stylus-neon",
-    "visera-trucker","vuvuzela-colombia-produccion-nacional","woody","yoyo-plastico-produccion-nacional-nuevo",
-]
 
-missing = [s for s in old_slugs if s not in current_slugs]
-print(f'Old slugs: {len(old_slugs)}, Missing: {len(missing)}')
+def load_json(name):
+    with open(os.path.join(SOURCES, name), encoding='utf-8') as f:
+        return json.load(f)
 
-redirects = {}
-for old in missing:
-    # Try exact base + numeric ID match
-    match = next((s for s in current_slugs if re.match(re.escape(old) + r'-\d+$', s)), None)
-    if match:
-        redirects[old] = match
-        continue
-    # Try stripping known marketing suffixes
-    for suffix in ['-precio-bomba', '-nuevo', '-oferta', '-max']:
-        if old.endswith(suffix):
-            base = old[:-len(suffix)]
-            match = next((s for s in current_slugs if re.match(re.escape(base) + r'-\d+$', s)), None)
-            if match:
-                redirects[old] = match
-                break
-    else:
-        redirects[old] = None  # redirect to /tienda/
 
-found = {k: v for k, v in redirects.items() if v}
-not_found = [k for k, v in redirects.items() if not v]
-print(f'Matched: {len(found)}, Unmatched (->tienda): {len(not_found)}')
+def load_products():
+    with open(os.path.join(ROOT, 'data', 'products.json'), encoding='utf-8') as f:
+        return json.load(f)
 
-lines = []
-lines.append('# Redirects for old product URLs (pre-scraper catalog, April 2026)')
-lines.append('# Products that had slug changes: redirect to new URL or /tienda/')
-lines.append('')
-for old, new in sorted(found.items()):
-    lines.append(f'/tienda/{old}/  /tienda/{new}/  301')
-for old in sorted(not_found):
-    lines.append(f'/tienda/{old}/  /tienda/  301')
 
-out_path = os.path.join(ROOT, 'public', '_redirects')
+def load_categories():
+    with open(os.path.join(ROOT, 'data', 'categories.json'), encoding='utf-8') as f:
+        return json.load(f)
 
-# Preserve any existing non-product redirects (don't overwrite)
-header_comment = '# Auto-generated product redirects — do not edit manually\n# Run scripts/generate_redirects.py to regenerate\n'
-with open(out_path, 'w', encoding='utf-8') as f:
-    f.write(header_comment + '\n'.join(lines) + '\n')
 
-print(f'Written {len(lines) - 3} redirect rules to {out_path}')
-print(f'  Specific product redirects: {len(found)}')
-print(f'  Generic /tienda/ fallbacks: {len(not_found)}')
+def load_blog_posts():
+    with open(os.path.join(ROOT, 'data', 'blog-posts.json'), encoding='utf-8') as f:
+        return json.load(f)
+
+
+GEO_CIUDADES = {'quito', 'guayaquil', 'cuenca', 'manta'}
+
+STATIC_TOP_LEVEL = ['/tienda', '/novedades', '/productos', '/promociones', '/productos-promocionales-ecuador']
+
+
+def main():
+    products = load_products()
+    categories = load_categories()
+    blog_posts = load_blog_posts()
+
+    current_product_slugs = {p['slug'] for p in products}
+    current_category_slugs = {c['slug'] for c in categories} | {p['categoria_slug'] for p in products}
+    current_blog_slugs = {p['slug'] for p in blog_posts}
+
+    legacy_slugs = load_json('legacy_slugs.json')
+    legacy_categories = load_json('legacy_categories.json')
+    legacy_category_queries = load_json('legacy_category_queries.json')['categories']
+
+    with open(os.path.join(SOURCES, 'manual_redirects.txt'), encoding='utf-8') as f:
+        manual_redirects_text = f.read().replace('{SITE_URL}', SITE_URL)
+
+    errors = []
+    seen_from = {}
+    unresolved = []
+
+    def register_rule(frm, to, status, block_lines, source):
+        if frm in seen_from and seen_from[frm] != (to, status):
+            errors.append(f'Regla duplicada/conflictiva para "{frm}": {seen_from[frm]} vs ({to}, {status}) [{source}]')
+            return
+        seen_from[frm] = (to, status)
+        block_lines.append(f'{frm}  {to}  {status}')
+
+    def validate_absolute_target(to, source):
+        if not to.startswith(SITE_URL):
+            return
+        path = to[len(SITE_URL):]
+        if path in ('/', ''):
+            return
+        seg = [s for s in path.split('/') if s]
+        if not seg:
+            return
+        if seg[0] == 'tienda':
+            if len(seg) == 1:
+                return  # /tienda/
+            if seg[1] == 'categoria':
+                if len(seg) >= 3 and seg[2] in current_category_slugs:
+                    return
+                errors.append(f'Target de categoría inexistente: {to} [{source}]')
+                return
+            if seg[1] in current_product_slugs:
+                return
+            errors.append(f'Target de producto inexistente: {to} [{source}]')
+            return
+        if seg[0] == 'blog':
+            if len(seg) == 1:
+                return
+            if seg[1] in current_blog_slugs:
+                return
+            errors.append(f'Target de post inexistente: {to} [{source}]')
+            return
+        if seg[0] == 'productos-promocionales-ecuador':
+            if len(seg) == 1:
+                return
+            if seg[1] in GEO_CIUDADES:
+                return
+            errors.append(f'Target de ciudad inexistente: {to} [{source}]')
+            return
+        if path.rstrip('/') in ('/novedades', '/productos', '/promociones'):
+            return
+        # otros paths (manual) no se validan aquí — se asume revisados a mano.
+
+    # --- 2. Query string (facetas) ---
+    query_lines = []
+    for display_name, target_slug in legacy_category_queries.items():
+        if not target_slug:
+            continue
+        to = f'{SITE_URL}/tienda/categoria/{target_slug}/'
+        validate_absolute_target(to, 'legacy_category_queries.json')
+        # Netlify matching por query exige una condición por valor; como los valores son
+        # texto libre conocido (no un patrón genérico), se emite una regla por nombre exacto.
+        # Se codifica todo (espacios y acentos) tal como llegaría en la query string real —
+        # el archivo _redirects es whitespace-delimited, un espacio o acento literal rompería el parseo.
+        query_value = quote(display_name, safe='')
+        query_lines.append(f'/tienda/  categoria={query_value}  {to}  301')
+
+    # --- 3. Categorías históricas ---
+    category_lines = []
+    for old_slug, target in sorted(legacy_categories.items()):
+        to = target if target.startswith('http') else f'{SITE_URL}{target}'
+        validate_absolute_target(to, 'legacy_categories.json')
+        register_rule(f'/tienda/categoria/{old_slug}', to, '301', category_lines, 'legacy_categories.json')
+        register_rule(f'/tienda/categoria/{old_slug}/', to, '301', category_lines, 'legacy_categories.json')
+
+    # --- 4. Productos históricos ---
+    product_301_lines = []
+    product_410_lines = []
+    for old_slug, new_slug in sorted(legacy_slugs.items()):
+        if new_slug:
+            to = f'{SITE_URL}/tienda/{new_slug}/'
+            validate_absolute_target(to, 'legacy_slugs.json')
+            register_rule(f'/tienda/{old_slug}', to, '301', product_301_lines, 'legacy_slugs.json')
+            register_rule(f'/tienda/{old_slug}/', to, '301', product_301_lines, 'legacy_slugs.json')
+        else:
+            # Sin reemplazo seguro: 410 explícito (nunca se redirige a /tienda/ genérico).
+            # Sirve el contenido de app/not-found.tsx (out/404.html) con status 410.
+            register_rule(f'/tienda/{old_slug}', '/404.html', '410', product_410_lines, 'legacy_slugs.json')
+            register_rule(f'/tienda/{old_slug}/', '/404.html', '410', product_410_lines, 'legacy_slugs.json')
+            unresolved.append(old_slug)
+
+    # --- 5. Trailing-slash genérico (fallback, siempre después de las reglas específicas) ---
+    trailing_slash_lines = []
+    for p in STATIC_TOP_LEVEL:
+        trailing_slash_lines.append(f'{p}  {SITE_URL}{p}/  301')
+    trailing_slash_lines.append(f'/tienda/:slug  {SITE_URL}/tienda/:slug/  301')
+    trailing_slash_lines.append(f'/tienda/categoria/:slug/pagina/:page  {SITE_URL}/tienda/categoria/:slug/pagina/:page/  301')
+    trailing_slash_lines.append(f'/tienda/categoria/:slug  {SITE_URL}/tienda/categoria/:slug/  301')
+    trailing_slash_lines.append(f'/blog/:slug  {SITE_URL}/blog/:slug/  301')
+    trailing_slash_lines.append(f'/productos-promocionales-ecuador/:ciudad  {SITE_URL}/productos-promocionales-ecuador/:ciudad/  301')
+
+    # --- 6. Host / protocolo (red de seguridad final) ---
+    # Todo host secundario -> host canónico. NUNCA incluir aquí el host canónico como
+    # origen (crearía un bucle con la redirección de dominio primario de Netlify).
+    canonical_host = SITE_URL.split('://', 1)[1]
+    host_lines = []
+    for secondary in SITE_CONFIG.get('secondaryHosts', []):
+        if secondary.rstrip('/').split('://', 1)[1] == canonical_host and secondary.startswith('https://'):
+            errors.append(f'secondaryHosts incluye el host canónico {secondary}')
+            continue
+        host_lines.append(f'{secondary.rstrip("/")}/*  {SITE_URL}/:splat  301!')
+
+    if errors:
+        for e in errors:
+            print(f'ERROR: {e}', file=sys.stderr)
+        print(f'\n{len(errors)} error(es) de validación — no se escribió public/_redirects.', file=sys.stderr)
+        sys.exit(1)
+
+    parts = [
+        '# Archivo generado por scripts/generate_redirects.py — NO editar a mano.',
+        '# Para cambios manuales, editar scripts/redirect_sources/manual_redirects.txt',
+        '# y volver a ejecutar: python scripts/generate_redirects.py',
+        '',
+        '# ===== 1. Reglas manuales (Colombia, pre-catálogo, /contacto, etc.) =====',
+        manual_redirects_text.rstrip('\n'),
+        '',
+        '# ===== 2. Facetas de categoría por query string (DAFA/DWAD) =====',
+        *query_lines,
+        '',
+        '# ===== 3. Categorías históricas/renombradas =====',
+        *category_lines,
+        '',
+        '# ===== 4. Slugs de producto históricos =====',
+        *product_301_lines,
+        *product_410_lines,
+        '',
+        '# ===== 5. Trailing-slash genérico (fallback) =====',
+        *trailing_slash_lines,
+        '',
+        '# ===== 6. Host / protocolo canónico (red de seguridad final) =====',
+        *host_lines,
+        '',
+    ]
+
+    out_path = os.path.join(ROOT, 'public', '_redirects')
+    with open(out_path, 'w', encoding='utf-8', newline='\n') as f:
+        f.write('\n'.join(parts) + '\n')
+
+    total_rules = len(seen_from) + len(query_lines) + len(trailing_slash_lines) + len(host_lines) + \
+        len([l for l in manual_redirects_text.splitlines() if l.strip() and not l.strip().startswith('#')])
+    print(f'public/_redirects escrito: ~{total_rules} reglas.')
+    print(f'  Categorías históricas: {len(legacy_categories)} (x2 variantes de slash)')
+    print(f'  Productos con reemplazo: {sum(1 for v in legacy_slugs.values() if v)} (x2 variantes de slash, 301)')
+    print(f'  Productos sin reemplazo: {len(unresolved)} (x2 variantes de slash, 410)')
+    print(f'  Facetas de categoría con redirect: {len(query_lines)}')
+
+    os.makedirs(os.path.join(ROOT, 'reports'), exist_ok=True)
+    with open(os.path.join(ROOT, 'reports', 'unresolved_redirects.md'), 'w', encoding='utf-8') as f:
+        f.write('# Slugs de producto históricos sin reemplazo (410 Gone)\n\n')
+        f.write('Estos slugs existían antes pero no tienen un reemplazo seguro por SKU/ID en el catálogo actual.\n')
+        f.write('Se dejaron como 410 (retirado permanentemente) en vez de redirigir a /tienda/.\n')
+        f.write('Si alguno debería mapear a un producto vigente, añadirlo manualmente a\n')
+        f.write('scripts/redirect_sources/legacy_slugs.json y volver a generar.\n\n')
+        for slug in sorted(unresolved):
+            f.write(f'- {slug}\n')
+
+    print(f'\nreports/unresolved_redirects.md escrito ({len(unresolved)} slugs).')
+
+
+if __name__ == '__main__':
+    main()

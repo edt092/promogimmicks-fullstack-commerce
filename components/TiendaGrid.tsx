@@ -3,45 +3,69 @@
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { Search, X, ShoppingCart } from 'lucide-react';
 import ProductCard from './ProductCard';
-import productsDataRaw from '../data/products.json';
+import type { ProductCardData } from '@/lib/catalog';
+import { loadSearchIndex, searchItems, type SearchItem } from '@/lib/search';
 
-interface Product {
-  id: string;
-  nombre: string;
-  slug: string;
-  categoria: string;
-  categoria_slug: string;
-  descripcion_corta: string;
-  imagen_url: string;
-  imagen_original_url: string;
-  codigo: string | null;
-  sku: string;
-  seo_title: string;
-  seo_description: string;
-  seo_keywords: string;
+type GridProduct = ProductCardData & { descripcion_corta?: string };
+
+interface TiendaGridProps {
+  /** Primer lote renderizado en el servidor (visible sin JS). */
+  initialProducts: GridProduct[];
+  /** Total de productos del catálogo. */
+  totalCount: number;
 }
-
-const productsData = productsDataRaw as Product[];
 
 const PRODUCTS_PER_PAGE = 20;
 
-export default function TiendaGrid() {
+function toGrid(item: SearchItem): GridProduct {
+  return {
+    id: item.slug,
+    nombre: item.nombre,
+    slug: item.slug,
+    categoria: item.categoria,
+    categoria_slug: item.categoria_slug,
+    imagen_url: item.imagen_url,
+    sku: item.sku,
+    descripcion_corta: item.descripcion_corta,
+  };
+}
+
+// El catálogo completo ya no viaja en el JS de la página: el resto de productos y la
+// búsqueda usan /search-index.json, que se descarga al buscar o al pedir más productos.
+// El descubrimiento para buscadores no depende de este componente (enlaces SSR en
+// categorías paginadas, directorio de /tienda/ y sitemap).
+export default function TiendaGrid({ initialProducts, totalCount }: TiendaGridProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [visibleProducts, setVisibleProducts] = useState(PRODUCTS_PER_PAGE);
-  const [isLoading, setIsLoading] = useState(false);
+  const [index, setIndex] = useState<SearchItem[] | null>(null);
+  const [indexError, setIndexError] = useState(false);
   const loaderRef = useRef<HTMLDivElement>(null);
 
-  const filteredProducts = useMemo(() => {
-    if (searchTerm === '') return productsData;
+  const ensureIndex = useCallback(() => {
+    if (index || indexError) return;
+    loadSearchIndex().then(setIndex).catch(() => setIndexError(true));
+  }, [index, indexError]);
 
-    return productsData.filter(product => {
-      return product.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.descripcion_corta.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.categoria.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (product.codigo && product.codigo.toLowerCase().includes(searchTerm.toLowerCase()));
-    });
-  }, [searchTerm]);
+  const searching = searchTerm.trim().length >= 2;
+
+  useEffect(() => {
+    if (searching) ensureIndex();
+  }, [searching, ensureIndex]);
+
+  const allProducts = useMemo<GridProduct[]>(
+    () => (index ? index.map(toGrid) : initialProducts),
+    [index, initialProducts]
+  );
+
+  const filteredProducts = useMemo<GridProduct[]>(() => {
+    if (!searching) return allProducts;
+    if (!index) return [];
+    return searchItems(index, searchTerm).map(toGrid);
+  }, [searching, allProducts, index, searchTerm]);
+
+  const total = searching ? filteredProducts.length : index ? allProducts.length : totalCount;
+  const waitingIndex = !index && !indexError && (searching || visibleProducts > initialProducts.length);
+  const isLoading = waitingIndex;
 
   const displayedProducts = useMemo(() => {
     return filteredProducts.slice(0, visibleProducts);
@@ -52,18 +76,15 @@ export default function TiendaGrid() {
   }, [searchTerm]);
 
   const loadMore = useCallback(() => {
-    if (isLoading || visibleProducts >= filteredProducts.length) return;
-    setIsLoading(true);
-    setTimeout(() => {
-      setVisibleProducts(prev => Math.min(prev + PRODUCTS_PER_PAGE, filteredProducts.length));
-      setIsLoading(false);
-    }, 300);
-  }, [isLoading, visibleProducts, filteredProducts.length]);
+    if (visibleProducts >= total) return;
+    ensureIndex();
+    setVisibleProducts(prev => Math.min(prev + PRODUCTS_PER_PAGE, total));
+  }, [visibleProducts, total, ensureIndex]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
+        if (entries[0].isIntersecting && !waitingIndex) {
           loadMore();
         }
       },
@@ -73,7 +94,7 @@ export default function TiendaGrid() {
       observer.observe(loaderRef.current);
     }
     return () => observer.disconnect();
-  }, [loadMore]);
+  }, [loadMore, waitingIndex]);
 
   return (
     <div className="min-h-screen">
@@ -83,7 +104,8 @@ export default function TiendaGrid() {
             <div className="relative flex-1">
               <input
                 type="text"
-                placeholder="Buscar productos, categorías..."
+                placeholder="Buscar por nombre, SKU o categoría…"
+                aria-label="Buscar productos en el catálogo"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-12 pr-10 py-3.5 text-base border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-gray-50 focus:bg-white"
@@ -92,6 +114,7 @@ export default function TiendaGrid() {
               {searchTerm && (
                 <button
                   onClick={() => setSearchTerm('')}
+                  aria-label="Borrar búsqueda"
                   className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-200 rounded-full transition-colors"
                 >
                   <X size={16} />
@@ -100,7 +123,7 @@ export default function TiendaGrid() {
             </div>
 
             <p className="text-sm text-gray-500 text-center sm:text-right whitespace-nowrap">
-              <span className="font-semibold text-gray-900">{filteredProducts.length}</span> productos
+              <span className="font-semibold text-gray-900">{searching && !index ? '…' : total}</span> productos
               {searchTerm && (
                 <span className="ml-2 text-amber-600">
                   para &quot;{searchTerm}&quot;
@@ -116,11 +139,11 @@ export default function TiendaGrid() {
           <>
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-5">
               {displayedProducts.map((product, index) => (
-                <ProductCard key={product.id} product={product} priority={index < 10} />
+                <ProductCard key={product.id} product={product} priority={index < 2} />
               ))}
             </div>
 
-            {visibleProducts < filteredProducts.length && (
+            {(visibleProducts < total || isLoading) && (
               <div ref={loaderRef} className="flex justify-center items-center py-12">
                 {isLoading ? (
                   <div className="flex items-center gap-3 text-gray-500">
@@ -138,12 +161,21 @@ export default function TiendaGrid() {
               </div>
             )}
 
-            {visibleProducts >= filteredProducts.length && filteredProducts.length > PRODUCTS_PER_PAGE && (
+            {!isLoading && visibleProducts >= total && total > PRODUCTS_PER_PAGE && (
               <div className="text-center py-8 text-gray-500">
-                Has visto todos los {filteredProducts.length} productos
+                Has visto todos los {total} productos
               </div>
             )}
           </>
+        ) : isLoading ? (
+          <div className="flex justify-center items-center gap-3 py-20 text-gray-500" role="status" aria-live="polite">
+            <div className="w-6 h-6 border-2 border-blue-900 border-t-transparent rounded-full animate-spin" />
+            <span>Buscando en el catálogo…</span>
+          </div>
+        ) : indexError && searching ? (
+          <div className="text-center py-20 text-gray-600" role="alert">
+            No se pudo cargar el buscador. Revisa tu conexión o navega por categorías.
+          </div>
         ) : (
           <div className="text-center py-20 animate-fadeIn">
             <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 max-w-md mx-auto">

@@ -3,18 +3,13 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import TiendaGrid from '@/components/TiendaGrid';
 import GoldenShimmerText from '@/components/GoldenShimmerText';
-import productsDataRaw from '@/data/products.json';
 import categoriesData from '@/data/categories.json';
+import { SITE_URL } from '@/lib/site';
 
-interface Product {
-  id: string;
-  nombre: string;
-  slug: string;
-  categoria: string;
-  categoria_slug: string;
-}
+import { products as productsData, toCardData, type Product } from '@/lib/catalog';
 
-const productsData = productsDataRaw as Product[];
+// Primer lote del grid interactivo, renderizado en el servidor.
+const initialProducts = productsData.slice(0, 20).map((p) => ({ ...toCardData(p), descripcion_corta: p.descripcion_corta }));
 
 const productsByCategory = productsData.reduce<Record<string, Product[]>>((acc, p) => {
   if (!acc[p.categoria_slug]) acc[p.categoria_slug] = [];
@@ -26,7 +21,7 @@ export const metadata = {
   title: 'Tienda - PromoGimmicks | Productos Promocionales',
   description: 'Explora nuestro catálogo completo de productos promocionales. Artículos de escritura, drinkware, tecnología, textil y más.',
   alternates: {
-    canonical: 'https://promogimmicks.com/tienda/',
+    canonical: `${SITE_URL}/tienda/`,
   },
 };
 
@@ -73,7 +68,7 @@ export default function TiendaPage() {
       {/* Products Grid */}
       <section className="py-8 md:py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <TiendaGrid />
+          <TiendaGrid initialProducts={initialProducts} totalCount={productsData.length} />
         </div>
       </section>
 

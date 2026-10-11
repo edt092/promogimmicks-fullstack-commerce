@@ -6,12 +6,15 @@ interface LogoProps {
   variant?: 'dark' | 'light';
   markSize?: number;
   className?: string;
+  /** Precarga con prioridad alta. Por defecto no: el header y el footer comparten este
+   *  componente y el homepage ya precarga el logo del hero (evita precargas duplicadas). */
+  priority?: boolean;
 }
 
 // Aspect ratio real del archivo de marca (public/img/brand/promogimmicks-logo.png): 1042x266.
 const LOGO_ASPECT = 1042 / 266;
 
-export function Logo({ markSize = 44, className = '' }: LogoProps) {
+export function Logo({ markSize = 44, className = '', priority = false }: LogoProps) {
   const height = markSize;
   const width = Math.round(height * LOGO_ASPECT);
 
@@ -23,7 +26,7 @@ export function Logo({ markSize = 44, className = '' }: LogoProps) {
           alt="Promogimmicks"
           width={width}
           height={height}
-          priority
+          priority={priority}
           style={{ height, width: 'auto' }}
         />
       </span>

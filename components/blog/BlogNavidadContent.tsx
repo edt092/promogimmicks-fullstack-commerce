@@ -28,23 +28,14 @@ import {
   Clock,
   HelpCircle
 } from 'lucide-react';
-import productsData from '@/data/products.json';
-
-// Categorías de productos relevantes para Navidad
-const getChristmasProducts = () => {
-  const categories = ['Drinkware', 'Tecnología', 'Hogar', 'Oficina', 'Eco', 'Textil y Vestuario'];
-  return productsData.filter(p => categories.includes(p.categoria)).slice(0, 12);
-};
-
-const getProductsByCategory = (category: string, limit: number = 4) => {
-  return productsData
-    .filter(p => p.categoria.toLowerCase().includes(category.toLowerCase()))
-    .slice(0, limit);
-};
+import { useBlogProducts } from './BlogProductsContext';
+import type { BlogProduct } from '@/lib/blog-products';
+import { whatsappUrl as waLink } from '@/lib/site';
 
 // Carrusel interactivo de productos navideños
 function ChristmasCarousel() {
-  const products = getChristmasProducts();
+  const { mixed } = useBlogProducts();
+  const products = mixed(['Drinkware', 'Tecnología', 'Hogar', 'Oficina', 'Eco', 'Textil y Vestuario']);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const itemsPerView = 4;
@@ -68,7 +59,7 @@ function ChristmasCarousel() {
     e.preventDefault();
     e.stopPropagation();
     const mensaje = `Hola! Me interesa cotizar para regalo navideño: ${productName}`;
-    const whatsappUrl = `https://wa.me/593998594123?text=${encodeURIComponent(mensaje)}`;
+    const whatsappUrl = waLink(mensaje);
     window.open(whatsappUrl, '_blank');
   };
 
@@ -213,7 +204,7 @@ function ChristmasCTA({
 }) {
   const handleWhatsApp = () => {
     const mensaje = "Hola! Me interesa cotizar artículos promocionales navideños para mi empresa.";
-    const whatsappUrl = `https://wa.me/593998594123?text=${encodeURIComponent(mensaje)}`;
+    const whatsappUrl = waLink(mensaje);
     window.open(whatsappUrl, '_blank');
   };
 
@@ -408,7 +399,7 @@ function ChristmasProductShowcase({
   subtitle,
   bgColor = 'from-slate-900 to-slate-900'
 }: {
-  products: typeof productsData;
+  products: BlogProduct[];
   title: string;
   subtitle?: string;
   bgColor?: string;
@@ -417,7 +408,7 @@ function ChristmasProductShowcase({
     e.preventDefault();
     e.stopPropagation();
     const mensaje = `Hola! Me interesa cotizar para regalo navideño: ${productName}`;
-    const whatsappUrl = `https://wa.me/593998594123?text=${encodeURIComponent(mensaje)}`;
+    const whatsappUrl = waLink(mensaje);
     window.open(whatsappUrl, '_blank');
   };
 
@@ -473,6 +464,7 @@ function ChristmasProductShowcase({
 }
 
 export default function BlogNavidadContent() {
+  const { byCategory: getProductsByCategory } = useBlogProducts();
   const [tocOpen, setTocOpen] = useState(true);
 
   // Productos por categoría
