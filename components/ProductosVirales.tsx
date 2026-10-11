@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
+import { whatsappUrl as waLink } from '@/lib/site';
 
 const viralProducts = [
   '/img/imagenes-productos-virales/producto_1.jpg',
@@ -59,7 +60,7 @@ export default function ProductosVirales() {
               y potencial de impacto en el mercado corporativo.
             </p>
             <a
-              href="https://wa.me/593998594123?text=Hola%2C%20me%20interesa%20consultar%20disponibilidad%20de%20productos%20promocionales"
+              href={waLink('Hola, me interesa consultar disponibilidad de productos promocionales')}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-sky-500 hover:bg-sky-600 text-white font-bold px-7 py-3.5 rounded-full transition-all duration-300 shadow-md shadow-sky-200 hover:shadow-sky-300 group"

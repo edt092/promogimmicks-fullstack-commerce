@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, ShoppingBag, MessageCircle, ArrowRight, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import { whatsappUrl as waLink } from '@/lib/site';
 
 // Badge 100% Personalizables — animación CSS pura, sin setInterval
 function GoldenShimmerBadge() {
@@ -82,7 +83,7 @@ export default function TiendaPromo() {
 
   const handleWhatsApp = () => {
     const mensaje = "Hola! Me interesa cotizar productos promocionales para mi empresa.";
-    window.open(`https://wa.me/593998594123?text=${encodeURIComponent(mensaje)}`, '_blank');
+    window.open(waLink(mensaje), '_blank');
   };
 
   return (

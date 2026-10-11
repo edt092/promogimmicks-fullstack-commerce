@@ -3,7 +3,6 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { Tag, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
-import productsDataRaw from '@/data/products.json';
 
 interface Product {
   id: string;
@@ -15,15 +14,12 @@ interface Product {
   sku: string;
 }
 
-const productsData = productsDataRaw as Product[];
 const PER_PAGE = 20;
-const OFFERS_CATEGORY_SLUG = 'precio-bomba';
 
 type SortKey = 'relevancia' | 'nombre-asc' | 'nombre-desc';
 
-const offersPool = productsData.filter((p) => p.categoria_slug === OFFERS_CATEGORY_SLUG);
-
-export default function PromocionesGrid() {
+// Productos de ofertas resueltos en el servidor (app/promociones/page.tsx).
+export default function PromocionesGrid({ products: offersPool }: { products: Product[] }) {
   const [sort, setSort] = useState<SortKey>('relevancia');
   const [page, setPage] = useState(1);
 
@@ -32,7 +28,7 @@ export default function PromocionesGrid() {
     if (sort === 'nombre-asc') list.sort((a, b) => a.nombre.localeCompare(b.nombre));
     if (sort === 'nombre-desc') list.sort((a, b) => b.nombre.localeCompare(a.nombre));
     return list;
-  }, [sort]);
+  }, [sort, offersPool]);
 
   const totalPages = Math.max(1, Math.ceil(sorted.length / PER_PAGE));
   const currentPage = Math.min(page, totalPages);

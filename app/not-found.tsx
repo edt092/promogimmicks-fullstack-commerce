@@ -4,6 +4,7 @@ import Footer from '@/components/Footer';
 
 export const metadata = {
   title: 'Página no encontrada | PromoGimmicks',
+  description: 'La página que buscas no existe o fue retirada. Explora el catálogo de artículos promocionales de PromoGimmicks.',
   robots: { index: false, follow: true },
 };
 

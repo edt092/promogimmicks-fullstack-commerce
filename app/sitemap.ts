@@ -2,78 +2,46 @@ import { MetadataRoute } from 'next'
 import productsData from '@/data/products.json'
 import blogPosts from '@/data/blog-posts.json'
 import { ecuador } from '@/data/geo-data'
+import { absoluteUrl } from '@/lib/site'
+import { categoryPageCount, categoryPagePath } from '@/lib/catalog'
 
-const SITE_URL = 'https://promogimmicks.com'
-
+// Política (reports/seo-implementation-log.md):
+// - Solo URLs canónicas, indexables y existentes en el export (host de site.config.json).
+// - lastModified solo cuando existe una fecha real de cambio. El catálogo no registra
+//   fechas por producto/categoría: omitirla es mejor que una fecha de build o inventada.
+//   El blog usa fecha_actualizacion (si se registra) o fecha_publicacion.
+// - changeFrequency/priority se omiten: Google no los usa.
 export default function sitemap(): MetadataRoute.Sitemap {
-  // Fechas fijas para evitar que Google re-rastree todo en cada deploy
-  const GEO_UPDATED = new Date('2025-11-01')
-  const STORE_UPDATED = new Date('2026-05-05')
+  const staticPaths = ['/', '/tienda/', '/productos/', '/novedades/', '/promociones/', '/blog/', '/nosotros/', '/contacto/']
 
-  // Páginas estáticas principales
-  const staticPages: MetadataRoute.Sitemap = [
-    {
-      url: `${SITE_URL}/`,
-      lastModified: new Date('2026-04-01'),
-      changeFrequency: 'weekly',
-      priority: 1,
-    },
-    {
-      url: `${SITE_URL}/tienda/`,
-      lastModified: STORE_UPDATED,
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
-      url: `${SITE_URL}/blog/`,
-      lastModified: new Date('2026-02-01'),
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-  ]
+  const staticPages: MetadataRoute.Sitemap = staticPaths.map((path) => ({ url: absoluteUrl(path) }))
 
-  // Páginas geográficas - Ecuador
   const ecuadorPages: MetadataRoute.Sitemap = [
-    {
-      url: `${SITE_URL}/productos-promocionales-ecuador/`,
-      lastModified: GEO_UPDATED,
-      changeFrequency: 'monthly' as const,
-      priority: 0.9,
-    },
+    { url: absoluteUrl('/productos-promocionales-ecuador/') },
     ...ecuador.ciudades.map((ciudad) => ({
-      url: `${SITE_URL}/productos-promocionales-ecuador/${ciudad.slug}/`,
-      lastModified: GEO_UPDATED,
-      changeFrequency: 'monthly' as const,
-      priority: 0.85,
+      url: absoluteUrl(`/productos-promocionales-ecuador/${ciudad.slug}/`),
     })),
   ]
 
-  // Obtener categorías únicas
-  const uniqueCategories = Array.from(new Set(productsData.map(p => p.categoria_slug)))
+  const uniqueCategories = Array.from(new Set(productsData.map((p) => p.categoria_slug)))
+  // Página 1 y páginas 2..N de cada categoría (cada una es canónica de sí misma).
+  const categoryPages: MetadataRoute.Sitemap = uniqueCategories.flatMap((categorySlug) =>
+    Array.from({ length: categoryPageCount(categorySlug) }, (_, i) => ({
+      url: absoluteUrl(categoryPagePath(categorySlug, i + 1)),
+    }))
+  )
 
-  // Páginas de categorías
-  const categoryPages: MetadataRoute.Sitemap = uniqueCategories.map((categorySlug) => ({
-    url: `${SITE_URL}/tienda/categoria/${categorySlug}/`,
-    lastModified: STORE_UPDATED,
-    changeFrequency: 'monthly' as const,
-    priority: 0.85,
-  }))
-
-  // Páginas de productos — lastModified estático para no señalizar cambios diarios
   const productPages: MetadataRoute.Sitemap = productsData.map((product) => ({
-    url: `${SITE_URL}/tienda/${product.slug}/`,
-    lastModified: STORE_UPDATED,
-    changeFrequency: 'monthly' as const,
-    priority: 0.7,
+    url: absoluteUrl(`/tienda/${product.slug}/`),
   }))
 
-  // Páginas del blog
-  const blogPages: MetadataRoute.Sitemap = blogPosts.map((post) => ({
-    url: `${SITE_URL}/blog/${post.slug}/`,
-    lastModified: new Date(post.fecha_publicacion),
-    changeFrequency: 'monthly' as const,
-    priority: 0.8,
-  }))
+  const blogPages: MetadataRoute.Sitemap = blogPosts.map((post) => {
+    const updated = (post as { fecha_actualizacion?: string }).fecha_actualizacion || post.fecha_publicacion
+    return {
+      url: absoluteUrl(`/blog/${post.slug}/`),
+      lastModified: new Date(updated),
+    }
+  })
 
   return [...staticPages, ...ecuadorPages, ...categoryPages, ...productPages, ...blogPages]
 }

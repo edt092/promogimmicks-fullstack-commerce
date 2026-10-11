@@ -107,12 +107,20 @@ CATEGORY_ATTRS = {
     'audifonos-bluetooth':   ('con cancelación de ruido y autonomía extendida', 'oficinas, viajes y activaciones de marca'),
 }
 
+NEUTRAL_ATTR = 'personalizable con el logo de tu empresa'
+
+
 def get_category_context(cat_id):
-    """Return (atributo, uso) tuple for a category, with generic fallback."""
+    """Return (atributo, uso) tuple for a category, with generic fallback.
+
+    El atributo es siempre neutral: los atributos por categoría de CATEGORY_ATTRS
+    (BPA, cancelación de ruido, acero, etc.) no están verificados por modelo y no
+    deben publicarse como especificación. Solo se usa la sugerencia de uso.
+    """
     for key, val in CATEGORY_ATTRS.items():
         if key in cat_id:
-            return val
-    return ('personalizable con logo y texto', 'empresas, eventos y campañas de marketing')
+            return (NEUTRAL_ATTR, val[1])
+    return (NEUTRAL_ATTR, 'empresas, eventos y campañas de marketing')
 
 
 def build_product(raw_name, img_original_url, cat_id, cat_name):
@@ -133,21 +141,22 @@ def build_product(raw_name, img_original_url, cat_id, cat_name):
 
     # Five richer template variants using category-specific attributes
     desc_templates = [
-        f"{clean_name} personalizado con tu logo: {attr}. Ideal para {uso}. Cotiza con PromoGimmicks en Ecuador y Colombia.",
-        f"Imprime tu marca en este {name_lower} ({attr}). Perfecto para {uso}. Envíos a todo Ecuador y Colombia.",
+        f"{clean_name} personalizado con tu logo: {attr}. Ideal para {uso}. Cotiza con PromoGimmicks en Ecuador.",
+        f"Imprime tu marca en este {name_lower} ({attr}). Perfecto para {uso}. Envíos a todo Ecuador.",
         f"Destaca en ferias y eventos con el {name_lower} personalizado. {attr.capitalize()}, orientado a {uso}.",
         f"El {name_lower} es un artículo promocional {attr} muy buscado por {uso}. Personalízalo con tu logo.",
-        f"Regala el {name_lower} con tu logo corporativo. {attr.capitalize()}. Pensado para {uso} en Ecuador y Colombia.",
+        f"Regala el {name_lower} con tu logo corporativo. {attr.capitalize()}. Pensado para {uso} en Ecuador.",
     ]
     descripcion = desc_templates[idx]
 
-    seo_title = f"{clean_name} Personalizado con Logo | PromoGimmicks Ecuador"
-    seo_desc  = f"{descripcion} Mínimo de unidades accesible. Envíos desde Quito y Guayaquil a todo Ecuador y Colombia."
+    seo_title = f"{clean_name} Personalizado con Logo | PromoGimmicks"
+    # Sin promesas de mínimos ni de cobertura fuera de Ecuador (ver reports/seo-implementation-log.md).
+    seo_desc  = f"{descripcion} Cotiza por WhatsApp para empresas en todo Ecuador."
     seo_kw = (
         f"{name_lower}, {name_lower} personalizado, {name_lower} con logo, "
-        f"{name_lower} ecuador, {name_lower} bogota, {cat_id} personalizado, "
+        f"{name_lower} ecuador, {cat_id} personalizado, "
         f"regalo corporativo ecuador, merchandising quito, productos promocionales guayaquil, "
-        f"artículos publicitarios colombia, promogimmicks"
+        f"artículos publicitarios ecuador, promogimmicks"
     )
 
     return {

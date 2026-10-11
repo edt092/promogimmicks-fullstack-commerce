@@ -2,9 +2,10 @@
 
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
+import { whatsappUrl as waLink } from '@/lib/site';
 
 const WHATSAPP_GIFTS_URL =
-  'https://wa.me/593998594123?text=Hola%2C%20me%20interesa%20cotizar%20regalos%20corporativos%20personalizados';
+  waLink('Hola, me interesa cotizar regalos corporativos personalizados');
 
 export default function RegalosCorporativos() {
   const sectionRef = useRef<HTMLElement>(null);

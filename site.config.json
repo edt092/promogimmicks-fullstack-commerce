@@ -1,0 +1,11 @@
+{
+  "_comment": "Fuente única de identidad del sitio. La leen lib/site.ts (Next.js) y los scripts Python (redirects, validadores, auditoría GSC). Host decidido el 2026-10-10: www es el dominio primario servido por Netlify (raíz responde 301 -> www). Ver reports/seo-implementation-log.md.",
+  "siteUrl": "https://www.promogimmicks.com",
+  "secondaryHosts": ["https://promogimmicks.com", "http://promogimmicks.com", "http://www.promogimmicks.com"],
+  "siteName": "PromoGimmicks",
+  "whatsappNumber": "593998594123",
+  "phoneDisplay": "+593 99 859 4123",
+  "email": "info@promogimmicks.com",
+  "locale": "es_EC",
+  "language": "es-EC"
+}

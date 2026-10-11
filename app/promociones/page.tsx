@@ -1,8 +1,9 @@
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import PromocionesGrid from '@/components/PromocionesGrid';
+import { SITE_URL } from '@/lib/site';
+import { offerProducts } from '@/lib/catalog';
 
-const SITE_URL = 'https://promogimmicks.com';
 
 export const metadata = {
   title: 'Promociones - Ofertas en Productos Promocionales | PromoGimmicks',
@@ -41,7 +42,7 @@ export default function PromocionesPage() {
 
       <section className="py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <PromocionesGrid />
+          <PromocionesGrid products={offerProducts()} />
         </div>
       </section>
 

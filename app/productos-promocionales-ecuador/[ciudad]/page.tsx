@@ -4,8 +4,10 @@ import { notFound } from 'next/navigation';
 import { ecuador, getCiudadBySlug } from '@/data/geo-data';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import TiendaGrid from '@/components/TiendaGrid';
+import Image from 'next/image';
 import { MapPin, ArrowRight, CheckCircle, ArrowLeft } from 'lucide-react';
+import { SITE_URL, absoluteUrl, jsonLd, whatsappUrl, ORGANIZATION_ID } from '@/lib/site';
+import { firstProductPerCategory, categoryName, FEATURED_CATEGORY_SLUGS } from '@/lib/catalog';
 
 interface Props {
   params: { ciudad: string };
@@ -41,11 +43,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: ciudad.seoDescription,
       type: 'website',
       locale: 'es_EC',
-      url: `https://promogimmicks.com/productos-promocionales-ecuador/${ciudad.slug}`,
+      url: `${SITE_URL}/productos-promocionales-ecuador/${ciudad.slug}/`,
       siteName: 'PromoGimmicks',
     },
     alternates: {
-      canonical: `https://promogimmicks.com/productos-promocionales-ecuador/${ciudad.slug}`,
+      canonical: `${SITE_URL}/productos-promocionales-ecuador/${ciudad.slug}/`,
     },
   };
 }
@@ -56,6 +58,8 @@ export default function CiudadEcuadorPage({ params }: Props) {
   if (!ciudad) {
     notFound();
   }
+
+  const destacados = firstProductPerCategory(FEATURED_CATEGORY_SLUGS);
 
   const otrasCiudades = ecuador.ciudades.filter(c => c.slug !== params.ciudad);
 
@@ -69,7 +73,7 @@ export default function CiudadEcuadorPage({ params }: Props) {
             <nav className="flex items-center gap-2 text-sm">
               <Link href="/" className="text-gray-500 hover:text-amber-600">Inicio</Link>
               <span className="text-gray-400">/</span>
-              <Link href="/productos-promocionales-ecuador" className="text-gray-500 hover:text-amber-600">Ecuador</Link>
+              <Link href="/productos-promocionales-ecuador/" className="text-gray-500 hover:text-amber-600">Ecuador</Link>
               <span className="text-gray-400">/</span>
               <span className="text-amber-600 font-medium">{ciudad.nombre}</span>
             </nav>
@@ -81,7 +85,7 @@ export default function CiudadEcuadorPage({ params }: Props) {
           <div className="absolute inset-0 bg-black/20"></div>
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <Link
-              href="/productos-promocionales-ecuador"
+              href="/productos-promocionales-ecuador/"
               className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
             >
               <ArrowLeft size={18} />
@@ -104,7 +108,7 @@ export default function CiudadEcuadorPage({ params }: Props) {
 
             <div className="flex flex-wrap gap-4">
               <a
-                href="https://wa.me/593998594123?text=Hola,%20me%20interesa%20cotizar%20productos%20promocionales%20en%20{ciudad.nombre}"
+                href={whatsappUrl(`Hola, me interesa cotizar productos promocionales en ${ciudad.nombre}`)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-green-600 text-white px-8 py-4 rounded-full font-bold hover:bg-green-700 transition-colors"
@@ -135,14 +139,49 @@ export default function CiudadEcuadorPage({ params }: Props) {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                Productos Promocionales Disponibles en {ciudad.nombre}
+                Productos promocionales para empresas en {ciudad.nombre}
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Explora nuestra selección de productos promocionales con envío directo a {ciudad.nombre} y alrededores.
+                Una muestra por categoría de nuestro catálogo. Cotiza desde {ciudad.nombre} y coordinamos contigo la entrega.
               </p>
             </div>
 
-            <TiendaGrid />
+            {/* Selección curada (SSR) en lugar del catálogo completo de 2.000+ productos. */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+              {destacados.map((p) => (
+                <Link
+                  key={p.id}
+                  href={`/tienda/${p.slug}/`}
+                  className="group bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-lg transition-all overflow-hidden"
+                >
+                  <div className="aspect-square relative bg-gray-50">
+                    <Image
+                      src={p.imagen_url}
+                      alt={`${p.nombre} personalizado con logo`}
+                      fill
+                      className="object-contain p-3 group-hover:scale-105 transition-transform duration-300"
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    />
+                  </div>
+                  <div className="p-3">
+                    <p className="text-xs text-amber-600 font-semibold">{p.categoria}</p>
+                    <p className="text-sm font-medium text-slate-900 line-clamp-2">{p.nombre}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            <div className="mt-10 flex flex-wrap justify-center gap-3">
+              {FEATURED_CATEGORY_SLUGS.map((slug) => (
+                <Link
+                  key={slug}
+                  href={`/tienda/categoria/${slug}/`}
+                  className="px-4 py-3 rounded-full border border-gray-200 bg-white text-slate-800 text-sm hover:border-amber-500 hover:text-amber-700 transition-colors"
+                >
+                  {categoryName(slug)}
+                </Link>
+              ))}
+            </div>
 
             <div className="text-center mt-12">
               <Link
@@ -172,7 +211,7 @@ export default function CiudadEcuadorPage({ params }: Props) {
               {otrasCiudades.map((otraCiudad) => (
                 <Link
                   key={otraCiudad.slug}
-                  href={`/productos-promocionales-ecuador/${otraCiudad.slug}`}
+                  href={`/productos-promocionales-ecuador/${otraCiudad.slug}/`}
                   className="bg-white border border-gray-200 hover:border-amber-500 rounded-xl p-4 text-center transition-all hover:shadow-lg"
                 >
                   <MapPin className="mx-auto text-amber-500 mb-2" size={24} />
@@ -193,7 +232,7 @@ export default function CiudadEcuadorPage({ params }: Props) {
               Contáctanos ahora y recibe atención personalizada para tu empresa en {ciudad.nombre}.
             </p>
             <a
-              href={`https://wa.me/593998594123?text=Hola,%20me%20interesa%20cotizar%20productos%20promocionales%20en%20${encodeURIComponent(ciudad.nombre)}`}
+              href={whatsappUrl(`Hola, me interesa cotizar productos promocionales en ${ciudad.nombre}`)}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-green-600 text-white px-8 py-4 rounded-full font-bold hover:bg-green-700 transition-colors"
@@ -204,29 +243,39 @@ export default function CiudadEcuadorPage({ params }: Props) {
           </div>
         </section>
 
-        {/* Schema.org JSON-LD */}
+        {/* Schema.org JSON-LD: página de servicio con área atendida; el proveedor es la
+            misma Organization del sitio (no se declara una sucursal local inexistente). */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
+            __html: jsonLd({
               "@context": "https://schema.org",
-              "@type": "LocalBusiness",
-              "name": `PromoGimmicks ${ciudad.nombre}`,
+              "@type": "Service",
+              "@id": `${absoluteUrl(`/productos-promocionales-ecuador/${ciudad.slug}/`)}#service`,
+              "name": `Productos promocionales personalizados en ${ciudad.nombre}`,
+              "serviceType": "Artículos promocionales personalizados con logo",
               "description": ciudad.seoDescription,
-              "url": `https://promogimmicks.com/productos-promocionales-ecuador/${ciudad.slug}`,
+              "url": absoluteUrl(`/productos-promocionales-ecuador/${ciudad.slug}/`),
+              "provider": { "@id": ORGANIZATION_ID },
               "areaServed": {
                 "@type": "City",
                 "name": ciudad.nombre,
-                "containedInPlace": {
-                  "@type": "Country",
-                  "name": "Ecuador"
-                }
-              },
-              "parentOrganization": {
-                "@type": "Organization",
-                "name": "PromoGimmicks",
-                "url": "https://promogimmicks.com"
+                "containedInPlace": { "@type": "Country", "name": "Ecuador" }
               }
+            })
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: jsonLd({
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              "itemListElement": [
+                { "@type": "ListItem", "position": 1, "name": "Inicio", "item": absoluteUrl('/') },
+                { "@type": "ListItem", "position": 2, "name": "Ecuador", "item": absoluteUrl('/productos-promocionales-ecuador/') },
+                { "@type": "ListItem", "position": 3, "name": ciudad.nombre, "item": absoluteUrl(`/productos-promocionales-ecuador/${ciudad.slug}/`) }
+              ]
             })
           }}
         />

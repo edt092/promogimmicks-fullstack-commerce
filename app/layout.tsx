@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Manrope } from 'next/font/google';
 import "./globals.css";
+import {
+  SITE_URL, SITE_NAME, SITE_LANGUAGE, WHATSAPP_NUMBER, CONTACT_EMAIL,
+  ORGANIZATION_ID, WEBSITE_ID, absoluteUrl, whatsappUrl, jsonLd,
+} from "@/lib/site";
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -9,19 +13,47 @@ const manrope = Manrope({
   weight: ['400', '500', '600', '700', '800'],
 });
 
-const SITE_URL = "https://promogimmicks.com";
-
 export const metadata: Metadata = {
-  title: "PromoGimmicks - Productos Promocionales y Merchandising",
-  description: "Expertos en productos promocionales, merchandising e importación. Encuentra los mejores productos virales y catálogos especializados.",
-  alternates: {
-    canonical: SITE_URL,
-    languages: {
-      "x-default": SITE_URL,
-      "es": SITE_URL,
-      "es-EC": `${SITE_URL}/productos-promocionales-ecuador`,
+  metadataBase: new URL(SITE_URL),
+  // Sin canonical ni hreflang globales: cada ruta indexable declara su propio canonical.
+  // (Antes el canonical raíz se heredaba en rutas sin metadata propia, incluida la 404,
+  // y el hreflang presentaba homepage y hub Ecuador como versiones equivalentes.)
+  title: "Artículos Promocionales en Ecuador | PromoGimmicks",
+  description: "Catálogo de más de 2.000 artículos promocionales personalizados con tu logo para empresas en Ecuador: bolígrafos, tomatodos, mugs, mochilas y más. Cotiza por WhatsApp.",
+};
+
+// Entidad única del sitio. Solo datos publicados y verificables en el propio sitio;
+// sameAs, dirección, RUC y año de fundación quedan pendientes (reports/seo-business-inputs.md).
+const siteSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": ORGANIZATION_ID,
+      name: SITE_NAME,
+      url: absoluteUrl('/'),
+      logo: absoluteUrl('/icon.png'),
+      email: CONTACT_EMAIL,
+      telephone: `+${WHATSAPP_NUMBER}`,
+      areaServed: { "@type": "Country", name: "Ecuador" },
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "sales",
+        telephone: `+${WHATSAPP_NUMBER}`,
+        email: CONTACT_EMAIL,
+        areaServed: "EC",
+        availableLanguage: "es",
+      },
     },
-  },
+    {
+      "@type": "WebSite",
+      "@id": WEBSITE_ID,
+      url: absoluteUrl('/'),
+      name: SITE_NAME,
+      inLanguage: SITE_LANGUAGE,
+      publisher: { "@id": ORGANIZATION_ID },
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -32,9 +64,10 @@ export default function RootLayout({
   return (
     <html lang="es" className={manrope.variable}>
       <body className="font-manrope">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(siteSchema) }} />
         {children}
         <a
-          href="https://wa.me/593998594123?text=Hola%2C%20me%20interesa%20cotizar%20productos%20promocionales"
+          href={whatsappUrl()}
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Contactar por WhatsApp"

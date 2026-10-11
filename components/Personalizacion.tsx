@@ -182,7 +182,7 @@ export default function Personalizacion() {
                   style={{ opacity: activeIndex === i ? 1 : 0, transform: activeIndex === i ? 'scale(1)' : 'scale(1.065)', visibility: activeIndex === i ? 'visible' : 'hidden' }}
                   aria-hidden="true"
                 >
-                  <TechniqueVisual title={t.title} image={t.image} priority={i === 0} />
+                  <TechniqueVisual title={t.title} image={t.image} />
                 </div>
               ))}
             </div>
@@ -212,7 +212,7 @@ export default function Personalizacion() {
 
               {/* Mobile-only inline visual per technique */}
               <div className="lg:hidden relative w-full aspect-[4/5] mb-10 overflow-hidden mt-8">
-                <TechniqueVisual title={t.title} image={t.image} priority={i === 0} />
+                <TechniqueVisual title={t.title} image={t.image} />
               </div>
 
               <p className="technique__index text-sky-200/[58%] text-xs font-semibold tracking-[0.12em] uppercase mb-10 lg:mb-16" style={{ fontVariantNumeric: 'tabular-nums' }}>

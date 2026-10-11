@@ -2,9 +2,10 @@
 
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { whatsappUrl as waLink } from '@/lib/site';
 
 const WHATSAPP_QUOTE_URL =
-  'https://wa.me/593998594123?text=Hola%2C%20me%20interesa%20solicitar%20una%20cotizaci%C3%B3n%20de%20art%C3%ADculos%20promocionales';
+  waLink('Hola, me interesa solicitar una cotización de artículos promocionales');
 
 export default function LlamadaFinal() {
   const sectionRef = useRef<HTMLElement>(null);

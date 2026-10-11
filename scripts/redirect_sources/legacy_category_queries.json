@@ -1,0 +1,23 @@
+{
+  "_comment": "Historic /tienda/?categoria=<value> query strings reported by GSC (DAFA: blocked by robots.txt; DWAD: alternate with proper canonical). No component currently generates these links. Values are the exact decoded display-name that appeared in the GSC export. Maps to the current category slug when a real equivalent exists; 'null' means no equivalent — leave as a documented, expected exclusion (do not redirect, do not touch robots.ts).",
+  "categories": {
+    "Deportes y Recreación": "deportes",
+    "Artículos de Escritura": "articulos-escritura",
+    "Iluminación": "iluminacion",
+    "EcoNature": "econature",
+    "Salud y Bienestar": null,
+    "Calculadoras": "calculadoras",
+    "Maletines": "maletines",
+    "Textil y Vestuario": null,
+    "Variedades": "variedades",
+    "Gorras": "gorras",
+    "Accesorios": null,
+    "Bicicleta": "bicicleta",
+    "Automóvil": "automovil",
+    "Cuidado Personal": "cuidado-personal",
+    "Médicos": "medicos",
+    "Deportes": "deportes",
+    "Precio Bomba": "precio-bomba",
+    "Reflectivos": "reflectivos"
+  }
+}

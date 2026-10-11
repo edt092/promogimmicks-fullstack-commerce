@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight, Tag } from 'lucide-react';
-import productsDataRaw from '@/data/products.json';
 
 interface Product {
   id: string;
@@ -16,15 +15,8 @@ interface Product {
   sku: string;
 }
 
-const productsData = productsDataRaw as Product[];
-const OFFERS_CATEGORY_SLUG = 'precio-bomba';
-const OFFERS_LIMIT = 16;
-
-const OFFER_PRODUCTS = productsData
-  .filter((p) => p.categoria_slug === OFFERS_CATEGORY_SLUG)
-  .slice(0, OFFERS_LIMIT);
-
-export default function PromocionesSlider() {
+// Productos de la categoría de ofertas, resueltos en el servidor (app/page.tsx).
+export default function PromocionesSlider({ products: OFFER_PRODUCTS }: { products: Product[] }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(true);
@@ -124,7 +116,6 @@ export default function PromocionesSlider() {
                   fill
                   sizes="(max-width: 640px) 68vw, 300px"
                   loading={i < 3 ? undefined : 'lazy'}
-                  priority={i < 3}
                   className="object-contain p-6 transition-transform duration-500 ease-out group-hover:scale-105"
                 />
                 <span className="absolute top-3 left-3 inline-flex items-center gap-1 bg-danger-500 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">

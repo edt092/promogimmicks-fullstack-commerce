@@ -39,7 +39,6 @@ export default function CategoriasGrid() {
                   fill
                   sizes="(max-width: 640px) 46vw, (max-width: 1024px) 24vw, 16vw"
                   loading={i < 12 ? undefined : 'lazy'}
-                  priority={i < 6}
                   className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                 />
                 <span

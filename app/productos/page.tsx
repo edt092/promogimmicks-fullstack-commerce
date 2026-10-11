@@ -3,8 +3,9 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import categoriesDataRaw from '@/data/categories.json';
 import productsDataRaw from '@/data/products.json';
+import { SITE_URL } from '@/lib/site';
+import { whatsappUrl as waLink } from '@/lib/site';
 
-const SITE_URL = 'https://promogimmicks.com';
 const STOCK_IMAGES_COUNT = 12;
 
 interface Category {
@@ -114,7 +115,7 @@ export default function ProductosPage() {
             Escríbenos por WhatsApp y te ayudamos a encontrar el producto ideal para tu campaña.
           </p>
           <a
-            href="https://wa.me/593998594123?text=Hola%2C%20busco%20un%20producto%20promocional%20para%20mi%20empresa"
+            href={waLink('Hola, busco un producto promocional para mi empresa')}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-magnetic inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#20BA5A] text-white font-semibold px-8 py-4 rounded-full transition-colors"

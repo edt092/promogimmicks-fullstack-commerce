@@ -131,7 +131,7 @@ export default function SeleccionObjetivo() {
                   visibility: activeIndex === i ? 'visible' : 'hidden',
                 }}
               >
-                <Image src={obj.image} alt="" fill sizes="58vw" loading={i === 0 ? undefined : 'lazy'} priority={i === 0} className="object-cover" style={{ filter: 'saturate(0.78) contrast(1.03)' }} />
+                <Image src={obj.image} alt="" fill sizes="58vw" loading="lazy" className="object-cover" style={{ filter: 'saturate(0.78) contrast(1.03)' }} />
                 <span
                   className="absolute inset-0"
                   style={{ background: 'linear-gradient(90deg, rgba(6,15,28,0.1) 40%, rgba(6,15,28,0.64) 100%), linear-gradient(180deg, rgba(6,15,28,0.08), rgba(6,15,28,0.48))' }}

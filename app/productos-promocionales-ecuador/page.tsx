@@ -4,6 +4,7 @@ import { ecuador } from '@/data/geo-data';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { MapPin, ArrowRight, CheckCircle, Package, Truck, Award } from 'lucide-react';
+import { SITE_URL, absoluteUrl, jsonLd, whatsappUrl, ORGANIZATION_ID } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: ecuador.seoTitle,
@@ -23,11 +24,11 @@ export const metadata: Metadata = {
     description: ecuador.seoDescription,
     type: 'website',
     locale: 'es_EC',
-    url: 'https://promogimmicks.com/productos-promocionales-ecuador',
+    url: `${SITE_URL}/productos-promocionales-ecuador/`,
     siteName: 'PromoGimmicks',
   },
   alternates: {
-    canonical: 'https://promogimmicks.com/productos-promocionales-ecuador',
+    canonical: `${SITE_URL}/productos-promocionales-ecuador/`,
   },
 };
 
@@ -110,7 +111,7 @@ export default function EcuadorPage() {
               {ecuador.ciudades.map((ciudad) => (
                 <Link
                   key={ciudad.slug}
-                  href={`/productos-promocionales-ecuador/${ciudad.slug}`}
+                  href={`/productos-promocionales-ecuador/${ciudad.slug}/`}
                   className="group bg-white border border-gray-200 rounded-2xl p-6 hover:border-amber-500 hover:shadow-xl transition-all duration-300"
                 >
                   <div className="flex items-start gap-4">
@@ -190,20 +191,20 @@ export default function EcuadorPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-                Categorías Populares en Ecuador
+                Categorías del catálogo
               </h2>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
                 { nombre: 'Tecnología', slug: 'tecnologia' },
-                { nombre: 'Drinkware', slug: 'drinkware' },
+                { nombre: 'Tomatodos y botilitos', slug: 'tomatodos-y-botilitos-personalizados' },
                 { nombre: 'Oficina', slug: 'oficina' },
-                { nombre: 'Textiles', slug: 'textil-vestuario' },
-                { nombre: 'Bolsos', slug: 'bolsos-mochilas' },
-                { nombre: 'Eco', slug: 'eco' },
-                { nombre: 'Deportes', slug: 'deportes-recreacion' },
-                { nombre: 'Accesorios', slug: 'accesorios' },
+                { nombre: 'Confección', slug: 'confeccion' },
+                { nombre: 'Maletines y morrales', slug: 'maletines' },
+                { nombre: 'Ecología', slug: 'ecologia' },
+                { nombre: 'Deportes', slug: 'deportes' },
+                { nombre: 'Llaveros', slug: 'llaveros' },
               ].map((cat) => (
                 <Link
                   key={cat.slug}
@@ -235,7 +236,7 @@ export default function EcuadorPage() {
                 <ArrowRight size={20} />
               </Link>
               <a
-                href="https://wa.me/593998594123?text=Hola,%20me%20interesa%20cotizar%20productos%20promocionales%20para%20Ecuador"
+                href={whatsappUrl('Hola, me interesa cotizar productos promocionales para Ecuador')}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-green-600 text-white px-8 py-4 rounded-full font-bold hover:bg-green-700 transition-colors"
@@ -246,24 +247,23 @@ export default function EcuadorPage() {
           </div>
         </section>
 
-        {/* Schema.org JSON-LD */}
+        {/* Schema.org JSON-LD: servicio nacional de la Organization del sitio (sin sucursal ficticia). */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
+            __html: jsonLd({
               "@context": "https://schema.org",
-              "@type": "LocalBusiness",
-              "name": "PromoGimmicks Ecuador",
+              "@type": "Service",
+              "@id": `${absoluteUrl('/productos-promocionales-ecuador/')}#service`,
+              "name": "Productos promocionales personalizados en Ecuador",
+              "serviceType": "Artículos promocionales personalizados con logo",
               "description": ecuador.seoDescription,
-              "url": "https://promogimmicks.com/productos-promocionales-ecuador",
-              "areaServed": {
-                "@type": "Country",
-                "name": "Ecuador"
-              },
-              "serviceArea": ecuador.ciudades.map(c => ({
-                "@type": "City",
-                "name": c.nombre
-              }))
+              "url": absoluteUrl('/productos-promocionales-ecuador/'),
+              "provider": { "@id": ORGANIZATION_ID },
+              "areaServed": [
+                { "@type": "Country", "name": "Ecuador" },
+                ...ecuador.ciudades.map((c) => ({ "@type": "City", "name": c.nombre })),
+              ]
             })
           }}
         />

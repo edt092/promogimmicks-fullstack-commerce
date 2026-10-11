@@ -5,35 +5,30 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { Menu, X, Search } from 'lucide-react';
 import { Logo } from './Logo';
-import productsDataRaw from '@/data/products.json';
+import { loadSearchIndex, searchItems, type SearchItem } from '@/lib/search';
+import { whatsappUrl } from '@/lib/site';
 
-interface Product {
-  id: string;
-  nombre: string;
-  slug: string;
-  categoria: string;
-  imagen_url: string;
-  codigo: string | null;
-  sku: string;
-}
+// El índice de búsqueda (~2.000 productos) se descarga solo al abrir el buscador;
+// antes el catálogo completo se incluía en el JS de todas las páginas.
+function useProductSearch(term: string, enabled: boolean) {
+  const [items, setItems] = useState<SearchItem[] | null>(null);
+  const [error, setError] = useState(false);
 
-const productsData = productsDataRaw as Product[];
+  useEffect(() => {
+    if (!enabled || items) return;
+    let cancelled = false;
+    loadSearchIndex()
+      .then((data) => { if (!cancelled) setItems(data); })
+      .catch(() => { if (!cancelled) setError(true); });
+    return () => { cancelled = true; };
+  }, [enabled, items]);
 
-function useProductSearch(term: string) {
-  return useMemo(() => {
-    const q = term.trim().toLowerCase();
-    if (q.length < 2) return [];
-    return productsData
-      .filter((p) => {
-        if (p.nombre.toLowerCase().includes(q)) return true;
-        return p.sku.toLowerCase().includes(q);
-      })
-      .slice(0, 6);
-  }, [term]);
+  const results = useMemo(() => (items ? searchItems(items, term, 6) : []), [items, term]);
+  return { results, loading: enabled && !items && !error, error };
 }
 
 function SearchResults({ term, onNavigate }: { term: string; onNavigate: () => void }) {
-  const results = useProductSearch(term);
+  const { results, loading, error } = useProductSearch(term, true);
   if (term.trim().length < 2) return null;
 
   return (
@@ -41,7 +36,7 @@ function SearchResults({ term, onNavigate }: { term: string; onNavigate: () => v
       {results.length > 0 ? (
         <ul className="max-h-96 overflow-y-auto divide-y divide-slate-50">
           {results.map((p) => (
-            <li key={p.id}>
+            <li key={p.slug}>
               <Link
                 href={`/tienda/${p.slug}/`}
                 onClick={onNavigate}
@@ -59,8 +54,12 @@ function SearchResults({ term, onNavigate }: { term: string; onNavigate: () => v
           ))}
         </ul>
       ) : (
-        <p className="px-4 py-6 text-sm text-slate-500 text-center">
-          Sin resultados para &quot;{term}&quot;
+        <p className="px-4 py-6 text-sm text-slate-500 text-center" role="status" aria-live="polite">
+          {loading
+            ? 'Cargando catálogo…'
+            : error
+              ? 'No se pudo cargar el buscador. Intenta de nuevo o visita la tienda.'
+              : <>Sin resultados para &quot;{term}&quot;. <Link href="/tienda/" onClick={onNavigate} className="underline">Ver todo el catálogo</Link></>}
         </p>
       )}
     </div>
@@ -95,7 +94,7 @@ export default function Navbar() {
     { href: '/novedades/', label: 'Novedades' },
     { href: '/productos/', label: 'Productos' },
     { href: '/promociones/', label: 'Promociones' },
-    { href: '/blog', label: 'Blog' },
+    { href: '/blog/', label: 'Blog' },
   ];
 
   const navBg = isMobileMenuOpen
@@ -174,7 +173,7 @@ export default function Navbar() {
               </div>
 
               <a
-                href="https://wa.me/593998594123?text=Hola%2C%20me%20interesa%20cotizar%20productos%20promocionales"
+                href={whatsappUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-magnetic bg-brand hover:bg-brand-600 text-white text-sm font-semibold px-5 py-2 rounded-full transition-colors duration-200 shadow-sm hover:shadow-brand-glow whitespace-nowrap"
@@ -263,7 +262,7 @@ export default function Navbar() {
                 className="mt-2"
               >
                 <a
-                  href="https://wa.me/593998594123?text=Hola%2C%20me%20interesa%20cotizar%20productos%20promocionales"
+                  href={whatsappUrl()}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setIsMobileMenuOpen(false)}

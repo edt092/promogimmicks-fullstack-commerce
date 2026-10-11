@@ -51,7 +51,7 @@ export default function CatalogoPorCategoria() {
         </h2>
       </div>
       {SHOWCASES.map(({ category, products }, i) => (
-        <CategoryShowcase key={category.id} category={category} products={products} priority={i === 0} />
+        <CategoryShowcase key={category.id} category={category} products={products} />
       ))}
     </section>
   );
