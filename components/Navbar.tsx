@@ -3,10 +3,11 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { Menu, X, Search } from 'lucide-react';
+import { Menu, X, Search, ClipboardList } from 'lucide-react';
 import { Logo } from './Logo';
 import { loadSearchIndex, searchItems, type SearchItem } from '@/lib/search';
 import { whatsappUrl } from '@/lib/site';
+import { useQuoteItems } from '@/lib/quote';
 
 // El índice de búsqueda (~2.000 productos) se descarga solo al abrir el buscador;
 // antes el catálogo completo se incluía en el JS de todas las páginas.
@@ -34,6 +35,7 @@ function SearchResults({ term, onNavigate }: { term: string; onNavigate: () => v
   return (
     <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden z-50">
       {results.length > 0 ? (
+        <>
         <ul className="max-h-96 overflow-y-auto divide-y divide-slate-50">
           {results.map((p) => (
             <li key={p.slug}>
@@ -53,13 +55,21 @@ function SearchResults({ term, onNavigate }: { term: string; onNavigate: () => v
             </li>
           ))}
         </ul>
+        <Link
+          href={`/tienda/?q=${encodeURIComponent(term.trim())}`}
+          onClick={onNavigate}
+          className="block px-4 py-3 text-sm font-semibold text-blue-900 bg-slate-50 hover:bg-slate-100 text-center"
+        >
+          Ver todos los resultados para &quot;{term.trim()}&quot;
+        </Link>
+        </>
       ) : (
         <p className="px-4 py-6 text-sm text-slate-500 text-center" role="status" aria-live="polite">
           {loading
             ? 'Cargando catálogo…'
             : error
               ? 'No se pudo cargar el buscador. Intenta de nuevo o visita la tienda.'
-              : <>Sin resultados para &quot;{term}&quot;. <Link href="/tienda/" onClick={onNavigate} className="underline">Ver todo el catálogo</Link></>}
+              : <>No encontramos coincidencias para «{term}». Prueba con el tipo de producto o su código. <Link href="/tienda/" onClick={onNavigate} className="underline">Ver todo el catálogo</Link></>}
         </p>
       )}
     </div>
@@ -72,6 +82,30 @@ export default function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const searchBoxRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuPanelRef = useRef<HTMLDivElement>(null);
+  const quoteCount = useQuoteItems().length;
+
+  // Menú móvil accesible: foco al primer enlace al abrir, Escape cierra y devuelve
+  // el foco al botón, y el fondo no se desplaza mientras el overlay está abierto.
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const t = window.setTimeout(() => menuPanelRef.current?.querySelector<HTMLElement>('a')?.focus(), 50);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsMobileMenuOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => {
+      window.clearTimeout(t);
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [isMobileMenuOpen]);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -149,7 +183,8 @@ export default function Navbar() {
                 >
                   <button
                     onClick={() => setSearchOpen((v) => !v)}
-                    aria-label="Buscar productos"
+                    aria-label={searchOpen ? 'Cerrar búsqueda' : 'Buscar productos'}
+                    aria-expanded={searchOpen}
                     className={`flex-shrink-0 p-2 rounded-full ${isScrolled ? 'text-slate-500' : 'text-white/80'}`}
                   >
                     <Search size={16} />
@@ -160,7 +195,8 @@ export default function Navbar() {
                       type="text"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      placeholder="Buscar por nombre o SKU..."
+                      placeholder="Mug, bolígrafo o código…"
+                      aria-label="Buscar en el catálogo"
                       className={`w-full bg-transparent text-sm py-2 outline-none ${
                         isScrolled ? 'text-ink placeholder:text-slate-400' : 'text-white placeholder:text-white/50'
                       }`}
@@ -171,6 +207,19 @@ export default function Navbar() {
                   <SearchResults term={searchTerm} onNavigate={() => setSearchOpen(false)} />
                 )}
               </div>
+
+              <Link
+                href="/cotizacion/"
+                className={`relative p-2 rounded-full ${isScrolled ? 'text-slate-600 hover:text-blue-900' : 'text-white/85 hover:text-white'}`}
+                aria-label={quoteCount ? `Tu cotización: ${quoteCount} producto${quoteCount === 1 ? '' : 's'}` : 'Tu cotización'}
+              >
+                <ClipboardList size={18} aria-hidden="true" />
+                {quoteCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-amber-500 text-white text-[11px] font-bold flex items-center justify-center" aria-hidden="true">
+                    {quoteCount}
+                  </span>
+                )}
+              </Link>
 
               <a
                 href={whatsappUrl()}
@@ -184,17 +233,33 @@ export default function Navbar() {
 
             {/* Mobile: search + toggle */}
             <div className="md:hidden flex items-center gap-1">
+              <Link
+                href="/cotizacion/"
+                className={`relative p-2.5 rounded-lg ${toggleColor}`}
+                aria-label={quoteCount ? `Tu cotización: ${quoteCount} producto${quoteCount === 1 ? '' : 's'}` : 'Tu cotización'}
+              >
+                <ClipboardList size={20} aria-hidden="true" />
+                {quoteCount > 0 && (
+                  <span className="absolute top-0.5 right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-amber-500 text-white text-[11px] font-bold flex items-center justify-center" aria-hidden="true">
+                    {quoteCount}
+                  </span>
+                )}
+              </Link>
               <button
                 onClick={() => { setSearchOpen((v) => !v); setIsMobileMenuOpen(false); }}
-                className={`p-2 rounded-lg transition-colors duration-200 ${toggleColor}`}
-                aria-label="Buscar productos"
+                className={`p-2.5 rounded-lg transition-colors duration-200 ${toggleColor}`}
+                aria-label={searchOpen ? 'Cerrar búsqueda' : 'Buscar productos'}
+                aria-expanded={searchOpen}
               >
                 <Search size={20} />
               </button>
               <button
+                ref={menuButtonRef}
                 onClick={() => { setIsMobileMenuOpen(!isMobileMenuOpen); setSearchOpen(false); }}
-                className={`p-2 rounded-lg transition-colors duration-200 relative z-50 ${toggleColor}`}
-                aria-label="Toggle menu"
+                className={`p-2.5 rounded-lg transition-colors duration-200 relative z-50 ${toggleColor}`}
+                aria-label={isMobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+                aria-expanded={isMobileMenuOpen}
+                aria-controls="mobile-menu"
               >
                 {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
               </button>
@@ -217,7 +282,8 @@ export default function Navbar() {
                     type="text"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Buscar por nombre o SKU..."
+                    placeholder="Mug, bolígrafo o código…"
+                    aria-label="Buscar en el catálogo"
                     className="w-full bg-transparent text-sm py-2.5 outline-none text-ink placeholder:text-slate-400"
                   />
                 </div>
@@ -236,6 +302,11 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
+            id="mobile-menu"
+            ref={menuPanelRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menú principal"
             className="fixed inset-0 z-40 bg-navy flex flex-col"
           >
             <div className="flex flex-col items-center justify-center flex-1 gap-7 px-8 pt-16">

@@ -5,6 +5,8 @@ import { ArrowLeft, Tag, Share2, Check, MessageCircle, Truck, ClipboardList, Pal
 import Link from 'next/link';
 import type { Product, ProductCardData } from '@/lib/catalog';
 import { whatsappUrl } from '@/lib/site';
+import AddToQuoteButton from './AddToQuoteButton';
+import { sanitizeQuantity } from '@/lib/quote';
 
 interface ProductDetailViewProps {
   product: Product;
@@ -178,38 +180,41 @@ function specRows(product: Product): { label: string; value: string | null }[] {
 
 export default function ProductDetailView({ product, categoryLabel, related }: ProductDetailViewProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const [shareState, setShareState] = useState<'idle' | 'copied' | 'error'>('idle');
+  const [quantityInput, setQuantityInput] = useState('');
+  const quantity = sanitizeQuantity(quantityInput);
 
   const content = categoryContent[product.categoria_slug] ?? defaultContent;
   const rows = specRows(product);
   const confirmed = rows.filter((r) => r.value);
   const pending = rows.filter((r) => !r.value).map((r) => r.label.toLowerCase());
 
-  const quoteMessage = `Hola! Me interesa cotizar el producto: ${product.nombre}\n\nCategoría: ${categoryLabel}${product.sku ? `\nSKU: ${product.sku}` : ''}\n\n¿Podrían enviarme información sobre precios, cantidades mínimas y opciones de personalización?`;
+  const quoteMessage = `Hola! Me interesa cotizar el producto: ${product.nombre}\n\nCategoría: ${categoryLabel}${product.sku ? `\nSKU: ${product.sku}` : ''}${quantity ? `\nCantidad: ${quantity} unidades` : ''}\n\n¿Podrían enviarme información sobre precios, cantidades mínimas y opciones de personalización?`;
   const quoteHref = whatsappUrl(quoteMessage);
 
-  const handleShare = async () => {
-    const shareData = {
-      title: product.nombre,
-      text: product.descripcion_corta,
-      url: window.location.href,
-    };
-
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-      } catch (err) {
-        copyToClipboard();
-      }
-    } else {
-      copyToClipboard();
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setShareState('copied');
+      setTimeout(() => setShareState('idle'), 2500);
+    } catch {
+      // Portapapeles denegado: se muestra la URL para copiarla manualmente.
+      setShareState('error');
     }
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: product.nombre, text: product.descripcion_corta, url: window.location.href });
+        return;
+      } catch (err) {
+        // Cancelar el diálogo de compartir no debe copiar nada ni mostrar error.
+        if (err instanceof DOMException && err.name === 'AbortError') return;
+      }
+    }
+    await copyLink();
   };
 
   return (
@@ -226,17 +231,25 @@ export default function ProductDetailView({ product, categoryLabel, related }: P
         </div>
       </nav>
 
+      {/* En móvil la información de decisión (nombre, SKU, acciones) va antes que la imagen. */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-        <div className="space-y-4">
-          <div className="bg-white rounded-2xl shadow-lg p-4 md:p-8 relative overflow-hidden">
-            {!imageLoaded && (
+        <div className="space-y-4 order-2 lg:order-1">
+          <div className="bg-white rounded-2xl shadow-lg p-4 md:p-8 relative overflow-hidden max-w-sm mx-auto lg:max-w-none w-full">
+            {!imageLoaded && !imageError && (
               <div className="absolute inset-0 bg-gray-100 animate-pulse rounded-lg" />
             )}
             <div className="aspect-square flex items-center justify-center bg-gradient-to-br from-gray-50 to-white rounded-xl">
               {/* Imagen principal (candidata a LCP): carga inmediata con prioridad alta. */}
+              {imageError ? (
+                <div className="flex flex-col items-center justify-center text-center text-gray-500 p-6" role="img" aria-label={`${product.nombre}: imagen no disponible`}>
+                  <img src="/img/placeholder-producto.svg" alt="" className="w-24 h-24 opacity-60 mb-3" />
+                  <span className="text-sm">Imagen no disponible</span>
+                </div>
+              ) : (
               <img
                 src={product.imagen_url}
                 alt={`${product.nombre} personalizado con logo`}
+                onError={() => setImageError(true)}
                 loading="eager"
                 fetchPriority="high"
                 decoding="async"
@@ -244,17 +257,13 @@ export default function ProductDetailView({ product, categoryLabel, related }: P
                 ref={(el) => { if (el?.complete) setImageLoaded(true); }}
                 className={`max-w-full max-h-full object-contain transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
               />
+              )}
             </div>
           </div>
 
-          {(product.sku || product.codigo) && (
-            <div className="text-center text-sm text-gray-500">
-              SKU: <span className="font-medium text-gray-700">{product.sku ?? product.codigo}</span>
-            </div>
-          )}
         </div>
 
-        <div className="flex flex-col">
+        <div className="flex flex-col order-1 lg:order-2">
           <div className="mb-4">
             <Link
               href={`/tienda/categoria/${product.categoria_slug}/`}
@@ -265,9 +274,14 @@ export default function ProductDetailView({ product, categoryLabel, related }: P
             </Link>
           </div>
 
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-blue-900 mb-4 leading-tight">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-blue-900 mb-2 leading-tight">
             {product.nombre}
           </h1>
+          {(product.sku || product.codigo) && (
+            <p className="text-sm text-gray-500 mb-4">
+              SKU: <span className="font-medium text-gray-700">{product.sku ?? product.codigo}</span>
+            </p>
+          )}
 
           <div className="mb-6">
             <p className="text-base md:text-lg text-gray-700 leading-relaxed">
@@ -276,24 +290,59 @@ export default function ProductDetailView({ product, categoryLabel, related }: P
           </div>
 
           <div className="space-y-3 mb-6">
+            <div>
+              <label htmlFor="pdv-qty" className="block text-sm font-medium text-blue-900 mb-1">
+                Cantidad aproximada <span className="font-normal text-gray-500">(opcional)</span>
+              </label>
+              <input
+                id="pdv-qty"
+                type="number"
+                inputMode="numeric"
+                min={1}
+                step={1}
+                placeholder="Ej.: 300"
+                value={quantityInput}
+                onChange={(e) => setQuantityInput(e.target.value)}
+                aria-describedby="pdv-qty-help"
+                className="w-full sm:w-48 rounded-lg border border-gray-300 px-3 py-2.5 text-base focus:border-blue-700 focus:ring-2 focus:ring-blue-200 outline-none"
+              />
+              <p id="pdv-qty-help" className="mt-1 text-xs text-gray-500">Pedido mínimo por confirmar según modelo y técnica.</p>
+            </div>
+
             <a
               href={quoteHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-6 py-4 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              aria-describedby="pdv-wa-help"
+              className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white px-6 py-4 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl"
             >
-              <MessageCircle size={22} />
-              Solicitar Cotización por WhatsApp
+              <MessageCircle size={22} aria-hidden="true" />
+              Cotizar este producto por WhatsApp
             </a>
+            <p id="pdv-wa-help" className="text-xs text-gray-500">
+              Se abrirá WhatsApp con tu consulta. Revisa el mensaje y envíalo para iniciar la conversación.
+            </p>
+
+            <AddToQuoteButton slug={product.slug} sku={product.sku} nombre={product.nombre} quantity={quantity} />
 
             <button
               type="button"
               onClick={handleShare}
-              className="w-full bg-white hover:bg-gray-50 text-blue-900 px-6 py-3.5 rounded-xl font-semibold border-2 border-blue-200 hover:border-blue-300 transition-all duration-200 flex items-center justify-center gap-2"
+              className="w-full min-h-[44px] bg-white hover:bg-gray-50 text-blue-900 px-6 py-3 rounded-xl font-medium border border-blue-200 hover:border-blue-300 transition-all duration-200 flex items-center justify-center gap-2"
             >
-              <Share2 size={18} />
-              {copied ? '¡Enlace copiado!' : 'Compartir Producto'}
+              <Share2 size={18} aria-hidden="true" />
+              Compartir producto
             </button>
+            <div role="status" aria-live="polite" className="text-sm text-gray-600">
+              {shareState === 'copied' && 'Enlace copiado.'}
+              {shareState === 'error' && (
+                <label className="block">
+                  No pudimos copiar el enlace automáticamente. Cópialo aquí:
+                  <input readOnly value={typeof window !== 'undefined' ? window.location.href : ''} onFocus={(e) => e.currentTarget.select()}
+                    className="mt-1 w-full rounded border border-gray-300 px-2 py-1 text-xs" />
+                </label>
+              )}
+            </div>
           </div>
 
           <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-5 md:p-6 mb-6 border border-blue-100">

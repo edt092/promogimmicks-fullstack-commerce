@@ -43,23 +43,28 @@ function NewsletterForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    // e.currentTarget deja de apuntar al formulario tras el await: se captura antes.
+    const form = e.currentTarget;
+    const body = new FormData(form);
     setStatus('sending');
+    let ok = false;
     try {
       const res = await fetch('https://formspree.io/f/mzznadzv', {
         method: 'POST',
-        body: new FormData(e.currentTarget),
+        body,
         headers: { Accept: 'application/json' },
       });
-      setStatus(res.ok ? 'success' : 'error');
-      if (res.ok) e.currentTarget.reset();
+      ok = res.ok;
     } catch {
-      setStatus('error');
+      ok = false;
     }
+    if (ok) form.reset();
+    setStatus(ok ? 'success' : 'error');
   };
 
   if (status === 'success') {
     return (
-      <div className="flex items-center gap-2 text-sky-400 text-sm">
+      <div className="flex items-center gap-2 text-sky-400 text-sm" role="status">
         <CheckCircle2 size={18} />
         <span>¡Gracias! Te mantendremos al día.</span>
       </div>
@@ -68,8 +73,12 @@ function NewsletterForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-2">
+      <label htmlFor="newsletter-email" className="block text-xs text-slate-300">Tu correo electrónico</label>
       <div className="relative">
         <input
+          id="newsletter-email"
+          autoComplete="email"
+          aria-describedby={status === 'error' ? 'newsletter-error' : undefined}
           type="email"
           name="correo_newsletter"
           required
@@ -85,9 +94,10 @@ function NewsletterForm() {
           <Send size={14} />
         </button>
       </div>
-      {status === 'error' && (
-        <p className="text-danger-400 text-xs">No pudimos enviarlo, intenta de nuevo.</p>
-      )}
+      <p id="newsletter-error" role="status" aria-live="polite" className="text-danger-400 text-xs">
+        {status === 'error' && 'No pudimos registrar tu correo. Intenta otra vez; el dato sigue en el campo.'}
+        {status === 'sending' && <span className="text-slate-300">Enviando…</span>}
+      </p>
     </form>
   );
 }

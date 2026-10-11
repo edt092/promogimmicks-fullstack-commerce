@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { ShoppingCart, Eye } from 'lucide-react';
+import { Eye } from 'lucide-react';
 import Link from 'next/link';
-import { whatsappUrl } from '@/lib/site';
+import AddToQuoteButton from './AddToQuoteButton';
 
 interface Product {
   id: string;
@@ -37,18 +37,13 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
     return () => observer.disconnect();
   }, [priority]);
 
-  const handleCotizar = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const mensaje = `Hola! Me interesa cotizar el producto: ${product.nombre}`;
-    window.open(whatsappUrl(mensaje), '_blank');
-  };
-
   return (
-    <Link
-      href={`/tienda/${product.slug}/`}
-      className="bg-white rounded-2xl overflow-hidden group block border border-slate-100 hover:border-sky-200 hover:shadow-xl hover:shadow-sky-50 transition-all duration-300 transform hover:-translate-y-1"
+    // Acciones hermanas (enlace a la ficha + botón de cotización), sin controles anidados.
+    <article
+      aria-labelledby={`product-title-${product.slug}`}
+      className="bg-white rounded-2xl overflow-hidden group border border-slate-100 hover:border-sky-200 hover:shadow-xl hover:shadow-sky-50 transition-all duration-300 flex flex-col"
     >
+      <Link href={`/tienda/${product.slug}/`} className="block flex-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-700">
       {/* Image area */}
       <div ref={imgRef} className="relative h-44 sm:h-48 bg-slate-50 overflow-hidden">
         {!isLoaded && isInView && (
@@ -57,7 +52,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
         {isInView && (
           <img
             src={imageError ? "/img/placeholder-producto.svg" : product.imagen_url}
-            alt={product.nombre}
+            alt={imageError ? `${product.nombre}: imagen no disponible` : product.nombre}
             loading={priority ? "eager" : "lazy"}
             onError={() => setImageError(true)}
             onLoad={() => setIsLoaded(true)}
@@ -77,27 +72,22 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
         {product.sku && (
           <p className="text-[10px] font-semibold text-brand uppercase tracking-wide mb-1">{product.sku}</p>
         )}
-        <h3 className="text-sm font-semibold text-slate-800 mb-1.5 line-clamp-2 min-h-[2.5rem] group-hover:text-sky-700 transition-colors">
+        <h3 id={`product-title-${product.slug}`} className="text-sm font-semibold text-slate-800 mb-1.5 line-clamp-2 min-h-[2.5rem] group-hover:text-sky-700 transition-colors">
           {product.nombre}
         </h3>
         <p className="text-slate-500 text-xs mb-4 line-clamp-2 min-h-[2rem]">
           {product.descripcion_corta}
         </p>
 
-        <div className="space-y-2">
           <div className="bg-blue-900 group-hover:bg-sky-600 text-white px-3 py-2 rounded-xl font-medium text-xs flex items-center justify-center gap-1.5 transition-colors duration-300">
-            <Eye size={13} />
+            <Eye size={13} aria-hidden="true" />
             Ver detalles
           </div>
-          <button
-            onClick={handleCotizar}
-            className="w-full bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 px-3 py-2 rounded-xl font-medium text-xs flex items-center justify-center gap-1.5 transition-colors"
-          >
-            <ShoppingCart size={13} />
-            Cotizar
-          </button>
         </div>
+      </Link>
+      <div className="px-4 pb-4">
+        <AddToQuoteButton slug={product.slug} sku={product.sku ?? ''} nombre={product.nombre} compact />
       </div>
-    </Link>
+    </article>
   );
 }
