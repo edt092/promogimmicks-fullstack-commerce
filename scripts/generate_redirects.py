@@ -170,14 +170,13 @@ def main():
             unresolved.append(old_slug)
 
     # --- 5. Trailing-slash genérico (fallback, siempre después de las reglas específicas) ---
+    # SOLO rutas exactas de páginas que existen. NO usar comodines (/tienda/:slug -> /tienda/:slug/):
+    # Netlify ignora la barra final al comparar reglas, así que para una URL inexistente
+    # la regla se aplica sobre sí misma y produce un bucle infinito de 301 (incidente
+    # 2026-10-10). Para páginas existentes Netlify ya añade la barra final por sí mismo.
     trailing_slash_lines = []
     for p in STATIC_TOP_LEVEL:
         trailing_slash_lines.append(f'{p}  {SITE_URL}{p}/  301')
-    trailing_slash_lines.append(f'/tienda/:slug  {SITE_URL}/tienda/:slug/  301')
-    trailing_slash_lines.append(f'/tienda/categoria/:slug/pagina/:page  {SITE_URL}/tienda/categoria/:slug/pagina/:page/  301')
-    trailing_slash_lines.append(f'/tienda/categoria/:slug  {SITE_URL}/tienda/categoria/:slug/  301')
-    trailing_slash_lines.append(f'/blog/:slug  {SITE_URL}/blog/:slug/  301')
-    trailing_slash_lines.append(f'/productos-promocionales-ecuador/:ciudad  {SITE_URL}/productos-promocionales-ecuador/:ciudad/  301')
 
     # --- 6. Host / protocolo (red de seguridad final) ---
     # Todo host secundario -> host canónico. NUNCA incluir aquí el host canónico como

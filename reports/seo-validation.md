@@ -101,3 +101,11 @@ Capturas: `after_*.png` en el scratchpad de la sesión.
 - Image CDN con los nuevos `deviceSizes`/`imageSizes`.
 - Rich Results Test, URL Inspection y canonical elegido por Google.
 - CWV reales (PageSpeed con API key / CrUX).
+
+## 6. Incidente tras la publicación (2026-10-10) y corrección
+
+- **Síntoma (smoke test en producción):** URLs inexistentes bajo `/tienda/`, `/tienda/categoria/`, `/blog/` y `/productos-promocionales-ecuador/` entraban en un bucle de 301 hacia sí mismas en lugar de responder 404.
+- **Causa:** reglas genéricas con comodín de `public/_redirects` (`/tienda/:slug → /tienda/:slug/`, etc.), generadas por `scripts/generate_redirects.py`. Netlify compara reglas ignorando la barra final; con un archivo inexistente, la regla se aplica sobre sí misma. Las páginas existentes no se veían afectadas: Netlify sirve el archivo antes de aplicar la regla y añade la barra final por sí mismo.
+- **Por qué no lo detectó el validador:** resolvía las cadenas por coincidencia exacta de ruta.
+- **Corrección:** se eliminan las reglas con comodín del generador, se regenera `_redirects` y el validador marca como bucle crítico cualquier regla con comodín cuyo destino sea el mismo patrón con barra final.
+- **Verificación pendiente tras publicar:** `/tienda/categoria/no-existe/`, `/tienda/producto-que-no-existe/` y `/blog/no-existe/` → 404; `/tienda/boligrafo-alden-10441` (sin barra) → 301 a la versión con barra.
