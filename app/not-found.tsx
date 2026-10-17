@@ -10,12 +10,12 @@ export const metadata = {
 
 export default function NotFound() {
   const categories = [
-    { name: 'Bolígrafos', slug: 'boligrafos' },
-    { name: 'Maletines y Morrales', slug: 'maletines-y-morrales' },
-    { name: 'Mugs y Termos', slug: 'mugs-termos' },
-    { name: 'Libretas', slug: 'libretas' },
+    { name: 'Bolígrafos', slug: 'articulos-escritura' },
+    { name: 'Maletines y Morrales', slug: 'maletines' },
+    { name: 'Mugs', slug: 'mugs' },
+    { name: 'Termos', slug: 'termos-personalizados' },
     { name: 'Tecnología', slug: 'tecnologia' },
-    { name: 'Botilitos', slug: 'botilitos' },
+    { name: 'Tomatodos y Botilitos', slug: 'tomatodos-y-botilitos-personalizados' },
   ];
 
   return (

@@ -2163,11 +2163,6 @@
 /productos  https://www.promogimmicks.com/productos/  301
 /promociones  https://www.promogimmicks.com/promociones/  301
 /productos-promocionales-ecuador  https://www.promogimmicks.com/productos-promocionales-ecuador/  301
-/tienda/:slug  https://www.promogimmicks.com/tienda/:slug/  301
-/tienda/categoria/:slug/pagina/:page  https://www.promogimmicks.com/tienda/categoria/:slug/pagina/:page/  301
-/tienda/categoria/:slug  https://www.promogimmicks.com/tienda/categoria/:slug/  301
-/blog/:slug  https://www.promogimmicks.com/blog/:slug/  301
-/productos-promocionales-ecuador/:ciudad  https://www.promogimmicks.com/productos-promocionales-ecuador/:ciudad/  301
 
 # ===== 6. Host / protocolo canónico (red de seguridad final) =====
 https://promogimmicks.com/*  https://www.promogimmicks.com/:splat  301!
